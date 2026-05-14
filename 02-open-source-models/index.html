@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>开源模型使用与推理服务</title><link rel="stylesheet" href="../styles.css"></head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../01-foundations/index.html">上一阶段</a><a href="../03-prompt-structured-output/index.html">下一阶段</a></nav></div></header>
+  <main class="shell">
+    <section class="hero"><h1>开源模型使用与推理服务</h1><p>学会选择、下载、运行和服务化开源模型。重点是使用模型，而不是训练基础模型。</p><div class="meta-row"><span class="pill">建议周期：2-3 周</span><span class="pill">产出：本地模型 API 服务</span></div></section>
+    <div class="layout">
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#concepts">模型概念</a><a href="#runtime">运行方式</a><a href="#models">模型选择</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <article class="content">
+        <section id="concepts" class="section"><h2>必须理解的概念</h2><ul><li>Base 模型、Instruct 模型、Chat 模型的区别。</li><li>token、上下文窗口、采样参数、停止词。</li><li>模型格式：Safetensors、GGUF、AWQ、GPTQ。</li><li>量化对显存、速度和效果的影响。</li><li>Chat template 为什么会影响输出质量。</li></ul></section>
+        <section id="runtime" class="section"><h2>运行与服务化</h2><ul><li>Ollama：适合快速本地实验。</li><li>Transformers：适合理解模型加载与推理流程。</li><li>vLLM：适合部署 OpenAI-compatible API。</li><li>llama.cpp：适合 CPU/Mac/边缘设备上的 GGUF 模型。</li></ul></section>
+        <section id="models" class="section"><h2>模型选择建议</h2><p>中文和中英混合任务优先尝试 Qwen 系列；代码任务优先尝试 Qwen Coder、DeepSeek Coder 等；本地入门从 7B/8B 或 14B 开始，等链路跑通后再追求更大模型。</p><div class="note warning">不要只看榜单。你的业务测试集比通用榜单更重要，同一个模型在不同任务上的表现可能差异很大。</div></section>
+        <section id="project" class="section"><h2>实践项目</h2><p>搭建一个本地聊天服务：后端提供 `/chat` 接口，底层可以切换 Ollama 或 vLLM，支持流式输出。</p><h3>验收标准</h3><ul><li>可以通过 HTTP 调用本地开源模型。</li><li>支持配置模型名、温度、最大输出长度。</li><li>记录每次请求耗时和 token 使用情况。</li></ul></section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

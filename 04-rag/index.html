@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RAG 知识库问答</title><link rel="stylesheet" href="../styles.css"></head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../03-prompt-structured-output/index.html">上一阶段</a><a href="../05-tool-calling-langchain-langgraph/index.html">下一阶段</a></nav></div></header>
+  <main class="shell">
+    <section class="hero"><h1>RAG 知识库问答</h1><p>让模型基于你的文档回答问题。RAG 是 LLM 应用开发里最常见、也最容易做坏的一块。</p><div class="meta-row"><span class="pill">建议周期：3-5 周</span><span class="pill">产出：带引用的知识库问答系统</span></div></section>
+    <div class="layout">
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#pipeline">RAG 流程</a><a href="#retrieval">检索优化</a><a href="#answer">答案生成</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <article class="content">
+        <section id="pipeline" class="section"><h2>完整流程</h2><ol><li>文档解析：PDF、Markdown、HTML、Word。</li><li>清洗：去页眉页脚、目录、重复内容。</li><li>切分：按标题、段落、语义块切分。</li><li>Embedding：把文本转成向量。</li><li>向量库：存储 chunk、metadata 和来源。</li><li>检索：根据问题召回相关片段。</li><li>重排：用 reranker 提升上下文质量。</li><li>生成：让模型只基于上下文回答。</li></ol></section>
+        <section id="retrieval" class="section"><h2>检索优化重点</h2><ul><li>chunk size 和 overlap 不要盲目固定，要按文档结构调。</li><li>混合检索：向量相似度加关键词检索。</li><li>Rerank 通常比单纯加大 top_k 更有效。</li><li>metadata 很重要，例如标题、页码、文件名、时间。</li><li>查询改写可以改善用户问题过短或含糊的情况。</li></ul></section>
+        <section id="answer" class="section"><h2>生成与防幻觉</h2><ul><li>要求模型引用来源。</li><li>上下文没有答案时明确说不知道。</li><li>把引用片段和最终答案分开保存，便于排查问题。</li><li>不要让模型自由补充文档外事实，除非产品明确允许。</li></ul></section>
+        <section id="project" class="section"><h2>实践项目</h2><p>做一个“个人知识库问答系统”：支持上传 PDF/Markdown，自动索引，提问时返回答案和引用来源。</p><h3>验收标准</h3><ul><li>能展示引用文件名和段落。</li><li>能重新索引文档。</li><li>有 50 条测试问题。</li><li>记录每个问题召回了哪些 chunk。</li></ul></section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

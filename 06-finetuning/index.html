@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LoRA/QLoRA 微调</title><link rel="stylesheet" href="../styles.css"></head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../05-tool-calling-langchain-langgraph/index.html">上一阶段</a><a href="../07-evaluation/index.html">下一阶段</a></nav></div></header>
+  <main class="shell">
+    <section class="hero"><h1>LoRA/QLoRA 微调</h1><p>微调不是让模型背知识，而是让模型更稳定地完成某类任务、输出某种格式或适应某种风格。</p><div class="meta-row"><span class="pill">建议周期：4-8 周</span><span class="pill">产出：一个领域 LoRA 模型</span></div></section>
+    <div class="layout">
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#when">何时微调</a><a href="#data">数据</a><a href="#training">训练</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <article class="content">
+        <section id="when" class="section"><h2>什么时候需要微调</h2><div class="grid"><div class="card"><h3>适合微调</h3><ul><li>固定输出格式。</li><li>领域分类、抽取、改写。</li><li>客服话术、写作风格。</li><li>工具调用格式稳定化。</li></ul></div><div class="card"><h3>不适合优先微调</h3><ul><li>大量业务知识问答。</li><li>实时变化的信息。</li><li>数据库查询。</li><li>文档内容记忆。</li></ul></div></div></section>
+        <section id="data" class="section"><h2>数据准备</h2><ul><li>从 500-2000 条高质量样本开始，质量比数量更重要。</li><li>格式建议使用 instruction/input/output 或 chat messages。</li><li>划分训练集、验证集、测试集。</li><li>清理重复、错误、过长和泄露隐私的数据。</li><li>保留负例和边界样本。</li></ul></section>
+        <section id="training" class="section"><h2>训练工具</h2><ul><li>Transformers：理解底层训练流程。</li><li>PEFT：LoRA/QLoRA 参数高效微调。</li><li>TRL：SFTTrainer 等训练组件。</li><li>LLaMA-Factory：适合快速上手和实验配置。</li><li>Axolotl：适合更工程化的训练配置。</li></ul><p>训练后要评估、保存 adapter、必要时合并权重，并部署到推理服务中。</p></section>
+        <section id="project" class="section"><h2>实践项目</h2><p>选择一个明确任务，例如“客服意图分类与回复草稿生成”或“合同条款信息抽取”，基于 Qwen 7B/14B 做 LoRA 微调。</p><h3>验收标准</h3><ul><li>有清晰的数据集说明。</li><li>训练前后在同一测试集上对比。</li><li>记录超参数和显存占用。</li><li>微调模型能通过 API 调用。</li></ul></section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

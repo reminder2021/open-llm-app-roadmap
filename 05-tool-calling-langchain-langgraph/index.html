@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>工具调用、LangChain 与 LangGraph</title><link rel="stylesheet" href="../styles.css"></head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../04-rag/index.html">上一阶段</a><a href="../06-finetuning/index.html">下一阶段</a></nav></div></header>
+  <main class="shell">
+    <section class="hero"><h1>工具调用、LangChain 与 LangGraph</h1><p>这一阶段回答你关心的 LangChain 问题：要学，但建议先理解工具调用底层机制，再用 LangChain/LangGraph 做工程编排。</p><div class="meta-row"><span class="pill">建议周期：3-5 周</span><span class="pill">产出：可控 Agent 助手</span></div></section>
+    <div class="layout">
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#manual">手写工具调用</a><a href="#langchain">LangChain</a><a href="#langgraph">LangGraph</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <article class="content">
+        <section id="manual" class="section"><h2>先手写工具调用</h2><ul><li>为工具设计名称、描述和参数 Schema。</li><li>让模型输出工具名和参数。</li><li>执行工具并把结果回填给模型。</li><li>处理参数缺失、类型错误、工具失败。</li><li>为高风险工具加入人工确认。</li></ul><div class="note">先手写一遍，你会真正理解 Function Calling 的循环：用户问题 → 模型选择工具 → 执行工具 → 观察结果 → 模型继续回答。</div></section>
+        <section id="langchain" class="section"><h2>再学 LangChain</h2><p>LangChain 适合提高开发效率，但不要把它当成黑盒魔法。重点学这些组件：</p><ul><li>ChatModel：统一模型调用。</li><li>PromptTemplate：管理提示词模板。</li><li>OutputParser：解析结构化输出。</li><li>Tool：封装外部能力。</li><li>Retriever / VectorStore：接入 RAG。</li><li>Runnable：把多个步骤组合成链。</li></ul></section>
+        <section id="langgraph" class="section"><h2>重点学习 LangGraph</h2><p>复杂 Agent 更推荐使用 LangGraph，因为它强调状态、节点和边，适合构建可控流程。</p><ul><li>状态管理：保存任务进度、中间结果、用户偏好。</li><li>分支逻辑：根据模型输出进入不同节点。</li><li>循环与重试：失败后修正参数或请求用户补充。</li><li>人工介入：高风险操作暂停等待确认。</li><li>可观测性：更容易知道 Agent 卡在哪一步。</li></ul></section>
+        <section id="project" class="section"><h2>实践项目</h2><p>做一个“个人工作助手”：能检索本地知识库、调用天气/日历/数据库等工具，并对写文件、发请求、删除数据等操作要求人工确认。</p><h3>验收标准</h3><ul><li>至少支持 4 个工具。</li><li>工具参数有 Schema 校验。</li><li>工具失败时能给出恢复策略。</li><li>用 LangGraph 实现一个多步骤任务流。</li></ul></section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

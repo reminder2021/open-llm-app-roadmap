@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>基于开源模型的 LLM 应用开发学习路线</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="00-overview/index.html">总览</a>
+        <a href="04-rag/index.html">RAG</a>
+        <a href="05-tool-calling-langchain-langgraph/index.html">工具调用</a>
+        <a href="06-finetuning/index.html">微调</a>
+        <a href="09-capstone-projects/index.html">项目</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>基于开源模型的 LLM 应用开发学习路线</h1>
+      <p>目标不是从零开发大模型，而是会选用开源模型、做 RAG、工具调用、LangChain/LangGraph 编排、LoRA/QLoRA 微调，并把应用部署成可用产品。</p>
+      <div class="meta-row">
+        <span class="pill">适合目标：LLM 应用开发工程师</span>
+        <span class="pill">周期建议：4-6 个月</span>
+        <span class="pill">主线：先底层机制，再框架编排</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>学习原则</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>先手写，再用框架</h3>
+          <p>先手写模型调用、RAG、工具调用，理解输入输出、状态和错误处理。再学习 LangChain 与 LangGraph，效率会高很多。</p>
+        </div>
+        <div class="card">
+          <h3>先 RAG，再微调</h3>
+          <p>多数业务知识问答不该直接微调。先用检索、重排、引用和评估解决，再判断是否需要微调风格、格式或领域任务。</p>
+        </div>
+        <div class="card">
+          <h3>每阶段都做项目</h3>
+          <p>不要只看教程。每个阶段都交付一个可运行的小系统，最后合成一个完整的知识库与工具助手。</p>
+        </div>
+        <div class="card">
+          <h3>评估贯穿全程</h3>
+          <p>Prompt、RAG、Agent、微调都要有测试集和指标，否则很难知道改动是真的变好，还是只是看起来更顺眼。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>阶段目录</h2>
+      <div class="timeline">
+        <article class="timeline-item">
+          <h3><a href="00-overview/index.html">总览与学习方式</a></h3>
+          <p>明确学习目标、工具栈、产出物和时间安排。</p>
+        </article>
+        <article class="timeline-item">
+          <h3><a href="01-foundations/index.html">Python 与 Web API 基础</a></h3>
+          <p>补齐 LLM 应用开发所需的 Python、HTTP、FastAPI、JSON 和异步基础。</p>
+        </article>
+        <article class="timeline-item">
+          <h3><a href="02-open-source-models/index.html">开源模型使用与推理服务</a></h3>
+          <p>学会本地运行、API 调用、模型格式、量化和 vLLM/Ollama 服务。</p>
+        </article>
+        <article class="timeline-item">
+          <h3><a href="03-prompt-structured-output/index.html">Prompt 与结构化输出</a></h3>
+          <p>掌握提示词、JSON 输出、输出校验、重试和对话状态。</p>
+        </article>
+        <article class="timeline-item">
+          <h3><a href="04-rag/index.html">RAG 知识库问答</a></h3>
+          <p>构建文档解析、切分、Embedding、向量检索、Rerank 和引用系统。</p>
+        </article>
+        <article class="timeline-item">
+          <h3><a href="05-tool-calling-langchain-langgraph/index.html">工具调用、LangChain 与 LangGraph</a></h3>
+          <p>先手写 Function Calling，再学习 LangChain 组件和 LangGraph 可控 Agent。</p>
+        </article>
+        <article class="timeline-item">
+          <h3><a href="06-finetuning/index.html">LoRA/QLoRA 微调</a></h3>
+          <p>学习数据构造、SFT、LoRA、QLoRA、训练、合并权重和部署。</p>
+        </article>
+        <article class="timeline-item">
+          <h3><a href="07-evaluation/index.html">评估体系</a></h3>
+          <p>为 Prompt、RAG、工具调用和微调建立可复现评估。</p>
+        </article>
+        <article class="timeline-item">
+          <h3><a href="08-deployment/index.html">部署与工程化</a></h3>
+          <p>学习 Docker、GPU 显存估算、并发、日志、权限和安全防护。</p>
+        </article>
+        <article class="timeline-item">
+          <h3><a href="09-capstone-projects/index.html">综合项目作品集</a></h3>
+          <p>用三个项目串起完整技能链：聊天助手、知识库、工具型业务助手。</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每周至少保留 2 次完整实践时间：一次学习新模块，一次改造自己的项目。</div>
+  </footer>
+</body>
+</html>

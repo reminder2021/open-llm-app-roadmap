@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>部署与工程化</title><link rel="stylesheet" href="../styles.css"></head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../07-evaluation/index.html">上一阶段</a><a href="../09-capstone-projects/index.html">下一阶段</a></nav></div></header>
+  <main class="shell">
+    <section class="hero"><h1>部署与工程化</h1><p>把 Demo 变成可用服务：稳定、可观测、可扩展，并且对工具调用和数据访问有安全边界。</p><div class="meta-row"><span class="pill">建议周期：3-6 周</span><span class="pill">产出：可部署的 LLM 应用服务</span></div></section>
+    <div class="layout">
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#serve">模型服务</a><a href="#ops">工程能力</a><a href="#security">安全</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <article class="content">
+        <section id="serve" class="section"><h2>模型服务</h2><ul><li>vLLM OpenAI-compatible API。</li><li>Ollama/llama.cpp 本地或轻量部署。</li><li>GPU 显存估算、batching、并发限制。</li><li>量化模型的效果与速度取舍。</li><li>多模型路由和 fallback。</li></ul></section>
+        <section id="ops" class="section"><h2>工程能力</h2><ul><li>Docker 与 Compose。</li><li>配置管理和环境变量。</li><li>请求日志、错误日志、链路追踪。</li><li>缓存：Embedding 缓存、答案缓存、检索缓存。</li><li>任务队列：长文档解析、批量索引、离线评估。</li></ul></section>
+        <section id="security" class="section"><h2>安全边界</h2><ul><li>Prompt 注入防护：不要把工具权限完全交给模型。</li><li>工具白名单：每个工具有明确权限和参数限制。</li><li>敏感操作人工确认。</li><li>数据隔离：不同用户、不同知识库权限分开。</li><li>输出审计：保存关键操作记录。</li></ul></section>
+        <section id="project" class="section"><h2>实践项目</h2><p>把 RAG + 工具调用助手部署为一个完整服务：前端页面、后端 API、向量库、模型服务分离，并提供基础日志和鉴权。</p></section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

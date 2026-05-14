@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Prompt 与结构化输出</title><link rel="stylesheet" href="../styles.css"></head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../02-open-source-models/index.html">上一阶段</a><a href="../04-rag/index.html">下一阶段</a></nav></div></header>
+  <main class="shell">
+    <section class="hero"><h1>Prompt 与结构化输出</h1><p>让模型稳定完成任务，而不是靠运气给出好答案。这个阶段会直接影响后面的 RAG、工具调用和微调。</p><div class="meta-row"><span class="pill">建议周期：2-3 周</span><span class="pill">产出：结构化信息抽取服务</span></div></section>
+    <div class="layout">
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#prompt">Prompt</a><a href="#json">结构化输出</a><a href="#state">会话状态</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <article class="content">
+        <section id="prompt" class="section"><h2>Prompt 基础</h2><ul><li>系统提示词、用户消息、少样本示例。</li><li>约束模型回答范围、语气和格式。</li><li>把复杂任务拆成分类、抽取、改写、生成等小任务。</li><li>为失败答案设计修复提示词。</li></ul></section>
+        <section id="json" class="section"><h2>结构化输出</h2><ul><li>JSON Schema 与 Pydantic 校验。</li><li>字段必填、枚举值、数组长度、类型检查。</li><li>解析失败时的重试策略。</li><li>把模型输出转成可入库、可调用工具的参数。</li></ul></section>
+        <section id="state" class="section"><h2>对话状态管理</h2><ul><li>短期上下文：最近几轮消息。</li><li>长期记忆：用户偏好、历史任务、摘要。</li><li>上下文裁剪：避免把无关历史全部塞给模型。</li><li>敏感信息：不要把不必要的私密数据发给模型。</li></ul></section>
+        <section id="project" class="section"><h2>实践项目</h2><p>做一个“简历信息抽取器”：输入简历文本，输出姓名、技能、项目经历、工作年限、风险提示等 JSON 字段。</p><h3>验收标准</h3><ul><li>JSON 解析成功率高于 95%。</li><li>解析失败时会自动重试一次。</li><li>输出通过 Pydantic 校验。</li><li>保留原始输出和修复后的输出日志。</li></ul></section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

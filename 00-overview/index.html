@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>总览与学习方式</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../index.html">主页</a><a class="current" href="index.html">总览</a></nav></div></header>
+  <main class="shell">
+    <section class="hero">
+      <h1>总览与学习方式</h1>
+      <p>这条路线面向“基于现有开源模型做应用”的目标，强调工程闭环：模型调用、知识接入、工具执行、微调、评估和部署。</p>
+      <div class="meta-row"><span class="pill">建议周期：第 1 周</span><span class="pill">产出：个人学习环境与项目仓库</span></div>
+    </section>
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>阶段导航</h2>
+        <a class="current" href="../00-overview/index.html">00 总览</a>
+        <a href="../01-foundations/index.html">01 基础</a>
+        <a href="../02-open-source-models/index.html">02 开源模型</a>
+        <a href="../03-prompt-structured-output/index.html">03 Prompt</a>
+        <a href="../04-rag/index.html">04 RAG</a>
+        <a href="../05-tool-calling-langchain-langgraph/index.html">05 工具与框架</a>
+        <a href="../06-finetuning/index.html">06 微调</a>
+        <a href="../07-evaluation/index.html">07 评估</a>
+        <a href="../08-deployment/index.html">08 部署</a>
+        <a href="../09-capstone-projects/index.html">09 项目</a>
+      </aside>
+      <article class="content">
+        <section class="section">
+          <h2>你要成为哪类开发者</h2>
+          <p>你的目标不是设计 Transformer 或训练基础模型，而是把开源模型变成可用系统。核心能力是：理解模型边界、接入业务数据、设计工具调用流程、用微调改善特定任务，并让系统稳定运行。</p>
+          <div class="note">主线建议：基础 API → 开源模型推理 → Prompt/结构化输出 → RAG → 工具调用 → LangChain/LangGraph → 微调 → 评估 → 部署。</div>
+        </section>
+        <section class="section">
+          <h2>推荐技术栈</h2>
+          <ul>
+            <li>语言：Python 为主，少量 JavaScript/TypeScript 用于前端。</li>
+            <li>后端：FastAPI、Pydantic、Uvicorn。</li>
+            <li>模型服务：Ollama、vLLM、Transformers、llama.cpp。</li>
+            <li>RAG：FAISS、Qdrant、Milvus 或 Chroma；Embedding 与 Reranker 选择中文友好的模型。</li>
+            <li>编排：先手写核心逻辑，再学 LangChain，复杂 Agent 重点看 LangGraph。</li>
+            <li>微调：Transformers、PEFT、TRL、LLaMA-Factory 或 Axolotl。</li>
+          </ul>
+        </section>
+        <section class="section">
+          <h2>每周学习节奏</h2>
+          <ol>
+            <li>看一个模块的核心概念，不追求细枝末节。</li>
+            <li>写一个最小可运行 Demo。</li>
+            <li>把 Demo 接入你的主项目。</li>
+            <li>记录踩坑、参数、效果对比。</li>
+            <li>每两周做一次复盘：哪些能力已经能独立完成，哪些只是照着教程跑通。</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

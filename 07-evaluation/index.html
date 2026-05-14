@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>评估体系</title><link rel="stylesheet" href="../styles.css"></head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../06-finetuning/index.html">上一阶段</a><a href="../08-deployment/index.html">下一阶段</a></nav></div></header>
+  <main class="shell">
+    <section class="hero"><h1>评估体系</h1><p>没有评估，就不知道系统到底有没有变好。评估应该贯穿 Prompt、RAG、工具调用和微调。</p><div class="meta-row"><span class="pill">建议周期：2-4 周，并贯穿全程</span><span class="pill">产出：自动评估脚本与测试集</span></div></section>
+    <div class="layout">
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#dataset">测试集</a><a href="#metrics">指标</a><a href="#workflow">流程</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <article class="content">
+        <section id="dataset" class="section"><h2>构建测试集</h2><ul><li>从真实用户问题和业务样本中抽取。</li><li>覆盖简单、复杂、边界、无答案、恶意输入。</li><li>为每条样本标注期望答案、来源文档、允许误差。</li><li>保留固定测试集，避免每次凭感觉比较。</li></ul></section>
+        <section id="metrics" class="section"><h2>核心指标</h2><ul><li>结构化输出：JSON 合法率、字段准确率、重试成功率。</li><li>RAG：召回命中率、引用正确率、答案忠实度。</li><li>工具调用：工具选择准确率、参数正确率、执行成功率。</li><li>微调：任务准确率、格式稳定性、泛化能力。</li><li>工程指标：延迟、成本、失败率、并发能力。</li></ul></section>
+        <section id="workflow" class="section"><h2>评估流程</h2><ol><li>固定模型、Prompt、检索参数和工具版本。</li><li>运行测试集，保存输入、上下文、输出和中间步骤。</li><li>用自动脚本计算可量化指标。</li><li>抽样人工复核主观质量。</li><li>把每次实验结果记录到表格或数据库。</li></ol></section>
+        <section id="project" class="section"><h2>实践项目</h2><p>为你的知识库问答系统建立 100 条测试问题，并实现一个评估脚本，对比不同 Embedding、Reranker、chunk 参数和模型。</p></section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

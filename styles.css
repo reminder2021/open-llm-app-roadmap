@@ -277,6 +277,26 @@ code {
   border-radius: 5px;
 }
 
+pre {
+  margin: 14px 0 18px;
+  padding: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #202124;
+  color: #f4f7f6;
+  line-height: 1.55;
+}
+
+pre code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  border-radius: 0;
+  font-size: 14px;
+}
+
 @media (max-width: 860px) {
   .layout {
     grid-template-columns: 1fr;

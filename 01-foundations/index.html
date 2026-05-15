@@ -1,16 +1,319 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Python 与 Web API 基础</title><link rel="stylesheet" href="../styles.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python 与 Web API 基础</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
 <body>
-  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../index.html">主页</a><a href="../02-open-source-models/index.html">下一阶段</a></nav></div></header>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../index.html">主页</a>
+        <a href="../00-overview/index.html">上一阶段</a>
+        <a href="../02-open-source-models/index.html">下一阶段</a>
+      </nav>
+    </div>
+  </header>
+
   <main class="shell">
-    <section class="hero"><h1>Python 与 Web API 基础</h1><p>LLM 应用本质上是 API、数据处理、服务编排和用户交互。这个阶段补齐工程基本功。</p><div class="meta-row"><span class="pill">建议周期：1-2 周</span><span class="pill">产出：一个 FastAPI 小服务</span></div></section>
+    <section class="hero">
+      <h1>Python 与 Web API 基础</h1>
+      <p>LLM 应用开发不是只会调一个模型接口。你需要能处理数据、设计 API、校验输入输出、记录日志、处理超时和流式响应。这一阶段先把工程底盘打稳。</p>
+      <div class="meta-row">
+        <span class="pill">建议周期：1-2 周</span>
+        <span class="pill">产出：文本处理 FastAPI 服务</span>
+        <span class="pill">重点：能独立写 API，不依赖 LLM 框架</span>
+      </div>
+    </section>
+
     <div class="layout">
-      <aside class="sidebar"><h2>本阶段模块</h2><a href="#python">Python</a><a href="#api">HTTP/API</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar">
+        <h2>本阶段模块</h2>
+        <a href="#goals">学习目标</a>
+        <a href="#environment">环境准备</a>
+        <a href="#python">Python 必备</a>
+        <a href="#data">数据处理</a>
+        <a href="#api">HTTP 与 API</a>
+        <a href="#fastapi">FastAPI</a>
+        <a href="#async">异步与流式</a>
+        <a href="#logging">日志与配置</a>
+        <a href="#schedule">练习安排</a>
+        <a href="#project">实践项目</a>
+        <a href="#resources">推荐资料</a>
+        <a href="../index.html">返回主页</a>
+      </aside>
+
       <article class="content">
-        <section id="python" class="section"><h2>Python 必备能力</h2><ul><li>虚拟环境、依赖管理、环境变量。</li><li>文件读取、JSON/YAML、CSV、异常处理。</li><li>类型标注、dataclass、Pydantic 数据模型。</li><li>异步基础：async/await、超时、并发请求。</li><li>日志：记录输入、输出、耗时和错误。</li></ul></section>
-        <section id="api" class="section"><h2>Web API 基础</h2><ul><li>HTTP 方法、状态码、Header、鉴权 Token。</li><li>REST API 与流式响应。</li><li>FastAPI 路由、请求体、响应模型。</li><li>OpenAI-compatible API 的请求格式。</li><li>接口重试、限流、超时与错误处理。</li></ul></section>
-        <section id="project" class="section"><h2>实践项目</h2><p>做一个“文本处理 API”：接收一段文本，返回摘要、关键词和结构化 JSON。先用规则实现，后续替换成 LLM 调用。</p><h3>验收标准</h3><ul><li>能启动本地服务。</li><li>接口参数有校验。</li><li>错误时返回清晰信息。</li><li>有基础日志。</li></ul></section>
+        <section id="goals" class="section">
+          <h2>学习目标</h2>
+          <p>完成这一阶段后，你应该能独立写出一个小型后端服务，为后续接入开源模型、RAG、工具调用和微调服务做准备。</p>
+          <div class="grid">
+            <div class="card">
+              <h3>能写 Python 服务</h3>
+              <p>熟悉虚拟环境、依赖安装、模块组织、类型标注、异常处理和基础测试。</p>
+            </div>
+            <div class="card">
+              <h3>能设计 Web API</h3>
+              <p>理解请求、响应、状态码、鉴权、错误格式，以及如何用 FastAPI 暴露服务。</p>
+            </div>
+            <div class="card">
+              <h3>能处理结构化数据</h3>
+              <p>会读写 JSON、CSV、YAML，用 Pydantic 对输入输出做校验。</p>
+            </div>
+            <div class="card">
+              <h3>能排查线上问题</h3>
+              <p>会记录日志、耗时、请求 ID、错误栈，能定位一次 API 调用为什么失败。</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="environment" class="section">
+          <h2>环境准备</h2>
+          <p>建议使用 Python 3.11 或更新版本。这个阶段不用追求复杂工程模板，先把最小可运行项目搭起来。</p>
+          <h3>建议目录结构</h3>
+          <pre><code>text-processor-api/
+├── app/
+│   ├── main.py
+│   ├── schemas.py
+│   ├── services.py
+│   └── config.py
+├── tests/
+│   └── test_api.py
+├── .env.example
+├── requirements.txt
+└── README.md</code></pre>
+          <h3>基础依赖</h3>
+          <pre><code class="language-bash">python3 -m venv .venv
+source .venv/bin/activate
+pip install fastapi uvicorn pydantic python-dotenv httpx pytest</code></pre>
+          <div class="note">后续接 LLM 时，你会经常遇到不同模型服务、向量库、微调工具的依赖冲突。现在先养成用虚拟环境隔离项目的习惯。</div>
+        </section>
+
+        <section id="python" class="section">
+          <h2>Python 必备能力</h2>
+          <p>不需要成为 Python 专家，但要掌握 LLM 应用开发中高频出现的能力。</p>
+          <div class="cards">
+            <div class="card">
+              <span class="tag">语法与结构</span>
+              <ul>
+                <li>函数、类、模块导入。</li>
+                <li>列表、字典、集合、生成式。</li>
+                <li>异常处理：<code>try/except/finally</code>。</li>
+                <li>上下文管理器：<code>with open(...)</code>。</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="tag">类型与模型</span>
+              <ul>
+                <li>类型标注：<code>str</code>、<code>list[str]</code>、<code>dict</code>。</li>
+                <li><code>Optional</code>、<code>Literal</code>、<code>Enum</code>。</li>
+                <li><code>dataclass</code> 的使用场景。</li>
+                <li>Pydantic 的输入输出校验。</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="tag">工程习惯</span>
+              <ul>
+                <li>依赖写入 <code>requirements.txt</code>。</li>
+                <li>密钥放在环境变量，不写死到代码。</li>
+                <li>函数只做一件清晰的事。</li>
+                <li>为关键逻辑写最小测试。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="data" class="section">
+          <h2>数据处理基础</h2>
+          <p>LLM 应用会不断在“文本、JSON、数据库记录、API 响应、模型输出”之间转换。数据处理能力会直接影响系统稳定性。</p>
+          <h3>必须会的格式</h3>
+          <ul>
+            <li>JSON：API 请求响应、模型结构化输出、工具参数。</li>
+            <li>CSV：批量样本、评估集、标注数据。</li>
+            <li>YAML：配置文件、实验参数、训练配置。</li>
+            <li>纯文本和 Markdown：知识库、Prompt 模板、日志摘要。</li>
+          </ul>
+          <h3>练习任务</h3>
+          <ol>
+            <li>读取一个 Markdown 文件，统计字数、段落数和标题层级。</li>
+            <li>读取一个 CSV 文件，把每行转换成 JSON。</li>
+            <li>把一组文本样本保存成 <code>jsonl</code>，为后续微调数据格式做准备。</li>
+            <li>写一个函数，过滤空文本、超长文本和重复文本。</li>
+          </ol>
+        </section>
+
+        <section id="api" class="section">
+          <h2>HTTP 与 API 基础</h2>
+          <p>后续无论是调用模型、调用工具，还是把你的能力暴露给前端，本质上都离不开 HTTP API。</p>
+          <div class="grid">
+            <div class="card">
+              <h3>请求</h3>
+              <ul>
+                <li><code>GET</code>：读取资源。</li>
+                <li><code>POST</code>：提交任务或生成内容。</li>
+                <li><code>Header</code>：鉴权、内容类型、请求 ID。</li>
+                <li><code>Body</code>：JSON 请求体。</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>响应</h3>
+              <ul>
+                <li><code>200</code>：成功。</li>
+                <li><code>400</code>：请求参数错误。</li>
+                <li><code>401/403</code>：未登录或无权限。</li>
+                <li><code>429</code>：限流。</li>
+                <li><code>500</code>：服务端错误。</li>
+              </ul>
+            </div>
+          </div>
+          <h3>LLM 场景下的 API 设计要点</h3>
+          <ul>
+            <li>每个请求都应该有唯一 <code>request_id</code>，方便排查问题。</li>
+            <li>耗时任务要考虑超时、取消和异步执行。</li>
+            <li>错误响应要稳定，不要把内部异常直接暴露给用户。</li>
+            <li>模型输出不可信，进入下一步前要校验。</li>
+            <li>API 返回结构尽量固定，方便前端和评估脚本使用。</li>
+          </ul>
+        </section>
+
+        <section id="fastapi" class="section">
+          <h2>FastAPI 必会内容</h2>
+          <p>FastAPI 很适合 LLM 应用原型和中小型后端服务。它和 Pydantic 的结合能帮你减少大量参数校验代码。</p>
+          <h3>最小服务示例</h3>
+          <pre><code class="language-python">from fastapi import FastAPI
+from pydantic import BaseModel, Field
+
+app = FastAPI(title="Text Processor API")
+
+class TextRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=8000)
+    language: str = "zh"
+
+class TextResponse(BaseModel):
+    summary: str
+    keywords: list[str]
+    length: int
+
+@app.post("/process", response_model=TextResponse)
+def process_text(payload: TextRequest) -> TextResponse:
+    text = payload.text.strip()
+    keywords = list(dict.fromkeys(text.replace("，", " ").replace("。", " ").split()))[:5]
+    return TextResponse(
+        summary=text[:80],
+        keywords=keywords,
+        length=len(text),
+    )</code></pre>
+          <h3>需要掌握</h3>
+          <ul>
+            <li>路由：<code>@app.get</code>、<code>@app.post</code>。</li>
+            <li>请求模型和响应模型。</li>
+            <li>路径参数、查询参数、请求体。</li>
+            <li>统一异常处理。</li>
+            <li>自动生成的 Swagger 文档：<code>/docs</code>。</li>
+          </ul>
+        </section>
+
+        <section id="async" class="section">
+          <h2>异步、超时与流式响应</h2>
+          <p>LLM 调用通常耗时较长，后续做流式输出、并发请求、工具调用时，异步能力会非常有用。</p>
+          <h3>你需要理解</h3>
+          <ul>
+            <li><code>async def</code> 和 <code>await</code> 的基本语义。</li>
+            <li>用 <code>httpx.AsyncClient</code> 调用外部 API。</li>
+            <li>为外部请求设置超时时间。</li>
+            <li>用 FastAPI 返回流式响应。</li>
+            <li>并发不是无限开，必须有限流和资源控制。</li>
+          </ul>
+          <div class="note warning">先能写同步版本，再改成异步版本。异步代码如果没有清晰边界，会让错误更难排查。</div>
+        </section>
+
+        <section id="logging" class="section">
+          <h2>日志、配置与错误处理</h2>
+          <p>LLM 应用很容易出现“偶尔答错、偶尔超时、偶尔格式坏掉”。没有日志，问题很难复现。</p>
+          <h3>建议记录的字段</h3>
+          <ul>
+            <li><code>request_id</code>：一次请求的唯一标识。</li>
+            <li><code>endpoint</code>：调用了哪个接口。</li>
+            <li><code>latency_ms</code>：耗时。</li>
+            <li><code>status</code>：成功、参数错误、外部服务失败、内部异常。</li>
+            <li><code>input_length</code> 和 <code>output_length</code>：避免记录完整敏感文本。</li>
+            <li><code>error_type</code>：便于统计问题类型。</li>
+          </ul>
+          <h3>配置管理</h3>
+          <ul>
+            <li>把端口、模型地址、API Key、超时时间放到环境变量。</li>
+            <li>提供 <code>.env.example</code>，不要提交真实密钥。</li>
+            <li>开发环境和生产环境使用不同配置。</li>
+          </ul>
+        </section>
+
+        <section id="schedule" class="section">
+          <h2>两周练习安排</h2>
+          <div class="timeline">
+            <article class="timeline-item">
+              <h3>第 1-2 天：Python 项目结构</h3>
+              <p>搭建虚拟环境，创建模块目录，完成文本读写、JSON/CSV 处理和异常处理练习。</p>
+            </article>
+            <article class="timeline-item">
+              <h3>第 3-4 天：Pydantic 与数据校验</h3>
+              <p>为文本处理任务设计请求模型、响应模型和错误模型，练习字段长度、枚举值、默认值。</p>
+            </article>
+            <article class="timeline-item">
+              <h3>第 5-7 天：FastAPI 服务</h3>
+              <p>实现 <code>/health</code>、<code>/process</code>、<code>/batch-process</code> 三个接口，并通过 <code>/docs</code> 测试。</p>
+            </article>
+            <article class="timeline-item">
+              <h3>第 8-10 天：异步与外部调用</h3>
+              <p>用 <code>httpx</code> 调用一个公开 API 或本地假服务，加入超时、重试和错误处理。</p>
+            </article>
+            <article class="timeline-item">
+              <h3>第 11-14 天：项目整理</h3>
+              <p>补充日志、README、测试用例和运行脚本，为下一阶段接入本地开源模型做准备。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="project" class="section">
+          <h2>实践项目：文本处理 API</h2>
+          <p>做一个“文本处理 API”：接收一段文本，返回摘要、关键词、文本统计和结构化 JSON。先用规则实现，下一阶段再把规则处理替换为开源模型调用。</p>
+          <h3>接口建议</h3>
+          <ul>
+            <li><code>GET /health</code>：服务健康检查。</li>
+            <li><code>POST /process</code>：处理单条文本。</li>
+            <li><code>POST /batch-process</code>：批量处理多条文本。</li>
+            <li><code>GET /version</code>：返回服务版本和配置摘要。</li>
+          </ul>
+          <h3>返回字段建议</h3>
+          <ul>
+            <li><code>summary</code>：短摘要。</li>
+            <li><code>keywords</code>：关键词列表。</li>
+            <li><code>stats</code>：字符数、段落数、句子数。</li>
+            <li><code>warnings</code>：输入过短、过长、疑似为空等提示。</li>
+            <li><code>request_id</code>：请求 ID。</li>
+          </ul>
+          <h3>验收标准</h3>
+          <ul>
+            <li>能用 <code>uvicorn app.main:app --reload</code> 启动。</li>
+            <li>请求参数有 Pydantic 校验。</li>
+            <li>错误时返回稳定 JSON，而不是直接抛异常页面。</li>
+            <li>日志里能看到请求 ID、接口、耗时和错误类型。</li>
+            <li>至少有 5 个测试用例：正常文本、空文本、超长文本、批量文本、非法参数。</li>
+            <li>README 能说明如何安装、启动、调用接口。</li>
+          </ul>
+        </section>
+
+        <section id="resources" class="section">
+          <h2>推荐资料</h2>
+          <ul>
+            <li><a href="https://docs.python.org/zh-cn/3/" target="_blank" rel="noreferrer">Python 官方文档</a>：遇到语法和标准库问题时优先查官方文档。</li>
+            <li><a href="https://fastapi.tiangolo.com/" target="_blank" rel="noreferrer">FastAPI 官方文档</a>：重点看请求体、响应模型、异常处理和依赖注入。</li>
+            <li><a href="https://docs.pydantic.dev/" target="_blank" rel="noreferrer">Pydantic 官方文档</a>：重点看 BaseModel、Field、校验器和类型约束。</li>
+            <li><a href="https://www.python-httpx.org/" target="_blank" rel="noreferrer">HTTPX 官方文档</a>：后续调用模型服务、工具 API 会经常用到。</li>
+          </ul>
+        </section>
       </article>
     </div>
   </main>

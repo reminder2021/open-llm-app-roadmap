@@ -264,6 +264,63 @@ li + li {
   margin: 0 0 6px;
 }
 
+.practice-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.practice-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.practice-item h4 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.example {
+  margin-top: 12px;
+}
+
+.example summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 13px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--green-soft);
+  color: var(--accent-strong);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+}
+
+.example summary:hover {
+  background: #d9eee9;
+}
+
+.example[open] summary {
+  margin-bottom: 12px;
+}
+
+.example-tip {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.example.compact pre {
+  margin-top: 10px;
+}
+
 .footer {
   border-top: 1px solid var(--line);
   padding: 24px 0 42px;

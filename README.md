@@ -109,7 +109,7 @@ git init
 git add .
 git commit -m "Initial roadmap site"
 git branch -M main
-git remote add origin https://github.com/<your-username>/open-llm-app-roadmap.git
+git remote add origin https://github.com/reminder2021/open-llm-app-roadmap.git
 git push -u origin main
 ```
 

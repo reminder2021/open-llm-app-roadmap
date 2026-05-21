@@ -1,17 +1,164 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>工具调用、LangChain 与 LangGraph</title><link rel="stylesheet" href="../styles.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>工具调用、LangChain 与 LangGraph</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
 <body>
   <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../04-rag/index.html">上一阶段</a><a href="../06-finetuning/index.html">下一阶段</a></nav></div></header>
   <main class="shell">
-    <section class="hero"><h1>工具调用、LangChain 与 LangGraph</h1><p>这一阶段回答你关心的 LangChain 问题：要学，但建议先理解工具调用底层机制，再用 LangChain/LangGraph 做工程编排。</p><div class="meta-row"><span class="pill">建议周期：3-5 周</span><span class="pill">产出：可控 Agent 助手</span></div></section>
+    <section class="hero">
+      <h1>工具调用、LangChain 与 LangGraph</h1>
+      <p>工具调用让模型从“只会说”变成“能查询、计算、检索和执行”。这一阶段先手写工具调用，再学习 LangChain 和 LangGraph 的工程化编排。</p>
+      <div class="meta-row"><span class="pill">建议周期：3-5 周</span><span class="pill">产出：可控 Agent 助手</span><span class="pill">重点：工具 Schema、状态、人工确认</span></div>
+    </section>
     <div class="layout">
-      <aside class="sidebar"><h2>本阶段模块</h2><a href="#manual">手写工具调用</a><a href="#langchain">LangChain</a><a href="#langgraph">LangGraph</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#manual">手写工具调用</a><a href="#langchain">LangChain</a><a href="#langgraph">LangGraph</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
       <article class="content">
-        <section id="manual" class="section"><h2>先手写工具调用</h2><ul><li>为工具设计名称、描述和参数 Schema。</li><li>让模型输出工具名和参数。</li><li>执行工具并把结果回填给模型。</li><li>处理参数缺失、类型错误、工具失败。</li><li>为高风险工具加入人工确认。</li></ul><div class="note">先手写一遍，你会真正理解 Function Calling 的循环：用户问题 → 模型选择工具 → 执行工具 → 观察结果 → 模型继续回答。</div></section>
-        <section id="langchain" class="section"><h2>再学 LangChain</h2><p>LangChain 适合提高开发效率，但不要把它当成黑盒魔法。重点学这些组件：</p><ul><li>ChatModel：统一模型调用。</li><li>PromptTemplate：管理提示词模板。</li><li>OutputParser：解析结构化输出。</li><li>Tool：封装外部能力。</li><li>Retriever / VectorStore：接入 RAG。</li><li>Runnable：把多个步骤组合成链。</li></ul></section>
-        <section id="langgraph" class="section"><h2>重点学习 LangGraph</h2><p>复杂 Agent 更推荐使用 LangGraph，因为它强调状态、节点和边，适合构建可控流程。</p><ul><li>状态管理：保存任务进度、中间结果、用户偏好。</li><li>分支逻辑：根据模型输出进入不同节点。</li><li>循环与重试：失败后修正参数或请求用户补充。</li><li>人工介入：高风险操作暂停等待确认。</li><li>可观测性：更容易知道 Agent 卡在哪一步。</li></ul></section>
-        <section id="project" class="section"><h2>实践项目</h2><p>做一个“个人工作助手”：能检索本地知识库、调用天气/日历/数据库等工具，并对写文件、发请求、删除数据等操作要求人工确认。</p><h3>验收标准</h3><ul><li>至少支持 4 个工具。</li><li>工具参数有 Schema 校验。</li><li>工具失败时能给出恢复策略。</li><li>用 LangGraph 实现一个多步骤任务流。</li></ul></section>
+        <section id="manual" class="section">
+          <h2>先手写工具调用</h2>
+          <p>不要一上来把工具调用交给框架。先理解循环：用户问题 → 模型选择工具 → 程序执行工具 → 工具结果回填 → 模型继续回答。</p>
+          <ul>
+            <li>工具名要短而明确，例如 <code>search_docs</code>、<code>calculate</code>。</li>
+            <li>参数必须有 Schema，不能让模型随便拼字符串。</li>
+            <li>工具执行失败时要返回结构化错误。</li>
+            <li>写文件、发请求、删数据等操作需要人工确认。</li>
+          </ul>
+        </section>
+
+        <section id="langchain" class="section">
+          <h2>再学 LangChain</h2>
+          <p>LangChain 适合快速集成模型、Prompt、Retriever、Tool 和链式流程。学习重点是组件思想，而不是死记 API。</p>
+          <ul>
+            <li>ChatModel：统一模型调用。</li>
+            <li>PromptTemplate：管理提示词模板。</li>
+            <li>OutputParser：解析结构化输出。</li>
+            <li>Tool：封装外部能力。</li>
+            <li>Runnable：把多个步骤组合起来。</li>
+          </ul>
+        </section>
+
+        <section id="langgraph" class="section">
+          <h2>重点学习 LangGraph</h2>
+          <p>复杂 Agent 更适合 LangGraph：它用节点、边和状态描述流程，比传统自动 Agent 更可控。</p>
+          <ul>
+            <li>状态：保存用户问题、中间结果、工具结果。</li>
+            <li>节点：每个节点做一件事，例如规划、检索、执行工具。</li>
+            <li>边：根据条件决定下一步去哪里。</li>
+            <li>人工确认：高风险操作暂停，等待用户批准。</li>
+          </ul>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>练习任务</h2>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>任务 1：定义工具 Schema</h4>
+              <p>工具 Schema 是模型和程序之间的合同。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">from pydantic import BaseModel, Field
+
+class SearchDocsArgs(BaseModel):
+    query: str = Field(min_length=1, description="用户要检索的问题")
+    top_k: int = Field(default=3, ge=1, le=10, description="返回结果数量")
+
+def search_docs(query: str, top_k: int = 3) -&gt; dict:
+    # 这里先写假数据，后续可以接 RAG 检索模块。
+    return {
+        "query": query,
+        "results": [
+            {"title": "RAG 入门", "content": "RAG 是检索增强生成。"}
+        ][:top_k],
+    }
+
+args = SearchDocsArgs(query="什么是 RAG？", top_k=1)
+print(search_docs(**args.model_dump()))</code></pre>
+              </details>
+            </article>
+            <article class="practice-item">
+              <h4>任务 2：实现工具注册表</h4>
+              <p>用统一入口管理工具，方便后续做权限控制和日志。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">TOOLS = {
+    "search_docs": search_docs,
+}
+
+def run_tool(name: str, arguments: dict) -&gt; dict:
+    # 先检查工具是否存在，避免模型调用未授权工具。
+    if name not in TOOLS:
+        return {"ok": False, "error": f"未知工具: {name}"}
+
+    try:
+        result = TOOLS[name](**arguments)
+        return {"ok": True, "result": result}
+    except TypeError as exc:
+        # 参数不匹配时返回结构化错误，方便模型或程序修复。
+        return {"ok": False, "error": "参数错误", "message": str(exc)}
+
+print(run_tool("search_docs", {"query": "工具调用", "top_k": 2}))</code></pre>
+              </details>
+            </article>
+            <article class="practice-item">
+              <h4>任务 3：为危险工具加入人工确认</h4>
+              <p>Agent 的核心不是全自动，而是可控自动化。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">DANGEROUS_TOOLS = {"send_email", "delete_file", "write_database"}
+
+def need_confirmation(tool_name: str) -&gt; bool:
+    return tool_name in DANGEROUS_TOOLS
+
+def plan_tool_call(tool_name: str, arguments: dict) -&gt; dict:
+    if need_confirmation(tool_name):
+        return {
+            "status": "waiting_confirmation",
+            "tool": tool_name,
+            "arguments": arguments,
+            "message": "这个操作需要用户确认后才能执行。",
+        }
+    return run_tool(tool_name, arguments)</code></pre>
+              </details>
+            </article>
+          </div>
+        </section>
+
+        <section id="project" class="section">
+          <h2>实践项目：个人工作助手</h2>
+          <p>做一个能检索知识库、计算、查询 API、生成任务清单的助手。高风险操作必须暂停确认。</p>
+          <details class="example"><summary>查看最小 Agent Loop</summary>
+            <pre><code class="language-python">def agent_loop(user_message: str, call_llm) -&gt; str:
+    # 第一步：让模型判断是否需要工具。这里约定模型返回 JSON。
+    tool_plan = call_llm(f"判断是否需要工具，并输出 JSON: {user_message}")
+
+    # 示例：真实项目中要用 Pydantic 校验 tool_plan。
+    if tool_plan.get("tool"):
+        tool_result = plan_tool_call(tool_plan["tool"], tool_plan["arguments"])
+        if tool_result.get("status") == "waiting_confirmation":
+            return tool_result["message"]
+
+        # 第二步：把工具结果交回模型，让它生成最终回答。
+        return call_llm(f"用户问题: {user_message}\n工具结果: {tool_result}\n请回答用户。")
+
+    return call_llm(user_message)</code></pre>
+          </details>
+          <h3>验收标准</h3>
+          <ul>
+            <li>至少支持 4 个工具。</li>
+            <li>工具参数使用 Pydantic 校验。</li>
+            <li>危险工具需要人工确认。</li>
+            <li>记录每次工具调用的名称、参数、结果和耗时。</li>
+          </ul>
+        </section>
+        <section id="resources" class="section">
+          <h2>推荐资料</h2>
+          <ul>
+            <li><a href="https://docs.langchain.com/oss/python/langchain/tools" target="_blank" rel="noreferrer">LangChain Tools</a>：学习工具封装、参数和运行时上下文。</li>
+            <li><a href="https://docs.langchain.com/oss/python/langchain/agents" target="_blank" rel="noreferrer">LangChain Agents</a>：理解 Agent 循环和工具执行节点。</li>
+            <li><a href="https://docs.langchain.com/oss/python/langgraph" target="_blank" rel="noreferrer">LangGraph Overview</a>：学习状态图、节点和边。</li>
+            <li><a href="https://docs.langchain.com/oss/python/langgraph/workflows-agents" target="_blank" rel="noreferrer">LangGraph Workflows and Agents</a>：学习可控工作流和 Agent 编排。</li>
+          </ul>
+        </section>
       </article>
     </div>
   </main>

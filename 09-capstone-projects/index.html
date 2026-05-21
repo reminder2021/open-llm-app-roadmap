@@ -1,17 +1,117 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>综合项目作品集</title><link rel="stylesheet" href="../styles.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>综合项目作品集</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
 <body>
   <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../08-deployment/index.html">上一阶段</a><a href="../index.html">主页</a></nav></div></header>
   <main class="shell">
-    <section class="hero"><h1>综合项目作品集</h1><p>用三个项目把能力串起来。每个项目都应该能独立运行、能演示、能说明技术选择和评估结果。</p><div class="meta-row"><span class="pill">建议周期：贯穿全程</span><span class="pill">产出：3 个作品集项目</span></div></section>
+    <section class="hero">
+      <h1>综合项目作品集</h1>
+      <p>作品集不是功能堆砌，而是证明你能从问题出发，设计方案、实现系统、评估效果并说明取舍。</p>
+      <div class="meta-row"><span class="pill">建议周期：贯穿全程</span><span class="pill">产出：3 个作品集项目</span><span class="pill">重点：能演示、能解释、能复现</span></div>
+    </section>
     <div class="layout">
-      <aside class="sidebar"><h2>项目导航</h2><a href="#chat">项目一</a><a href="#rag">项目二</a><a href="#agent">项目三</a><a href="#portfolio">作品集</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar"><h2>项目导航</h2><a href="#chat">项目一</a><a href="#rag">项目二</a><a href="#agent">项目三</a><a href="#portfolio">作品集</a><a href="#readme">README 模板</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
       <article class="content">
-        <section id="chat" class="section"><span class="tag">项目一</span><h2>本地聊天助手</h2><p>目标是熟悉模型服务和基础应用开发。</p><ul><li>支持本地开源模型。</li><li>支持流式输出和多轮对话。</li><li>支持系统提示词配置。</li><li>记录请求耗时和错误。</li></ul></section>
-        <section id="rag" class="section"><span class="tag">项目二</span><h2>个人知识库问答系统</h2><p>目标是掌握 RAG 全链路。</p><ul><li>支持上传文档并建立索引。</li><li>支持向量检索、Rerank 和引用来源。</li><li>有测试集和评估脚本。</li><li>可以对比不同模型和检索参数。</li></ul></section>
-        <section id="agent" class="section"><span class="tag">项目三</span><h2>带工具调用的业务助手</h2><p>目标是掌握工具调用、LangChain/LangGraph 编排和权限控制。</p><ul><li>至少 4 个工具：搜索、知识库、数据库/API、文件处理。</li><li>使用 Schema 校验工具参数。</li><li>高风险操作需要人工确认。</li><li>用 LangGraph 表达多步骤任务。</li></ul></section>
-        <section id="portfolio" class="section"><h2>作品集要求</h2><ul><li>每个项目有 README：目标、架构、运行方式、技术选型。</li><li>有截图或演示视频。</li><li>有评估结果和失败案例分析。</li><li>能说明为什么某些问题用 RAG，某些问题用微调。</li><li>代码结构清晰，配置和密钥不硬编码。</li></ul></section>
+        <section id="chat" class="section">
+          <span class="tag">项目一</span><h2>本地聊天助手</h2>
+          <p>目标是熟悉模型服务、API 封装、流式输出和多轮对话。</p>
+          <ul><li>支持本地开源模型。</li><li>支持系统提示词配置。</li><li>支持流式输出和会话保存。</li><li>记录请求耗时和错误。</li></ul>
+          <details class="example"><summary>查看功能清单</summary><pre><code class="language-text">MVP:
+- /chat 接口
+- 模型参数配置
+- 基础前端页面
+- 请求日志
+
+进阶:
+- 流式输出
+- 多会话管理
+- 模型切换
+- 历史摘要</code></pre></details>
+        </section>
+        <section id="rag" class="section">
+          <span class="tag">项目二</span><h2>个人知识库问答系统</h2>
+          <p>目标是掌握 RAG 全链路：文档解析、切分、索引、检索、引用、评估。</p>
+          <ul><li>支持上传 Markdown/PDF。</li><li>支持索引和重新索引。</li><li>答案带引用来源。</li><li>有测试集和评估脚本。</li></ul>
+          <details class="example"><summary>查看模块拆分</summary><pre><code class="language-text">modules:
+- document_loader: 文档加载
+- chunker: 文档切分
+- indexer: 建立索引
+- retriever: 检索相关片段
+- answerer: 生成带引用答案
+- evaluator: 运行测试集</code></pre></details>
+        </section>
+        <section id="agent" class="section">
+          <span class="tag">项目三</span><h2>带工具调用的业务助手</h2>
+          <p>目标是掌握 Tool Calling、Agent 状态、权限控制和 LangGraph 流程编排。</p>
+          <ul><li>至少 4 个工具：知识库、计算器、API 查询、文件处理。</li><li>工具参数有 Schema 校验。</li><li>危险操作需要人工确认。</li><li>记录每一步工具调用。</li></ul>
+          <details class="example"><summary>查看工具设计示例</summary><pre><code class="language-text">tools:
+- search_docs(query, top_k)
+- calculate(expression)
+- get_order_status(order_id)
+- draft_email(recipient, subject, body)
+
+dangerous_tools:
+- send_email
+- delete_file
+- write_database</code></pre></details>
+        </section>
+        <section id="portfolio" class="section">
+          <h2>作品集要求</h2>
+          <ul>
+            <li>每个项目都能本地运行。</li>
+            <li>有清晰 README：目标、架构、运行方式、技术选型。</li>
+            <li>有截图、演示 GIF 或录屏。</li>
+            <li>有评估结果和失败案例分析。</li>
+            <li>能说明为什么某些问题用 RAG，某些问题用微调。</li>
+          </ul>
+        </section>
+        <section id="readme" class="section">
+          <h2>README 模板</h2>
+          <details class="example" open><summary>查看模板</summary><pre><code class="language-markdown"># 项目名称
+
+## 目标
+
+这个项目解决什么问题，目标用户是谁。
+
+## 功能
+
+- 功能 1
+- 功能 2
+- 功能 3
+
+## 架构
+
+说明前端、后端、模型服务、向量库或工具服务如何协作。
+
+## 运行方式
+
+```bash
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+## 评估结果
+
+说明测试集规模、指标和主要结果。
+
+## 已知限制
+
+列出当前做得不好的地方，以及下一步计划。</code></pre></details>
+        </section>
+        <section id="resources" class="section">
+          <h2>推荐资料</h2>
+          <ul>
+            <li><a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes" target="_blank" rel="noreferrer">GitHub README 指南</a>：学习如何写清楚项目说明。</li>
+            <li><a href="https://docs.github.com/en/pages" target="_blank" rel="noreferrer">GitHub Pages 文档</a>：学习如何发布静态项目展示页。</li>
+            <li><a href="https://docs.docker.com/compose/" target="_blank" rel="noreferrer">Docker Compose 文档</a>：作品集项目建议能一键启动。</li>
+            <li><a href="https://docs.langchain.com/langsmith/" target="_blank" rel="noreferrer">LangSmith 文档</a>：可用于记录 Agent 和 RAG 调试过程。</li>
+          </ul>
+        </section>
       </article>
     </div>
   </main>

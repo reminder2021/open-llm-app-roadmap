@@ -1,17 +1,179 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RAG 知识库问答</title><link rel="stylesheet" href="../styles.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAG 知识库问答</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
 <body>
   <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../03-prompt-structured-output/index.html">上一阶段</a><a href="../05-tool-calling-langchain-langgraph/index.html">下一阶段</a></nav></div></header>
   <main class="shell">
-    <section class="hero"><h1>RAG 知识库问答</h1><p>让模型基于你的文档回答问题。RAG 是 LLM 应用开发里最常见、也最容易做坏的一块。</p><div class="meta-row"><span class="pill">建议周期：3-5 周</span><span class="pill">产出：带引用的知识库问答系统</span></div></section>
+    <section class="hero">
+      <h1>RAG 知识库问答</h1>
+      <p>RAG 的核心不是“把文档塞给模型”，而是把文档切好、检索准、上下文组织清楚，并让答案可追溯。</p>
+      <div class="meta-row"><span class="pill">建议周期：3-5 周</span><span class="pill">产出：带引用的知识库问答系统</span><span class="pill">重点：召回、引用、防幻觉</span></div>
+    </section>
     <div class="layout">
-      <aside class="sidebar"><h2>本阶段模块</h2><a href="#pipeline">RAG 流程</a><a href="#retrieval">检索优化</a><a href="#answer">答案生成</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#pipeline">完整流程</a><a href="#chunking">文档切分</a><a href="#retrieval">检索与重排</a><a href="#answer">答案生成</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
       <article class="content">
-        <section id="pipeline" class="section"><h2>完整流程</h2><ol><li>文档解析：PDF、Markdown、HTML、Word。</li><li>清洗：去页眉页脚、目录、重复内容。</li><li>切分：按标题、段落、语义块切分。</li><li>Embedding：把文本转成向量。</li><li>向量库：存储 chunk、metadata 和来源。</li><li>检索：根据问题召回相关片段。</li><li>重排：用 reranker 提升上下文质量。</li><li>生成：让模型只基于上下文回答。</li></ol></section>
-        <section id="retrieval" class="section"><h2>检索优化重点</h2><ul><li>chunk size 和 overlap 不要盲目固定，要按文档结构调。</li><li>混合检索：向量相似度加关键词检索。</li><li>Rerank 通常比单纯加大 top_k 更有效。</li><li>metadata 很重要，例如标题、页码、文件名、时间。</li><li>查询改写可以改善用户问题过短或含糊的情况。</li></ul></section>
-        <section id="answer" class="section"><h2>生成与防幻觉</h2><ul><li>要求模型引用来源。</li><li>上下文没有答案时明确说不知道。</li><li>把引用片段和最终答案分开保存，便于排查问题。</li><li>不要让模型自由补充文档外事实，除非产品明确允许。</li></ul></section>
-        <section id="project" class="section"><h2>实践项目</h2><p>做一个“个人知识库问答系统”：支持上传 PDF/Markdown，自动索引，提问时返回答案和引用来源。</p><h3>验收标准</h3><ul><li>能展示引用文件名和段落。</li><li>能重新索引文档。</li><li>有 50 条测试问题。</li><li>记录每个问题召回了哪些 chunk。</li></ul></section>
+        <section id="pipeline" class="section">
+          <h2>完整流程</h2>
+          <ol>
+            <li>加载文档：PDF、Markdown、HTML、Word。</li>
+            <li>清洗文本：去页眉页脚、目录、重复空白。</li>
+            <li>切分 chunk：保留标题、页码、来源。</li>
+            <li>生成 embedding：把 chunk 转成向量。</li>
+            <li>写入向量库：保存文本、向量和 metadata。</li>
+            <li>问题检索：召回相关 chunk。</li>
+            <li>Rerank：重新排序，提高上下文质量。</li>
+            <li>生成答案：只基于上下文回答，并给出引用。</li>
+          </ol>
+        </section>
+
+        <section id="chunking" class="section">
+          <h2>文档切分</h2>
+          <p>切分太小会丢上下文，切分太大会召回不准。初学建议先从固定长度切分开始，再升级为按标题和段落切分。</p>
+          <details class="example"><summary>查看切分示例</summary>
+            <pre><code class="language-python">def chunk_text(text: str, chunk_size: int = 500, overlap: int = 80) -&gt; list[str]:
+    # overlap 用来保留相邻片段之间的上下文连续性。
+    chunks = []
+    start = 0
+
+    while start &lt; len(text):
+        end = start + chunk_size
+        chunk = text[start:end].strip()
+        if chunk:
+            chunks.append(chunk)
+        start = end - overlap
+
+    return chunks
+
+print(chunk_text("很长的文档内容" * 100, chunk_size=100, overlap=20)[:2])</code></pre>
+          </details>
+        </section>
+
+        <section id="retrieval" class="section">
+          <h2>检索与重排</h2>
+          <ul>
+            <li>向量检索适合语义相近的问题。</li>
+            <li>关键词检索适合专有名词、编号、术语。</li>
+            <li>混合检索通常比单一路径更稳。</li>
+            <li>Rerank 可以把召回结果重新排序，减少无关上下文进入模型。</li>
+          </ul>
+        </section>
+
+        <section id="answer" class="section">
+          <h2>答案生成</h2>
+          <p>生成 Prompt 要明确要求：只能基于上下文回答、没有答案就说不知道、必须列出引用来源。</p>
+          <pre><code class="language-text">请只基于【参考资料】回答问题。
+如果资料中没有答案，请回答“根据当前资料无法判断”。
+回答后列出引用来源，格式为 [文件名 - 段落编号]。</code></pre>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>练习任务</h2>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>任务 1：为 chunk 增加 metadata</h4>
+              <p>metadata 是引用、过滤和排查问题的基础。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">from dataclasses import dataclass
+
+@dataclass
+class Chunk:
+    text: str
+    source: str
+    chunk_id: int
+
+def build_chunks(text: str, source: str) -&gt; list[Chunk]:
+    parts = chunk_text(text, chunk_size=300, overlap=50)
+    return [
+        Chunk(text=part, source=source, chunk_id=index)
+        for index, part in enumerate(parts)
+    ]
+
+chunks = build_chunks("RAG 是检索增强生成。" * 80, "rag_notes.md")
+print(chunks[0])</code></pre>
+              </details>
+            </article>
+            <article class="practice-item">
+              <h4>任务 2：实现一个最小关键词检索</h4>
+              <p>在学习向量库之前，先用关键词检索理解“召回”的含义。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">def keyword_search(query: str, chunks: list[Chunk], top_k: int = 3) -&gt; list[Chunk]:
+    query_terms = set(query.lower().split())
+
+    def score(chunk: Chunk) -&gt; int:
+        text_terms = set(chunk.text.lower().split())
+        return len(query_terms &amp; text_terms)
+
+    # 按分数从高到低排序，只返回前 top_k 个。
+    ranked = sorted(chunks, key=score, reverse=True)
+    return ranked[:top_k]
+
+for item in keyword_search("RAG 检索", chunks):
+    print(item.source, item.chunk_id)</code></pre>
+              </details>
+            </article>
+            <article class="practice-item">
+              <h4>任务 3：组织带引用的上下文</h4>
+              <p>把召回结果整理成模型容易理解的上下文。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">def format_context(chunks: list[Chunk]) -&gt; str:
+    blocks = []
+    for chunk in chunks:
+        # 给每段资料一个清晰来源，方便模型引用。
+        blocks.append(
+            f"[{chunk.source} - chunk {chunk.chunk_id}]\n{chunk.text}"
+        )
+    return "\n\n".join(blocks)
+
+context = format_context(chunks[:2])
+print(context)</code></pre>
+              </details>
+            </article>
+          </div>
+        </section>
+
+        <section id="project" class="section">
+          <h2>实践项目：个人知识库问答系统</h2>
+          <p>支持上传 Markdown 或 PDF，建立索引，提问时返回答案和引用来源。第一版可以先用关键词检索，第二版再接入 embedding 和向量库。</p>
+          <h3>最小回答流程</h3>
+          <details class="example"><summary>查看参考代码</summary>
+            <pre><code class="language-python">def build_rag_prompt(question: str, retrieved_chunks: list[Chunk]) -&gt; str:
+    context = format_context(retrieved_chunks)
+    return f"""请只基于参考资料回答问题。
+如果资料中没有答案，请回答“根据当前资料无法判断”。
+回答后列出引用来源。
+
+参考资料：
+{context}
+
+问题：
+{question}
+"""
+
+# prompt = build_rag_prompt("RAG 的核心流程是什么？", chunks[:3])
+# answer = call_llm(prompt)</code></pre>
+          </details>
+          <h3>验收标准</h3>
+          <ul>
+            <li>能展示引用文件名和 chunk 编号。</li>
+            <li>能重新索引文档。</li>
+            <li>有至少 30 条测试问题。</li>
+            <li>保存每次问题召回了哪些 chunk。</li>
+          </ul>
+        </section>
+        <section id="resources" class="section">
+          <h2>推荐资料</h2>
+          <ul>
+            <li><a href="https://docs.llamaindex.ai/" target="_blank" rel="noreferrer">LlamaIndex 文档</a>：系统学习 RAG、索引、检索和评估。</li>
+            <li><a href="https://qdrant.tech/documentation/" target="_blank" rel="noreferrer">Qdrant 文档</a>：学习向量数据库、collection、payload 和检索。</li>
+            <li><a href="https://faiss.ai/" target="_blank" rel="noreferrer">FAISS</a>：理解本地向量检索和相似度搜索。</li>
+            <li><a href="https://docs.llamaindex.ai/en/stable/optimizing/evaluation/evaluation/" target="_blank" rel="noreferrer">LlamaIndex Evaluation</a>：学习如何评估 RAG 结果。</li>
+          </ul>
+        </section>
       </article>
     </div>
   </main>

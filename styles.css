@@ -195,6 +195,62 @@ li + li {
   gap: 16px;
 }
 
+.roadmap-map {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 22px 0;
+}
+
+.roadmap-lane {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.lane-title {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.roadmap-node {
+  display: grid;
+  gap: 4px;
+  min-height: 82px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+}
+
+.roadmap-node:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.roadmap-node strong {
+  color: var(--accent-strong);
+  font-size: 16px;
+}
+
+.roadmap-node span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.roadmap-node.final {
+  background: var(--green-soft);
+  border-color: var(--accent);
+}
+
 .card {
   border: 1px solid var(--line);
   background: var(--panel);
@@ -364,7 +420,8 @@ pre code {
   }
 
   .grid,
-  .cards {
+  .cards,
+  .roadmap-map {
     grid-template-columns: 1fr;
   }
 

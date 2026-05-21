@@ -1,17 +1,179 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Prompt 与结构化输出</title><link rel="stylesheet" href="../styles.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prompt 与结构化输出</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
 <body>
   <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../02-open-source-models/index.html">上一阶段</a><a href="../04-rag/index.html">下一阶段</a></nav></div></header>
   <main class="shell">
-    <section class="hero"><h1>Prompt 与结构化输出</h1><p>让模型稳定完成任务，而不是靠运气给出好答案。这个阶段会直接影响后面的 RAG、工具调用和微调。</p><div class="meta-row"><span class="pill">建议周期：2-3 周</span><span class="pill">产出：结构化信息抽取服务</span></div></section>
+    <section class="hero">
+      <h1>Prompt 与结构化输出</h1>
+      <p>Prompt 不是写一句“请认真回答”。这一阶段学习如何把任务说清楚、让输出稳定、用代码校验结果，并在失败时自动修复。</p>
+      <div class="meta-row"><span class="pill">建议周期：2-3 周</span><span class="pill">产出：结构化信息抽取服务</span><span class="pill">重点：稳定、可校验、可重试</span></div>
+    </section>
     <div class="layout">
-      <aside class="sidebar"><h2>本阶段模块</h2><a href="#prompt">Prompt</a><a href="#json">结构化输出</a><a href="#state">会话状态</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#goals">学习目标</a><a href="#prompt">Prompt 设计</a><a href="#json">结构化输出</a><a href="#state">会话状态</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
       <article class="content">
-        <section id="prompt" class="section"><h2>Prompt 基础</h2><ul><li>系统提示词、用户消息、少样本示例。</li><li>约束模型回答范围、语气和格式。</li><li>把复杂任务拆成分类、抽取、改写、生成等小任务。</li><li>为失败答案设计修复提示词。</li></ul></section>
-        <section id="json" class="section"><h2>结构化输出</h2><ul><li>JSON Schema 与 Pydantic 校验。</li><li>字段必填、枚举值、数组长度、类型检查。</li><li>解析失败时的重试策略。</li><li>把模型输出转成可入库、可调用工具的参数。</li></ul></section>
-        <section id="state" class="section"><h2>对话状态管理</h2><ul><li>短期上下文：最近几轮消息。</li><li>长期记忆：用户偏好、历史任务、摘要。</li><li>上下文裁剪：避免把无关历史全部塞给模型。</li><li>敏感信息：不要把不必要的私密数据发给模型。</li></ul></section>
-        <section id="project" class="section"><h2>实践项目</h2><p>做一个“简历信息抽取器”：输入简历文本，输出姓名、技能、项目经历、工作年限、风险提示等 JSON 字段。</p><h3>验收标准</h3><ul><li>JSON 解析成功率高于 95%。</li><li>解析失败时会自动重试一次。</li><li>输出通过 Pydantic 校验。</li><li>保留原始输出和修复后的输出日志。</li></ul></section>
+        <section id="goals" class="section">
+          <h2>学习目标</h2>
+          <div class="grid">
+            <div class="card"><h3>会拆任务</h3><p>把复杂任务拆成分类、抽取、改写、总结、生成等小任务。</p></div>
+            <div class="card"><h3>会写格式约束</h3><p>让模型输出 JSON、列表或固定字段，减少自由发挥。</p></div>
+            <div class="card"><h3>会校验输出</h3><p>用 Pydantic 判断模型输出是否真的符合要求。</p></div>
+            <div class="card"><h3>会失败重试</h3><p>解析失败时保留原始输出，并让模型修复为合法格式。</p></div>
+          </div>
+        </section>
+
+        <section id="prompt" class="section">
+          <h2>Prompt 设计</h2>
+          <ul>
+            <li>角色：模型应该以什么身份工作。</li>
+            <li>任务：明确输入是什么、输出是什么。</li>
+            <li>约束：不能编造、不能输出额外文本、字段必须完整。</li>
+            <li>示例：给 1-3 个高质量样例比长篇解释更有效。</li>
+            <li>边界：输入不足时怎么处理，无法判断时怎么返回。</li>
+          </ul>
+        </section>
+
+        <section id="json" class="section">
+          <h2>结构化输出</h2>
+          <p>结构化输出的原则是：模型负责生成，程序负责校验。不要默认模型说是 JSON，就一定能被解析。</p>
+          <pre><code class="language-text">你是信息抽取助手。
+请只输出 JSON，不要输出 Markdown。
+字段：
+- name: 字符串，无法判断时为空字符串
+- skills: 字符串数组
+- years: 数字，无法判断时为 0</code></pre>
+        </section>
+
+        <section id="state" class="section">
+          <h2>会话状态管理</h2>
+          <ul>
+            <li>短对话可以直接保留最近几轮。</li>
+            <li>长对话要做摘要或裁剪，避免上下文越来越长。</li>
+            <li>敏感信息不要无脑放入历史消息。</li>
+            <li>业务状态最好由程序保存，不要完全依赖模型记忆。</li>
+          </ul>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>练习任务</h2>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>任务 1：为信息抽取写 Prompt 模板</h4>
+              <p>把自由文本抽取成固定字段，为后续简历、合同、客服记录等任务打基础。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">def build_extract_prompt(text: str) -&gt; str:
+    # 用三段式组织 Prompt：角色、规则、输入。
+    return f"""你是一个严谨的信息抽取助手。
+
+请从输入文本中抽取信息，并只输出 JSON。
+不要输出 Markdown，不要解释过程。
+
+JSON 字段：
+- name: 姓名，无法判断时为空字符串
+- skills: 技能列表，无法判断时为空数组
+- years: 工作年限，无法判断时为 0
+
+输入文本：
+{text}
+"""
+
+print(build_extract_prompt("张三，Python 工程师，有 3 年后端经验。"))</code></pre>
+              </details>
+            </article>
+
+            <article class="practice-item">
+              <h4>任务 2：用 Pydantic 校验模型输出</h4>
+              <p>模型输出必须先经过程序校验，才能进入数据库、工具调用或下一步流程。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">import json
+from pydantic import BaseModel, Field, ValidationError
+
+class ResumeInfo(BaseModel):
+    name: str = ""
+    skills: list[str] = Field(default_factory=list)
+    years: int = Field(default=0, ge=0)
+
+def parse_resume_info(raw_output: str) -&gt; ResumeInfo | None:
+    try:
+        # 先把字符串解析成 dict，再交给 Pydantic 校验字段类型。
+        data = json.loads(raw_output)
+        return ResumeInfo(**data)
+    except (json.JSONDecodeError, ValidationError) as exc:
+        print(f"解析失败: {exc}")
+        return None
+
+print(parse_resume_info('{"name": "张三", "skills": ["Python"], "years": 3}'))</code></pre>
+              </details>
+            </article>
+
+            <article class="practice-item">
+              <h4>任务 3：设计 JSON 修复 Prompt</h4>
+              <p>第一次输出不合法时，不要直接失败，可以把错误信息发回模型要求修复。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">def build_repair_prompt(raw_output: str, error: str) -&gt; str:
+    # 把原始输出和解析错误都给模型，让它只负责修复格式。
+    return f"""下面的内容不是合法 JSON，或不符合字段要求。
+请修复为合法 JSON，只输出修复后的 JSON。
+
+字段要求：
+- name: string
+- skills: array[string]
+- years: integer
+
+解析错误：
+{error}
+
+原始内容：
+{raw_output}
+"""
+
+print(build_repair_prompt("姓名：张三，技能：Python", "Expecting value"))</code></pre>
+              </details>
+            </article>
+          </div>
+        </section>
+
+        <section id="project" class="section">
+          <h2>实践项目：简历信息抽取器</h2>
+          <p>输入简历文本，输出姓名、技能、工作年限、项目关键词和风险提示。先不追求完美，重点是形成“Prompt → 模型 → 解析 → 校验 → 重试”的闭环。</p>
+          <details class="example"><summary>查看参考流程代码</summary>
+            <pre><code class="language-python">def extract_with_retry(text: str, call_llm) -&gt; dict | None:
+    # call_llm 是你封装的模型调用函数，输入 Prompt，返回模型文本。
+    prompt = build_extract_prompt(text)
+    raw = call_llm(prompt)
+    parsed = parse_resume_info(raw)
+
+    if parsed:
+        return parsed.model_dump()
+
+    # 第一次失败后，构造修复 Prompt 再试一次。
+    repair_prompt = build_repair_prompt(raw, "JSON 解析或字段校验失败")
+    repaired = call_llm(repair_prompt)
+    parsed = parse_resume_info(repaired)
+    return parsed.model_dump() if parsed else None</code></pre>
+          </details>
+          <h3>验收标准</h3>
+          <ul>
+            <li>至少准备 20 条简历片段测试。</li>
+            <li>输出必须能通过 Pydantic 校验。</li>
+            <li>保存原始输出、解析结果和失败原因。</li>
+            <li>统计 JSON 解析成功率和重试成功率。</li>
+          </ul>
+        </section>
+        <section id="resources" class="section">
+          <h2>推荐资料</h2>
+          <ul>
+            <li><a href="https://platform.openai.com/docs/guides/structured-outputs" target="_blank" rel="noreferrer">OpenAI Structured Outputs</a>：理解 JSON Schema 与结构化输出的工程思路。</li>
+            <li><a href="https://platform.openai.com/docs/guides/function-calling" target="_blank" rel="noreferrer">OpenAI Function Calling</a>：理解工具调用和参数结构化的基础概念。</li>
+            <li><a href="https://docs.pydantic.dev/" target="_blank" rel="noreferrer">Pydantic 文档</a>：学习如何在 Python 中校验模型输出。</li>
+            <li><a href="https://huggingface.co/docs/transformers/chat_templating" target="_blank" rel="noreferrer">Chat Templates</a>：理解 system/user/assistant 消息如何进入模型。</li>
+          </ul>
+        </section>
       </article>
     </div>
   </main>

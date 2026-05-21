@@ -1,17 +1,105 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>评估体系</title><link rel="stylesheet" href="../styles.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>评估体系</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
 <body>
   <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../06-finetuning/index.html">上一阶段</a><a href="../08-deployment/index.html">下一阶段</a></nav></div></header>
   <main class="shell">
-    <section class="hero"><h1>评估体系</h1><p>没有评估，就不知道系统到底有没有变好。评估应该贯穿 Prompt、RAG、工具调用和微调。</p><div class="meta-row"><span class="pill">建议周期：2-4 周，并贯穿全程</span><span class="pill">产出：自动评估脚本与测试集</span></div></section>
+    <section class="hero">
+      <h1>评估体系</h1>
+      <p>LLM 应用不能只靠“感觉还行”。你需要固定测试集、明确指标、保存实验结果，才能知道 Prompt、RAG、工具调用或微调是否真的变好。</p>
+      <div class="meta-row"><span class="pill">建议周期：2-4 周，并贯穿全程</span><span class="pill">产出：评估脚本与测试集</span><span class="pill">重点：可复现对比</span></div>
+    </section>
     <div class="layout">
-      <aside class="sidebar"><h2>本阶段模块</h2><a href="#dataset">测试集</a><a href="#metrics">指标</a><a href="#workflow">流程</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#dataset">测试集</a><a href="#metrics">指标</a><a href="#workflow">流程</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
       <article class="content">
-        <section id="dataset" class="section"><h2>构建测试集</h2><ul><li>从真实用户问题和业务样本中抽取。</li><li>覆盖简单、复杂、边界、无答案、恶意输入。</li><li>为每条样本标注期望答案、来源文档、允许误差。</li><li>保留固定测试集，避免每次凭感觉比较。</li></ul></section>
-        <section id="metrics" class="section"><h2>核心指标</h2><ul><li>结构化输出：JSON 合法率、字段准确率、重试成功率。</li><li>RAG：召回命中率、引用正确率、答案忠实度。</li><li>工具调用：工具选择准确率、参数正确率、执行成功率。</li><li>微调：任务准确率、格式稳定性、泛化能力。</li><li>工程指标：延迟、成本、失败率、并发能力。</li></ul></section>
-        <section id="workflow" class="section"><h2>评估流程</h2><ol><li>固定模型、Prompt、检索参数和工具版本。</li><li>运行测试集，保存输入、上下文、输出和中间步骤。</li><li>用自动脚本计算可量化指标。</li><li>抽样人工复核主观质量。</li><li>把每次实验结果记录到表格或数据库。</li></ol></section>
-        <section id="project" class="section"><h2>实践项目</h2><p>为你的知识库问答系统建立 100 条测试问题，并实现一个评估脚本，对比不同 Embedding、Reranker、chunk 参数和模型。</p></section>
+        <section id="dataset" class="section">
+          <h2>构建测试集</h2>
+          <ul>
+            <li>从真实用户问题、业务文档和失败案例中抽样。</li>
+            <li>覆盖简单问题、复杂问题、边界问题、无答案问题和恶意输入。</li>
+            <li>每条样本要有期望答案、评分标准和来源。</li>
+            <li>测试集固定后不要频繁修改，否则无法比较版本。</li>
+          </ul>
+        </section>
+        <section id="metrics" class="section">
+          <h2>核心指标</h2>
+          <div class="grid">
+            <div class="card"><h3>结构化输出</h3><p>JSON 合法率、字段准确率、重试成功率。</p></div>
+            <div class="card"><h3>RAG</h3><p>召回命中率、引用正确率、答案忠实度。</p></div>
+            <div class="card"><h3>工具调用</h3><p>工具选择准确率、参数正确率、执行成功率。</p></div>
+            <div class="card"><h3>工程指标</h3><p>延迟、失败率、并发能力、成本。</p></div>
+          </div>
+        </section>
+        <section id="workflow" class="section">
+          <h2>评估流程</h2>
+          <ol>
+            <li>固定模型、Prompt、检索参数和工具版本。</li>
+            <li>运行测试集，保存输入、中间步骤和输出。</li>
+            <li>自动计算可量化指标。</li>
+            <li>人工复核主观质量和失败案例。</li>
+            <li>记录实验版本，方便回滚和对比。</li>
+          </ol>
+        </section>
+        <section id="practice" class="section">
+          <h2>练习任务</h2>
+          <div class="practice-list">
+            <article class="practice-item"><h4>任务 1：设计测试集格式</h4><p>先用 JSONL 保存测试样本，方便逐行读取。</p><details class="example"><summary>查看示例</summary><pre><code class="language-python">import json
+from pathlib import Path
+
+cases = [
+    {
+        "id": "rag_001",
+        "question": "RAG 的核心流程是什么？",
+        "expected_keywords": ["检索", "上下文", "生成"],
+        "source": "rag_notes.md",
+    }
+]
+
+Path("eval_cases.jsonl").write_text(
+    "\n".join(json.dumps(c, ensure_ascii=False) for c in cases) + "\n",
+    encoding="utf-8",
+)</code></pre></details></article>
+            <article class="practice-item"><h4>任务 2：计算关键词命中率</h4><p>这是一个非常简单的自动评分方法，适合入门。</p><details class="example"><summary>查看示例</summary><pre><code class="language-python">def keyword_hit_rate(answer: str, expected_keywords: list[str]) -&gt; float:
+    if not expected_keywords:
+        return 1.0
+    hits = sum(1 for keyword in expected_keywords if keyword in answer)
+    return hits / len(expected_keywords)
+
+answer = "RAG 先检索相关资料，再把上下文交给模型生成答案。"
+print(keyword_hit_rate(answer, ["检索", "上下文", "生成"]))</code></pre></details></article>
+            <article class="practice-item"><h4>任务 3：保存评估结果</h4><p>每次实验都要能追溯模型、Prompt 和参数。</p><details class="example"><summary>查看示例</summary><pre><code class="language-python">import csv
+
+def save_eval_result(file_path: str, rows: list[dict]) -&gt; None:
+    fieldnames = ["case_id", "model", "score", "latency_ms", "answer"]
+    with open(file_path, "w", encoding="utf-8", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+save_eval_result("eval_results.csv", [
+    {"case_id": "rag_001", "model": "local-model", "score": 1.0, "latency_ms": 1200, "answer": "RAG 先检索..."}
+])</code></pre></details></article>
+          </div>
+        </section>
+        <section id="project" class="section">
+          <h2>实践项目：RAG 评估脚本</h2>
+          <p>为知识库问答系统建立至少 100 条问题，比较不同 chunk 参数、Embedding、Reranker 和模型。</p>
+          <h3>验收标准</h3><ul><li>测试集和评估结果可提交到仓库。</li><li>每次实验有版本号和参数记录。</li><li>输出总分、失败案例和平均延迟。</li><li>至少做 3 组参数对比。</li></ul>
+        </section>
+        <section id="resources" class="section">
+          <h2>推荐资料</h2>
+          <ul>
+            <li><a href="https://huggingface.co/docs/evaluate/index" target="_blank" rel="noreferrer">Hugging Face Evaluate</a>：学习常见评估指标和评估流程。</li>
+            <li><a href="https://docs.llamaindex.ai/en/stable/optimizing/evaluation/evaluation/" target="_blank" rel="noreferrer">LlamaIndex Evaluation</a>：学习 RAG 和 LLM 应用评估。</li>
+            <li><a href="https://docs.ragas.io/" target="_blank" rel="noreferrer">Ragas 文档</a>：学习 RAG 评估指标，如 faithfulness、answer relevancy、context precision。</li>
+            <li><a href="https://docs.langchain.com/langsmith/" target="_blank" rel="noreferrer">LangSmith 文档</a>：学习实验追踪、调试和评估。</li>
+          </ul>
+        </section>
       </article>
     </div>
   </main>

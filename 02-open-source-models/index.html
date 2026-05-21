@@ -1,17 +1,218 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>开源模型使用与推理服务</title><link rel="stylesheet" href="../styles.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>开源模型使用与推理服务</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
 <body>
-  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../01-foundations/index.html">上一阶段</a><a href="../03-prompt-structured-output/index.html">下一阶段</a></nav></div></header>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../index.html">LLM 应用开发路线</a>
+      <nav class="nav"><a href="../01-foundations/index.html">上一阶段</a><a href="../03-prompt-structured-output/index.html">下一阶段</a></nav>
+    </div>
+  </header>
   <main class="shell">
-    <section class="hero"><h1>开源模型使用与推理服务</h1><p>学会选择、下载、运行和服务化开源模型。重点是使用模型，而不是训练基础模型。</p><div class="meta-row"><span class="pill">建议周期：2-3 周</span><span class="pill">产出：本地模型 API 服务</span></div></section>
+    <section class="hero">
+      <h1>开源模型使用与推理服务</h1>
+      <p>这一阶段学习如何选择、运行、调用和服务化开源模型。你不需要训练基础模型，但要理解模型格式、推理参数、量化和 OpenAI-compatible API。</p>
+      <div class="meta-row"><span class="pill">建议周期：2-3 周</span><span class="pill">产出：本地模型 API 服务</span><span class="pill">重点：会跑、会调、会对比</span></div>
+    </section>
     <div class="layout">
-      <aside class="sidebar"><h2>本阶段模块</h2><a href="#concepts">模型概念</a><a href="#runtime">运行方式</a><a href="#models">模型选择</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar">
+        <h2>本阶段模块</h2>
+        <a href="#goals">学习目标</a>
+        <a href="#concepts">模型概念</a>
+        <a href="#runtime">运行方式</a>
+        <a href="#params">推理参数</a>
+        <a href="#practice">练习任务</a>
+        <a href="#project">实践项目</a>
+        <a href="#resources">推荐资料</a>
+        <a href="../index.html">返回主页</a>
+      </aside>
       <article class="content">
-        <section id="concepts" class="section"><h2>必须理解的概念</h2><ul><li>Base 模型、Instruct 模型、Chat 模型的区别。</li><li>token、上下文窗口、采样参数、停止词。</li><li>模型格式：Safetensors、GGUF、AWQ、GPTQ。</li><li>量化对显存、速度和效果的影响。</li><li>Chat template 为什么会影响输出质量。</li></ul></section>
-        <section id="runtime" class="section"><h2>运行与服务化</h2><ul><li>Ollama：适合快速本地实验。</li><li>Transformers：适合理解模型加载与推理流程。</li><li>vLLM：适合部署 OpenAI-compatible API。</li><li>llama.cpp：适合 CPU/Mac/边缘设备上的 GGUF 模型。</li></ul></section>
-        <section id="models" class="section"><h2>模型选择建议</h2><p>中文和中英混合任务优先尝试 Qwen 系列；代码任务优先尝试 Qwen Coder、DeepSeek Coder 等；本地入门从 7B/8B 或 14B 开始，等链路跑通后再追求更大模型。</p><div class="note warning">不要只看榜单。你的业务测试集比通用榜单更重要，同一个模型在不同任务上的表现可能差异很大。</div></section>
-        <section id="project" class="section"><h2>实践项目</h2><p>搭建一个本地聊天服务：后端提供 `/chat` 接口，底层可以切换 Ollama 或 vLLM，支持流式输出。</p><h3>验收标准</h3><ul><li>可以通过 HTTP 调用本地开源模型。</li><li>支持配置模型名、温度、最大输出长度。</li><li>记录每次请求耗时和 token 使用情况。</li></ul></section>
+        <section id="goals" class="section">
+          <h2>学习目标</h2>
+          <div class="grid">
+            <div class="card"><h3>会选择模型</h3><p>理解 Base、Instruct、Chat、Embedding、Rerank、Coder 模型的用途差异。</p></div>
+            <div class="card"><h3>会本地运行</h3><p>能用 Ollama 或 llama.cpp 快速跑模型，也知道什么时候需要 vLLM。</p></div>
+            <div class="card"><h3>会调用接口</h3><p>能用 Python 调用 OpenAI-compatible 接口，并封装成自己的模型客户端。</p></div>
+            <div class="card"><h3>会做对比</h3><p>能记录响应耗时、输出质量、显存占用和失败案例。</p></div>
+          </div>
+        </section>
+
+        <section id="concepts" class="section">
+          <h2>必须理解的概念</h2>
+          <ul>
+            <li>Base 模型适合继续训练，不适合直接聊天；Instruct/Chat 模型适合应用开发。</li>
+            <li>token 是模型处理文本的基本单位，不等同于汉字或英文单词。</li>
+            <li>上下文窗口决定一次请求能放多少输入、历史消息和检索资料。</li>
+            <li>Safetensors 常见于 Hugging Face 模型；GGUF 常见于 llama.cpp/Ollama；AWQ/GPTQ 常用于量化部署。</li>
+            <li>Chat template 会把多轮消息转换成模型训练时熟悉的格式，格式错了会明显影响输出。</li>
+          </ul>
+          <div class="note warning">初学时不要追求最大模型。先用 7B/8B 级别把“下载、运行、调用、评估”链路跑通。</div>
+        </section>
+
+        <section id="runtime" class="section">
+          <h2>运行方式</h2>
+          <div class="cards">
+            <div class="card"><span class="tag">Ollama</span><p>适合快速本地体验，命令简单，适合入门阶段。</p></div>
+            <div class="card"><span class="tag">Transformers</span><p>适合理解 tokenizer、model、chat template 和推理代码。</p></div>
+            <div class="card"><span class="tag">vLLM</span><p>适合部署服务，支持 OpenAI-compatible API、并发和高吞吐。</p></div>
+          </div>
+        </section>
+
+        <section id="params" class="section">
+          <h2>推理参数</h2>
+          <ul>
+            <li><code>temperature</code>：越高越发散，越低越稳定。</li>
+            <li><code>top_p</code>：控制候选 token 的概率范围。</li>
+            <li><code>max_tokens</code>：限制最大输出长度。</li>
+            <li><code>stop</code>：遇到指定字符串时停止生成。</li>
+            <li><code>stream</code>：开启流式输出，适合聊天体验。</li>
+          </ul>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>练习任务</h2>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>任务 1：用 Python 调用本地 OpenAI-compatible 接口</h4>
+              <p>假设你已经启动了本地模型服务，例如 vLLM、Ollama 的兼容接口或其他 OpenAI-compatible 服务。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">import httpx
+
+def chat_once(message: str) -&gt; str:
+    # 本地模型服务地址。不同工具的端口可能不同，按实际情况修改。
+    url = "http://localhost:8000/v1/chat/completions"
+
+    payload = {
+        "model": "local-model",
+        "messages": [
+            {"role": "system", "content": "你是一个简洁、准确的中文助手。"},
+            {"role": "user", "content": message},
+        ],
+        "temperature": 0.3,
+        "max_tokens": 512,
+    }
+
+    response = httpx.post(url, json=payload, timeout=60)
+    response.raise_for_status()
+    data = response.json()
+    return data["choices"][0]["message"]["content"]
+
+if __name__ == "__main__":
+    print(chat_once("用三句话解释什么是 RAG。"))</code></pre>
+              </details>
+            </article>
+            <article class="practice-item">
+              <h4>任务 2：对比不同 temperature 的输出</h4>
+              <p>同一个问题跑多次，观察稳定性和创造性的变化。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">import httpx
+
+def ask(temp: float) -&gt; str:
+    payload = {
+        "model": "local-model",
+        "messages": [{"role": "user", "content": "给知识库问答系统起 5 个名字。"}],
+        "temperature": temp,
+        "max_tokens": 300,
+    }
+    response = httpx.post("http://localhost:8000/v1/chat/completions", json=payload, timeout=60)
+    response.raise_for_status()
+    return response.json()["choices"][0]["message"]["content"]
+
+for temp in [0.1, 0.7, 1.2]:
+    print(f"\n--- temperature={temp} ---")
+    print(ask(temp))</code></pre>
+              </details>
+            </article>
+            <article class="practice-item">
+              <h4>任务 3：记录模型调用耗时</h4>
+              <p>后续做评估和部署时，质量之外还要关心延迟。</p>
+              <details class="example"><summary>查看示例</summary>
+                <pre><code class="language-python">import time
+import httpx
+
+def timed_chat(message: str) -&gt; dict:
+    start = time.perf_counter()
+    response = httpx.post(
+        "http://localhost:8000/v1/chat/completions",
+        json={
+            "model": "local-model",
+            "messages": [{"role": "user", "content": message}],
+            "temperature": 0.2,
+        },
+        timeout=60,
+    )
+    latency_ms = round((time.perf_counter() - start) * 1000, 2)
+    response.raise_for_status()
+    return {
+        "latency_ms": latency_ms,
+        "answer": response.json()["choices"][0]["message"]["content"],
+    }
+
+print(timed_chat("解释 Base 模型和 Chat 模型的区别。"))</code></pre>
+              </details>
+            </article>
+          </div>
+        </section>
+
+        <section id="project" class="section">
+          <h2>实践项目：本地聊天服务</h2>
+          <p>在第一阶段 FastAPI 服务的基础上，增加 <code>/chat</code> 接口，底层调用本地开源模型。</p>
+          <h3>参考答案</h3>
+          <details class="example"><summary>查看 FastAPI 示例</summary>
+            <pre><code class="language-python">from pydantic import BaseModel, Field
+from fastapi import FastAPI
+import httpx
+
+app = FastAPI(title="Local LLM Chat API")
+
+class ChatRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=4000)
+    temperature: float = Field(default=0.3, ge=0, le=2)
+
+class ChatResponse(BaseModel):
+    answer: str
+
+@app.post("/chat", response_model=ChatResponse)
+async def chat(payload: ChatRequest) -&gt; ChatResponse:
+    # 把自己的 API 请求转换成本地模型服务需要的格式。
+    model_payload = {
+        "model": "local-model",
+        "messages": [{"role": "user", "content": payload.message}],
+        "temperature": payload.temperature,
+    }
+
+    async with httpx.AsyncClient(timeout=60) as client:
+        response = await client.post(
+            "http://localhost:8000/v1/chat/completions",
+            json=model_payload,
+        )
+        response.raise_for_status()
+
+    content = response.json()["choices"][0]["message"]["content"]
+    return ChatResponse(answer=content)</code></pre>
+          </details>
+          <h3>验收标准</h3>
+          <ul>
+            <li>能通过 HTTP 调用本地开源模型。</li>
+            <li>支持配置 temperature 和最大输出长度。</li>
+            <li>记录请求耗时和失败原因。</li>
+            <li>能对比至少 2 个模型或 2 组参数。</li>
+          </ul>
+        </section>
+        <section id="resources" class="section">
+          <h2>推荐资料</h2>
+          <ul>
+            <li><a href="https://docs.ollama.com/" target="_blank" rel="noreferrer">Ollama 官方文档</a>：适合快速本地运行和调用模型。</li>
+            <li><a href="https://docs.vllm.ai/serving/openai_compatible_server.html" target="_blank" rel="noreferrer">vLLM OpenAI-compatible Server</a>：学习如何把开源模型部署成兼容 OpenAI 风格的 API。</li>
+            <li><a href="https://huggingface.co/docs/transformers/index" target="_blank" rel="noreferrer">Transformers 文档</a>：理解 tokenizer、模型加载、推理和 chat template。</li>
+            <li><a href="https://huggingface.co/docs/transformers/chat_templating" target="_blank" rel="noreferrer">Hugging Face Chat Templates</a>：理解为什么不同聊天模型需要不同消息格式。</li>
+          </ul>
+        </section>
       </article>
     </div>
   </main>

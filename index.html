@@ -32,6 +32,33 @@
     </section>
 
     <section class="section">
+      <h2>全局路线图</h2>
+      <p>这条路线可以理解为三层递进：先把工程基础和模型调用跑通，再学习 RAG、工具调用和微调三类核心能力，最后用评估、部署和项目作品集把能力闭环。</p>
+      <div class="roadmap-map" aria-label="LLM 应用开发全局路线图">
+        <div class="roadmap-lane">
+          <span class="lane-title">入门底座</span>
+          <a class="roadmap-node" href="00-overview/index.html"><strong>00 总览</strong><span>目标、节奏、工具栈</span></a>
+          <a class="roadmap-node" href="01-foundations/index.html"><strong>01 基础</strong><span>Python、API、FastAPI</span></a>
+          <a class="roadmap-node" href="02-open-source-models/index.html"><strong>02 开源模型</strong><span>本地推理、模型服务</span></a>
+        </div>
+        <div class="roadmap-lane">
+          <span class="lane-title">核心能力</span>
+          <a class="roadmap-node" href="03-prompt-structured-output/index.html"><strong>03 Prompt</strong><span>结构化输出、校验</span></a>
+          <a class="roadmap-node" href="04-rag/index.html"><strong>04 RAG</strong><span>知识库、检索、引用</span></a>
+          <a class="roadmap-node" href="05-tool-calling-langchain-langgraph/index.html"><strong>05 工具与框架</strong><span>Tool Calling、Agent</span></a>
+          <a class="roadmap-node" href="06-finetuning/index.html"><strong>06 微调</strong><span>LoRA、QLoRA、SFT</span></a>
+        </div>
+        <div class="roadmap-lane">
+          <span class="lane-title">工程闭环</span>
+          <a class="roadmap-node" href="07-evaluation/index.html"><strong>07 评估</strong><span>测试集、指标、实验</span></a>
+          <a class="roadmap-node" href="08-deployment/index.html"><strong>08 部署</strong><span>Docker、服务化、安全</span></a>
+          <a class="roadmap-node final" href="09-capstone-projects/index.html"><strong>09 项目作品集</strong><span>聊天助手、知识库、业务助手</span></a>
+        </div>
+      </div>
+      <div class="note">推荐学习主线：<strong>基础 → 开源模型 → Prompt → RAG → 工具调用 → 微调 → 评估 → 部署 → 项目</strong>。其中评估不是最后才做，而是从 Prompt、RAG、工具调用阶段就开始积累测试集。</div>
+    </section>
+
+    <section class="section">
       <h2>学习原则</h2>
       <div class="grid">
         <div class="card">

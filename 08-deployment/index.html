@@ -1,17 +1,107 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>部署与工程化</title><link rel="stylesheet" href="../styles.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>部署与工程化</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
 <body>
   <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../07-evaluation/index.html">上一阶段</a><a href="../09-capstone-projects/index.html">下一阶段</a></nav></div></header>
   <main class="shell">
-    <section class="hero"><h1>部署与工程化</h1><p>把 Demo 变成可用服务：稳定、可观测、可扩展，并且对工具调用和数据访问有安全边界。</p><div class="meta-row"><span class="pill">建议周期：3-6 周</span><span class="pill">产出：可部署的 LLM 应用服务</span></div></section>
+    <section class="hero">
+      <h1>部署与工程化</h1>
+      <p>部署阶段的目标是把 Demo 变成稳定服务：配置清晰、日志可查、错误可恢复、权限可控制、模型服务可替换。</p>
+      <div class="meta-row"><span class="pill">建议周期：3-6 周</span><span class="pill">产出：可部署 LLM 应用</span><span class="pill">重点：稳定、安全、可观测</span></div>
+    </section>
     <div class="layout">
-      <aside class="sidebar"><h2>本阶段模块</h2><a href="#serve">模型服务</a><a href="#ops">工程能力</a><a href="#security">安全</a><a href="#project">实践项目</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#serve">模型服务</a><a href="#ops">工程能力</a><a href="#security">安全</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
       <article class="content">
-        <section id="serve" class="section"><h2>模型服务</h2><ul><li>vLLM OpenAI-compatible API。</li><li>Ollama/llama.cpp 本地或轻量部署。</li><li>GPU 显存估算、batching、并发限制。</li><li>量化模型的效果与速度取舍。</li><li>多模型路由和 fallback。</li></ul></section>
-        <section id="ops" class="section"><h2>工程能力</h2><ul><li>Docker 与 Compose。</li><li>配置管理和环境变量。</li><li>请求日志、错误日志、链路追踪。</li><li>缓存：Embedding 缓存、答案缓存、检索缓存。</li><li>任务队列：长文档解析、批量索引、离线评估。</li></ul></section>
-        <section id="security" class="section"><h2>安全边界</h2><ul><li>Prompt 注入防护：不要把工具权限完全交给模型。</li><li>工具白名单：每个工具有明确权限和参数限制。</li><li>敏感操作人工确认。</li><li>数据隔离：不同用户、不同知识库权限分开。</li><li>输出审计：保存关键操作记录。</li></ul></section>
-        <section id="project" class="section"><h2>实践项目</h2><p>把 RAG + 工具调用助手部署为一个完整服务：前端页面、后端 API、向量库、模型服务分离，并提供基础日志和鉴权。</p></section>
+        <section id="serve" class="section">
+          <h2>模型服务</h2>
+          <ul>
+            <li>vLLM：适合 GPU 服务化和 OpenAI-compatible API。</li>
+            <li>Ollama：适合本地和小团队快速部署。</li>
+            <li>llama.cpp：适合 GGUF、CPU/Mac/边缘设备。</li>
+            <li>量化：降低显存占用，但可能损失效果。</li>
+            <li>多模型路由：简单任务用小模型，复杂任务用大模型。</li>
+          </ul>
+        </section>
+        <section id="ops" class="section">
+          <h2>工程能力</h2>
+          <ul>
+            <li>Docker/Compose：让服务一键启动。</li>
+            <li>配置管理：模型地址、API Key、超时都用环境变量。</li>
+            <li>日志：记录 request_id、耗时、错误类型、工具调用。</li>
+            <li>缓存：Embedding 缓存、检索缓存、答案缓存。</li>
+            <li>后台任务：文档解析、索引、评估适合异步执行。</li>
+          </ul>
+        </section>
+        <section id="security" class="section">
+          <h2>安全边界</h2>
+          <ul>
+            <li>Prompt 注入不能只靠提示词解决，要靠权限和程序逻辑。</li>
+            <li>工具白名单：模型只能调用你允许的工具。</li>
+            <li>危险操作人工确认。</li>
+            <li>不同用户的数据和知识库要隔离。</li>
+            <li>不要在日志里记录完整密钥、隐私和敏感文本。</li>
+          </ul>
+        </section>
+        <section id="practice" class="section">
+          <h2>练习任务</h2>
+          <div class="practice-list">
+            <article class="practice-item"><h4>任务 1：写 Dockerfile</h4><p>先把 FastAPI 服务容器化。</p><details class="example"><summary>查看示例</summary><pre><code class="language-dockerfile">FROM python:3.11-slim
+
+WORKDIR /app
+
+# 先复制依赖文件，利用 Docker 缓存加速构建。
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app ./app
+
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]</code></pre></details></article>
+            <article class="practice-item"><h4>任务 2：写 Compose 配置</h4><p>把应用服务和模型服务拆开，后续更容易替换。</p><details class="example"><summary>查看示例</summary><pre><code class="language-yaml">services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # API 服务通过环境变量知道模型服务地址。
+      MODEL_BASE_URL: "http://model:8001/v1"
+      REQUEST_TIMEOUT: "60"
+
+  model:
+    image: vllm/vllm-openai:latest
+    ports:
+      - "8001:8000"
+    # 真实部署时还需要配置模型路径、GPU 和 volume。</code></pre></details></article>
+            <article class="practice-item"><h4>任务 3：读取环境变量配置</h4><p>不要把模型地址和密钥写死在代码里。</p><details class="example"><summary>查看示例</summary><pre><code class="language-python">import os
+from pydantic import BaseModel
+
+class Settings(BaseModel):
+    model_base_url: str = os.getenv("MODEL_BASE_URL", "http://localhost:8000/v1")
+    request_timeout: int = int(os.getenv("REQUEST_TIMEOUT", "60"))
+
+settings = Settings()
+print(settings.model_base_url)</code></pre></details></article>
+          </div>
+        </section>
+        <section id="project" class="section">
+          <h2>实践项目：部署 RAG + 工具助手</h2>
+          <p>把知识库问答、工具调用和模型服务拆成可配置服务，并提供日志、鉴权和基础监控。</p>
+          <h3>验收标准</h3><ul><li>能用 Docker Compose 启动。</li><li>应用服务和模型服务分离。</li><li>所有密钥来自环境变量。</li><li>有请求日志和错误日志。</li><li>危险工具有人工确认流程。</li></ul>
+        </section>
+        <section id="resources" class="section">
+          <h2>推荐资料</h2>
+          <ul>
+            <li><a href="https://docs.docker.com/build/concepts/dockerfile/" target="_blank" rel="noreferrer">Dockerfile 文档</a>：学习如何构建应用镜像。</li>
+            <li><a href="https://docs.docker.com/compose/" target="_blank" rel="noreferrer">Docker Compose 文档</a>：学习多服务应用的本地部署。</li>
+            <li><a href="https://docs.vllm.ai/serving/openai_compatible_server.html" target="_blank" rel="noreferrer">vLLM 服务化文档</a>：学习模型服务部署。</li>
+            <li><a href="https://fastapi.tiangolo.com/deployment/" target="_blank" rel="noreferrer">FastAPI Deployment</a>：学习 FastAPI 生产部署注意事项。</li>
+          </ul>
+        </section>
       </article>
     </div>
   </main>

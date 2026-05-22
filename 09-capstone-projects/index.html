@@ -160,6 +160,71 @@ if __name__ == "__main__":
     demo.launch(server_port=7860)</code></pre>
           </details>
           <details class="example">
+            <summary>查看 Streamlit 聊天界面示例</summary>
+            <pre><code class="language-python">import streamlit as st
+import httpx
+
+st.title("本地 LLM 聊天助手")
+st.caption("基于开源模型的对话系统")
+
+# 初始化消息历史
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# 显示历史消息
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# 用户输入
+if prompt := st.chat_input("输入消息..."):
+    # 显示用户消息
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    # 调用模型并流式显示
+    with st.chat_message("assistant"):
+        message_placeholder = st.empty()
+        full_response = ""
+
+        # 调用本地模型服务
+        with httpx.Client(timeout=60) as client:
+            with client.stream(
+                "POST",
+                "http://localhost:8000/v1/chat/completions",
+                json={
+                    "model": "local-model",
+                    "messages": [
+                        {"role": m["role"], "content": m["content"]}
+                        for m in st.session_state.messages
+                    ],
+                    "stream": True
+                }
+            ) as response:
+                for line in response.iter_lines():
+                    if line.startswith("data: "):
+                        data = line[6:]
+                        if data == "[DONE]":
+                            break
+                        try:
+                            chunk = httpx.Response(200, content=data).json()
+                            content = chunk["choices"][0]["delta"].get("content", "")
+                            full_response += content
+                            message_placeholder.markdown(full_response + "▌")
+                        except:
+                            continue
+
+        message_placeholder.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
+
+# 侧边栏：清除历史
+with st.sidebar:
+    if st.button("清除对话历史"):
+        st.session_state.messages = []
+        st.rerun()</code></pre>
+          </details>
+          <details class="example">
             <summary>查看简单 HTML 聊天界面示例</summary>
             <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html lang="zh"&gt;
@@ -168,7 +233,7 @@ if __name__ == "__main__":
     &lt;title&gt;LLM 聊天助手&lt;/title&gt;
     &lt;style&gt;
         body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        #chat-box { height: 400px; overflow-y: border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+        #chat-box { height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
         .message { margin: 10px 0; padding: 8px 12px; border-radius: 8px; }
         .user { background: #007bff; color: white; text-align: right; }
         .bot { background: #f1f1f1; }

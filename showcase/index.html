@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>学习成果展示</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../index.html">主页</a>
+        <a class="current" href="index.html">作品展示</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>学习成果展示</h1>
+      <p>这里是学习者们的优秀作品展示区。欢迎分享你在学习过程中完成的项目！</p>
+      <div class="meta-row">
+        <span class="pill">展示你的学习成果</span>
+        <span class="pill">互相学习、共同进步</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>导航</h2>
+        <a href="#how-to-submit">如何提交</a>
+        <a href="#template">作品模板</a>
+        <a href="#projects">优秀作品</a>
+        <a href="#discussions">社区讨论</a>
+        <a href="../index.html">返回主页</a>
+      </aside>
+
+      <article class="content">
+        <section id="how-to-submit" class="section">
+          <h2>如何提交你的作品</h2>
+          <p>我们推荐以下方式展示你的学习成果：</p>
+
+          <div class="grid">
+            <div class="card">
+              <h3>方式一：GitHub Discussions（推荐）</h3>
+              <ul>
+                <li>在 <a href="https://github.com/reminder2021/open-llm-app-roadmap/discussions/categories/show-and-tell" target="_blank">📣 Show and Tell</a> 频道发帖</li>
+                <li>附上项目截图或 GIF</li>
+                <li>附上 GitHub 仓库链接</li>
+                <li>分享你的学习心得和踩坑记录</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>方式二：提交 Pull Request</h3>
+              <ul>
+                <li>Fork 本仓库</li>
+                <li>在 <code>showcase/projects/</code> 目录下创建你的项目页面</li>
+                <li>提交 PR，我们会审核后合并</li>
+                <li>适合想要详细展示的项目</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="note">
+            <strong>提示</strong>：无论选择哪种方式，请确保你的项目：
+            <ul>
+              <li>有清晰的 README 说明如何运行</li>
+              <li>代码有基本的注释</li>
+              <li>不包含敏感信息（API Key、密码等）</li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="template" class="section">
+          <h2>作品展示模板</h2>
+          <p>如果你想提交 PR 展示作品，可以参考以下模板：</p>
+
+          <details class="example" open>
+            <summary>查看作品展示模板</summary>
+            <pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;项目名称 - 学习成果展示&lt;/title&gt;
+  &lt;link rel="stylesheet" href="../../styles.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header class="topbar"&gt;
+    &lt;div class="shell"&gt;
+      &lt;a class="brand" href="../../index.html"&gt;LLM 应用开发路线&lt;/a&gt;
+      &lt;nav class="nav"&gt;
+        &lt;a href="../index.html"&gt;作品展示&lt;/a&gt;
+        &lt;a class="current" href="index.html"&gt;你的项目名&lt;/a&gt;
+      &lt;/nav&gt;
+    &lt;/div&gt;
+  &lt;/header&gt;
+
+  &lt;main class="shell"&gt;
+    &lt;section class="hero"&gt;
+      &lt;h1&gt;项目名称&lt;/h1&gt;
+      &lt;p&gt;一句话描述你的项目解决了什么问题&lt;/p&gt;
+      &lt;div class="meta-row"&gt;
+        &lt;span class="pill"&gt;作者：你的名字&lt;/span&gt;
+        &lt;span class="pill"&gt;完成阶段：04 RAG&lt;/span&gt;
+        &lt;span class="pill"&gt;GitHub：链接&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;div class="layout"&gt;
+      &lt;aside class="sidebar"&gt;
+        &lt;h2&gt;项目导航&lt;/h2&gt;
+        &lt;a href="#overview"&gt;项目概述&lt;/a&gt;
+        &lt;a href="#features"&gt;功能特性&lt;/a&gt;
+        &lt;a href="#tech"&gt;技术栈&lt;/a&gt;
+        &lt;a href="#screenshots"&gt;截图展示&lt;/a&gt;
+        &lt;a href="#lessons"&gt;学习心得&lt;/a&gt;
+      &lt;/aside&gt;
+
+      &lt;article class="content"&gt;
+        &lt;section id="overview" class="section"&gt;
+          &lt;h2&gt;项目概述&lt;/h2&gt;
+          &lt;p&gt;详细描述你的项目：解决什么问题、目标用户是谁、核心功能是什么。&lt;/p&gt;
+        &lt;/section&gt;
+
+        &lt;section id="features" class="section"&gt;
+          &lt;h2&gt;功能特性&lt;/h2&gt;
+          &lt;ul&gt;
+            &lt;li&gt;功能 1：描述&lt;/li&gt;
+            &lt;li&gt;功能 2：描述&lt;/li&gt;
+            &lt;li&gt;功能 3：描述&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/section&gt;
+
+        &lt;section id="tech" class="section"&gt;
+          &lt;h2&gt;技术栈&lt;/h2&gt;
+          &lt;ul&gt;
+            &lt;li&gt;后端：FastAPI + Python&lt;/li&gt;
+            &lt;li&gt;模型：Qwen2.5-7B&lt;/li&gt;
+            &lt;li&gt;向量库：FAISS / Chroma&lt;/li&gt;
+            &lt;li&gt;前端：Gradio / Streamlit&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/section&gt;
+
+        &lt;section id="screenshots" class="section"&gt;
+          &lt;h2&gt;截图展示&lt;/h2&gt;
+          &lt;p&gt;添加你的项目截图或 GIF&lt;/p&gt;
+          &lt;!-- &lt;img src="screenshot.png" alt="项目截图"&gt; --&gt;
+        &lt;/section&gt;
+
+        &lt;section id="lessons" class="section"&gt;
+          &lt;h2&gt;学习心得&lt;/h2&gt;
+          &lt;p&gt;分享你在完成这个项目过程中的收获、踩坑记录和经验总结。&lt;/p&gt;
+        &lt;/section&gt;
+      &lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </details>
+        </section>
+
+        <section id="projects" class="section">
+          <h2>优秀作品展示</h2>
+          <p>以下是学习者们完成的优秀项目：</p>
+
+          <div class="grid">
+            <div class="card">
+              <h3>示例项目 1</h3>
+              <p><strong>作者</strong>：待添加</p>
+              <p><strong>完成阶段</strong>：04 RAG</p>
+              <p><strong>描述</strong>：基于 RAG 的个人知识库问答系统</p>
+              <ul>
+                <li>支持 Markdown/PDF 上传</li>
+                <li>使用 FAISS 向量检索</li>
+                <li>答案带引用来源</li>
+              </ul>
+              <p><em>等待你的贡献！</em></p>
+            </div>
+
+            <div class="card">
+              <h3>示例项目 2</h3>
+              <p><strong>作者</strong>：待添加</p>
+              <p><strong>完成阶段</strong>：05 工具调用</p>
+              <p><strong>描述</strong>：带工具调用的智能助手</p>
+              <ul>
+                <li>支持知识库检索</li>
+                <li>支持计算器功能</li>
+                <li>危险操作需人工确认</li>
+              </ul>
+              <p><em>等待你的贡献！</em></p>
+            </div>
+
+            <div class="card">
+              <h3>示例项目 3</h3>
+              <p><strong>作者</strong>：待添加</p>
+              <p><strong>完成阶段</strong>：06 微调</p>
+              <p><strong>描述</strong>：客服意图分类 LoRA 微调</p>
+              <ul>
+                <li>使用 QLoRA 微调 Qwen2.5</li>
+                <li>准确率提升 15%</li>
+                <li>部署成本降低 60%</li>
+              </ul>
+              <p><em>等待你的贡献！</em></p>
+            </div>
+          </div>
+
+          <div class="note">
+            <strong>想展示你的作品？</strong>
+            <p>请在 GitHub Discussions 的 <a href="https://github.com/reminder2021/open-llm-app-roadmap/discussions/categories/show-and-tell" target="_blank">📣 Show and Tell</a> 频道发帖，或提交 PR 到 <code>showcase/projects/</code> 目录。</p>
+          </div>
+        </section>
+
+        <section id="discussions" class="section">
+          <h2>社区讨论</h2>
+          <p>加入社区讨论，分享你的学习经验：</p>
+
+          <div class="grid">
+            <div class="card">
+              <h3>📣 Show and Tell</h3>
+              <p>展示你的项目、分享学习成果</p>
+              <a href="https://github.com/reminder2021/open-llm-app-roadmap/discussions/categories/show-and-tell" target="_blank">前往讨论 →</a>
+            </div>
+            <div class="card">
+              <h3>❓ Q&A</h3>
+              <p>学习过程中遇到问题？在这里提问</p>
+              <a href="https://github.com/reminder2021/open-llm-app-roadmap/discussions/categories/q-a" target="_blank">前往讨论 →</a>
+            </div>
+            <div class="card">
+              <h3>💡 Ideas</h3>
+              <p>有改进建议或新想法？欢迎分享</p>
+              <a href="https://github.com/reminder2021/open-llm-app-roadmap/discussions/categories/ideas" target="_blank">前往讨论 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

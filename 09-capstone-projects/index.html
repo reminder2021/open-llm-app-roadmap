@@ -15,7 +15,7 @@
       <div class="meta-row"><span class="pill">建议周期：贯穿全程</span><span class="pill">产出：3 个作品集项目</span><span class="pill">重点：能演示、能解释、能复现</span></div>
     </section>
     <div class="layout">
-      <aside class="sidebar"><h2>项目导航</h2><a href="#chat">项目一</a><a href="#rag">项目二</a><a href="#agent">项目三</a><a href="#portfolio">作品集</a><a href="#readme">README 模板</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar"><h2>项目导航</h2><a href="#chat">项目一</a><a href="#rag">项目二</a><a href="#agent">项目三</a><a href="#frontend">前端展示</a><a href="#portfolio">作品集</a><a href="#readme">README 模板</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
       <article class="content">
         <section id="chat" class="section">
           <span class="tag">项目一</span><h2>本地聊天助手</h2>
@@ -60,6 +60,203 @@ dangerous_tools:
 - delete_file
 - write_database</code></pre></details>
         </section>
+
+        <section id="frontend" class="section">
+          <h2>前端展示（可选但推荐）</h2>
+          <p>虽然这个路线主要聚焦后端，但一个完整的 LLM 应用通常需要前端界面。以下是几种适合 LLM 应用的前端方案。</p>
+          <div class="grid">
+            <div class="card">
+              <h3>方案一：Gradio（最快上手）</h3>
+              <ul>
+                <li><strong>适合场景</strong>：快速原型、Demo 展示、内部工具</li>
+                <li><strong>优点</strong>：几行代码生成界面、支持流式输出、可直接部署到 Hugging Face</li>
+                <li><strong>缺点</strong>：自定义程度有限、不适合复杂交互</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>方案二：Streamlit（数据应用）</h3>
+              <ul>
+                <li><strong>适合场景</strong>：数据可视化、仪表板、内部工具</li>
+                <li><strong>优点</strong>：Python 原生、组件丰富、部署简单</li>
+                <li><strong>缺点</strong>：性能一般、不适合高并发</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>方案三：React + Next.js（生产级）</h3>
+              <ul>
+                <li><strong>适合场景</strong>：正式产品、需要定制化 UI</li>
+                <li><strong>优点</strong>：完全可控、性能好、生态丰富</li>
+                <li><strong>缺点</strong>：需要前端开发能力、开发周期长</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>方案四：静态 HTML + JS（轻量）</h3>
+              <ul>
+                <li><strong>适合场景</strong>：简单聊天界面、学习项目</li>
+                <li><strong>优点</strong>：无框架依赖、部署简单、易于理解</li>
+                <li><strong>缺点</strong>：功能有限、需要手动处理状态</li>
+              </ul>
+            </div>
+          </div>
+          <div class="note">
+            <strong>选择建议</strong>：
+            <ul>
+              <li>学习阶段优先用 Gradio 或 Streamlit，快速验证想法。</li>
+              <li>作品集项目建议至少有一个用 React/Next.js，展示全栈能力。</li>
+              <li>聊天界面一定要支持流式输出，用户体验差别很大。</li>
+            </ul>
+          </div>
+          <details class="example">
+            <summary>查看 Gradio 聊天界面示例</summary>
+            <pre><code class="language-python">import gradio as gr
+import httpx
+
+async def chat_with_llm(message: str, history: list):
+    """与 LLM 对话的生成器函数"""
+    # 构建消息历史
+    messages = []
+    for user_msg, bot_msg in history:
+        messages.append({"role": "user", "content": user_msg})
+        messages.append({"role": "assistant", "content": bot_msg})
+    messages.append({"role": "user", "content": message})
+
+    # 调用本地模型服务（流式）
+    async with httpx.AsyncClient(timeout=60) as client:
+        async with client.stream(
+            "POST",
+            "http://localhost:8000/v1/chat/completions",
+            json={
+                "model": "local-model",
+                "messages": messages,
+                "stream": True
+            }
+        ) as response:
+            partial = ""
+            async for line in response.aiter_lines():
+                if line.startswith("data: "):
+                    data = line[6:]
+                    if data == "[DONE]":
+                        break
+                    try:
+                        chunk = json.loads(data)
+                        content = chunk["choices"][0]["delta"].get("content", "")
+                        partial += content
+                        yield partial
+                    except:
+                        continue
+
+# 创建 Gradio 界面
+demo = gr.ChatInterface(
+    fn=chat_with_llm,
+    title="本地 LLM 聊天助手",
+    description="基于开源模型的对话系统",
+    examples=["什么是 RAG？", "解释一下 LangChain"],
+    retry_btn="重新生成",
+    undo_btn="撤销",
+    clear_btn="清空对话"
+)
+
+if __name__ == "__main__":
+    demo.launch(server_port=7860)</code></pre>
+          </details>
+          <details class="example">
+            <summary>查看简单 HTML 聊天界面示例</summary>
+            <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="zh"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;LLM 聊天助手&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        #chat-box { height: 400px; overflow-y: border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+        .message { margin: 10px 0; padding: 8px 12px; border-radius: 8px; }
+        .user { background: #007bff; color: white; text-align: right; }
+        .bot { background: #f1f1f1; }
+        #input-area { display: flex; gap: 10px; }
+        #user-input { flex: 1; padding: 10px; }
+        button { padding: 10px 20px; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;LLM 聊天助手&lt;/h1&gt;
+    &lt;div id="chat-box"&gt;&lt;/div&gt;
+    &lt;div id="input-area"&gt;
+        &lt;input type="text" id="user-input" placeholder="输入消息..."&gt;
+        &lt;button onclick="sendMessage()"&gt;发送&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // 显示用户消息
+            appendMessage('user', message);
+            userInput.value = '';
+
+            // 调用后端 API
+            try {
+                const response = await fetch('/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        model: 'local-model',
+                        messages: [{role: 'user', content: message}],
+                        stream: true
+                    })
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let botMessage = '';
+                const botDiv = appendMessage('bot', '');
+
+                while (true) {
+                    const {done, value} = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6);
+                            if (data === '[DONE]') break;
+                            try {
+                                const json = JSON.parse(data);
+                                const content = json.choices[0].delta.content || '';
+                                botMessage += content;
+                                botDiv.textContent = botMessage;
+                            } catch (e) {}
+                        }
+                    }
+                }
+            } catch (error) {
+                appendMessage('bot', '错误: ' + error.message);
+            }
+        }
+
+        function appendMessage(role, content) {
+            const div = document.createElement('div');
+            div.className = 'message ' + role;
+            div.textContent = content;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return div;
+        }
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </details>
+        </section>
+
         <section id="portfolio" class="section">
           <h2>作品集要求</h2>
           <ul>

@@ -25,6 +25,7 @@
         <a href="#goals">学习目标</a>
         <a href="#concepts">模型概念</a>
         <a href="#runtime">运行方式</a>
+        <a href="#chinese-models">中文模型</a>
         <a href="#params">推理参数</a>
         <a href="#practice">练习任务</a>
         <a href="#project">实践项目</a>
@@ -61,6 +62,94 @@
             <div class="card"><span class="tag">Transformers</span><p>适合理解 tokenizer、model、chat template 和推理代码。</p></div>
             <div class="card"><span class="tag">vLLM</span><p>适合部署服务，支持 OpenAI-compatible API、并发和高吞吐。</p></div>
           </div>
+        </section>
+
+        <section id="chinese-models" class="section">
+          <h2>中文模型实践经验</h2>
+          <p>中文场景下，选择对中文友好的模型可以显著提升效果。以下是几个主流中文开源模型的实践经验。</p>
+          <div class="grid">
+            <div class="card">
+              <h3>Qwen 系列（通义千问）</h3>
+              <ul>
+                <li><strong>推荐版本</strong>：Qwen2.5-7B-Instruct、Qwen2.5-14B-Instruct</li>
+                <li><strong>特点</strong>：中文能力强、工具调用支持好、上下文窗口大</li>
+                <li><strong>适用场景</strong>：通用对话、RAG、工具调用、代码生成</li>
+                <li><strong>Ollama 快速体验</strong>：<code>ollama run qwen2.5:7b</code></li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>ChatGLM 系列</h3>
+              <ul>
+                <li><strong>推荐版本</strong>：GLM-4-9B-Chat</li>
+                <li><strong>特点</strong>：中文理解准确、推理速度快、社区活跃</li>
+                <li><strong>适用场景</strong>：中文问答、文本摘要、信息抽取</li>
+                <li><strong>注意事项</strong>：chat template 与其他模型不同，需特别处理</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Yi 系列（零一万物）</h3>
+              <ul>
+                <li><strong>推荐版本</strong>：Yi-1.5-9B-Chat</li>
+                <li><strong>特点</strong>：双语能力强、指令遵循好</li>
+                <li><strong>适用场景</strong>：中英双语任务、创意写作</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>DeepSeek 系列</h3>
+              <ul>
+                <li><strong>推荐版本</strong>：DeepSeek-V2-Lite、DeepSeek-Coder-V2</li>
+                <li><strong>特点</strong>：代码能力强、推理能力突出</li>
+                <li><strong>适用场景</strong>：代码生成、数学推理、技术问答</li>
+              </ul>
+            </div>
+          </div>
+          <div class="note">
+            <strong>选择建议</strong>：
+            <ul>
+              <li>入门阶段先用 Qwen2.5-7B 或 GLM-4-9B，中文效果好且资源要求适中。</li>
+              <li>需要工具调用能力优先选 Qwen 系列。</li>
+              <li>需要代码能力优先选 DeepSeek-Coder。</li>
+              <li>显存不足时考虑 4-bit 量化版本。</li>
+            </ul>
+          </div>
+          <details class="example">
+            <summary>查看中文模型对比测试示例</summary>
+            <pre><code class="language-python">import httpx
+
+def test_chinese_model(model_name: str, question: str) -> dict:
+    """测试不同中文模型的回答质量"""
+    url = "http://localhost:11434/api/chat"  # Ollama 默认端口
+
+    payload = {
+        "model": model_name,
+        "messages": [
+            {"role": "system", "content": "你是一个专业的中文助手，请用简洁准确的中文回答。"},
+            {"role": "user", "content": question}
+        ],
+        "stream": False
+    }
+
+    response = httpx.post(url, json=payload, timeout=120)
+    response.raise_for_status()
+    return {
+        "model": model_name,
+        "answer": response.json()["message"]["content"]
+    }
+
+# 测试问题
+test_question = "解释什么是 RAG，并给出一个实际应用场景。"
+
+# 对比不同模型（需要先用 ollama pull 下载）
+models_to_test = ["qwen2.5:7b", "glm4:9b", "yi:9b"]
+
+for model in models_to_test:
+    try:
+        result = test_chinese_model(model, test_question)
+        print(f"\n--- {model} ---")
+        print(result["answer"][:200] + "...")
+    except Exception as e:
+        print(f"{model} 测试失败: {e}")</code></pre>
+          </details>
         </section>
 
         <section id="params" class="section">

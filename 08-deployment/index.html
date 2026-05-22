@@ -15,7 +15,7 @@
       <div class="meta-row"><span class="pill">建议周期：3-6 周</span><span class="pill">产出：可部署 LLM 应用</span><span class="pill">重点：稳定、安全、可观测</span></div>
     </section>
     <div class="layout">
-      <aside class="sidebar"><h2>本阶段模块</h2><a href="#serve">模型服务</a><a href="#ops">工程能力</a><a href="#security">安全</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#serve">模型服务</a><a href="#ops">工程能力</a><a href="#security">安全</a><a href="#cost">成本控制</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
       <article class="content">
         <section id="serve" class="section">
           <h2>模型服务</h2>
@@ -47,6 +47,140 @@
             <li>不要在日志里记录完整密钥、隐私和敏感文本。</li>
           </ul>
         </section>
+
+        <section id="cost" class="section">
+          <h2>成本控制与 Token 计费</h2>
+          <p>LLM 应用的成本主要来自模型调用。理解 Token 计费、做好成本监控和优化，是生产部署的必备能力。</p>
+          <div class="grid">
+            <div class="card">
+              <h3>理解 Token 计费</h3>
+              <ul>
+                <li><strong>输入 Token</strong>：Prompt + 上下文 + 历史消息</li>
+                <li><strong>输出 Token</strong>：模型生成的回答</li>
+                <li><strong>计费单位</strong>：通常按千 Token 或百万 Token 计费</li>
+                <li><strong>中文特点</strong>：1 个汉字通常消耗 1-2 个 Token</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>成本优化策略</h3>
+              <ul>
+                <li><strong>模型选择</strong>：简单任务用小模型，复杂任务用大模型</li>
+                <li><strong>Prompt 精简</strong>：减少不必要的上下文和示例</li>
+                <li><strong>缓存</strong>：相同问题复用历史回答</li>
+                <li><strong>批量处理</strong>：合并多个请求减少调用次数</li>
+              </ul>
+            </div>
+          </div>
+          <div class="note">建议：在开发阶段就加入 Token 统计，不要等到上线后才发现成本超出预期。</div>
+          <details class="example">
+            <summary>查看 Token 统计与成本计算示例</summary>
+            <pre><code class="language-python">import tiktoken
+from dataclasses import dataclass
+
+@dataclass
+class TokenUsage:
+    prompt_tokens: int
+    completion_tokens: int
+    total_tokens: int
+
+def count_tokens(text: str, model: str = "gpt-3.5-turbo") -> int:
+    """统计文本的 Token 数量"""
+    try:
+        encoding = tiktoken.encoding_for_model(model)
+        return len(encoding.encode(text))
+    except KeyError:
+        # 对于非 OpenAI 模型，使用通用估算
+        # 中文约 1.5 字符/Token，英文约 4 字符/Token
+        return len(text) // 2
+
+def estimate_cost(usage: TokenUsage, model: str) -> dict:
+    """估算调用成本（以 OpenAI 价格为参考）"""
+    pricing = {
+        "gpt-3.5-turbo": {"input": 0.0015, "output": 0.002},  # 每千 Token 价格（美元）
+        "gpt-4": {"input": 0.03, "output": 0.06},
+        "gpt-4-turbo": {"input": 0.01, "output": 0.03},
+    }
+
+    if model not in pricing:
+        return {"error": f"未知模型: {model}"}
+
+    prices = pricing[model]
+    input_cost = (usage.prompt_tokens / 1000) * prices["input"]
+    output_cost = (usage.completion_tokens / 1000) * prices["output"]
+
+    return {
+        "input_cost_usd": round(input_cost, 6),
+        "output_cost_usd": round(output_cost, 6),
+        "total_cost_usd": round(input_cost + output_cost, 6),
+    }
+
+# 使用示例
+prompt = "请解释什么是 RAG？"
+response = "RAG（检索增强生成）是一种结合检索和生成的技术..."
+
+usage = TokenUsage(
+    prompt_tokens=count_tokens(prompt),
+    completion_tokens=count_tokens(response),
+    total_tokens=count_tokens(prompt) + count_tokens(response)
+)
+
+print(f"输入 Token: {usage.prompt_tokens}")
+print(f"输出 Token: {usage.completion_tokens}")
+print(f"总 Token: {usage.total_tokens}")
+
+cost = estimate_cost(usage, "gpt-3.5-turbo")
+print(f"预估成本: ${cost['total_cost_usd']}")</code></pre>
+          </details>
+          <details class="example">
+            <summary>查看成本监控中间件示例</summary>
+            <pre><code class="language-python">import time
+import logging
+from fastapi import Request
+from collections import defaultdict
+
+logger = logging.getLogger("cost-monitor")
+
+# 简单的内存统计，生产环境建议用 Redis 或数据库
+usage_stats = defaultdict(lambda: {"requests": 0, "tokens": 0, "cost": 0.0})
+
+async def cost_monitor_middleware(request: Request, call_next):
+    """监控每个请求的 Token 使用和成本"""
+    start_time = time.perf_counter()
+
+    response = await call_next(request)
+
+    # 从响应头或上下文中获取 Token 使用量
+    # 这里需要你的应用在处理过程中记录这些信息
+    if hasattr(request.state, "token_usage"):
+        usage = request.state.token_usage
+        endpoint = request.url.path
+
+        usage_stats[endpoint]["requests"] += 1
+        usage_stats[endpoint]["tokens"] += usage.get("total_tokens", 0)
+        usage_stats[endpoint]["cost"] += usage.get("cost", 0.0)
+
+        logger.info(
+            "endpoint=%s tokens=%d cost=%.6f",
+            endpoint,
+            usage.get("total_tokens", 0),
+            usage.get("cost", 0.0)
+        )
+
+    return response
+
+def get_usage_report() -> dict:
+    """获取使用统计报告"""
+    return {
+        "summary": {
+            "total_requests": sum(s["requests"] for s in usage_stats.values()),
+            "total_tokens": sum(s["tokens"] for s in usage_stats.values()),
+            "total_cost": sum(s["cost"] for s in usage_stats.values()),
+        },
+        "by_endpoint": dict(usage_stats)
+    }</code></pre>
+          </details>
+        </section>
+
         <section id="practice" class="section">
           <h2>练习任务</h2>
           <div class="practice-list">

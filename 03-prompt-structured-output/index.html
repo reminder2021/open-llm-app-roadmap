@@ -15,7 +15,7 @@
       <div class="meta-row"><span class="pill">建议周期：2-3 周</span><span class="pill">产出：结构化信息抽取服务</span><span class="pill">重点：稳定、可校验、可重试</span></div>
     </section>
     <div class="layout">
-      <aside class="sidebar"><h2>本阶段模块</h2><a href="#goals">学习目标</a><a href="#prompt">Prompt 设计</a><a href="#json">结构化输出</a><a href="#state">会话状态</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#goals">学习目标</a><a href="#prompt">Prompt 设计</a><a href="#json">结构化输出</a><a href="#state">会话状态</a><a href="#evaluation">Prompt 评估</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
       <article class="content">
         <section id="goals" class="section">
           <h2>学习目标</h2>
@@ -57,6 +57,87 @@
             <li>敏感信息不要无脑放入历史消息。</li>
             <li>业务状态最好由程序保存，不要完全依赖模型记忆。</li>
           </ul>
+        </section>
+
+        <section id="evaluation" class="section">
+          <h2>Prompt 评估（从这里开始积累测试集）</h2>
+          <p>评估不是最后才做的事。从这个阶段开始，你就应该建立测试集和评估习惯，这样才能知道 Prompt 改动是否真的有效。</p>
+          <div class="grid">
+            <div class="card">
+              <h3>为什么现在就要评估</h3>
+              <ul>
+                <li>Prompt 改一个词可能让输出变好或变差。</li>
+                <li>没有测试集，你无法知道改动是否真的有效。</li>
+                <li>后续 RAG、工具调用、微调都需要评估基础。</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Prompt 评估指标</h3>
+              <ul>
+                <li><strong>格式正确率</strong>：JSON 解析成功率。</li>
+                <li><strong>字段完整率</strong>：必填字段是否都有值。</li>
+                <li><strong>内容准确率</strong>：抽取结果是否正确。</li>
+                <li><strong>重试成功率</strong>：修复后能否通过校验。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="note">建议：为每个 Prompt 模板准备 20-50 条测试样本，覆盖正常、边界和异常情况。后续可以逐步扩展到 100+ 条。</div>
+          <details class="example">
+            <summary>查看 Prompt 评估示例</summary>
+            <pre><code class="language-python">import json
+from pathlib import Path
+
+def evaluate_extraction(test_cases: list[dict], extract_fn) -> dict:
+    results = {
+        "total": len(test_cases),
+        "json_parse_success": 0,
+        "field_complete": 0,
+        "accuracy": 0,
+    }
+
+    for case in test_cases:
+        output = extract_fn(case["input"])
+
+        # 检查 JSON 解析是否成功
+        try:
+            data = json.loads(output)
+            results["json_parse_success"] += 1
+        except json.JSONDecodeError:
+            continue
+
+        # 检查必填字段是否完整
+        required_fields = ["name", "skills", "years"]
+        if all(field in data for field in required_fields):
+            results["field_complete"] += 1
+
+        # 检查内容准确性（简单匹配示例）
+        if data.get("name") == case.get("expected_name"):
+            results["accuracy"] += 1
+
+    # 计算百分比
+    for key in ["json_parse_success", "field_complete", "accuracy"]:
+        results[f"{key}_rate"] = results[key] / results["total"]
+
+    return results
+
+# 示例测试集
+test_cases = [
+    {
+        "input": "张三，Python 工程师，有 3 年后端经验。",
+        "expected_name": "张三"
+    },
+    {
+        "input": "李四，前端开发，React 和 Vue 都会。",
+        "expected_name": "李四"
+    },
+]
+
+# 假设 extract_fn 是你的抽取函数
+# results = evaluate_extraction(test_cases, your_extract_function)
+# print(f"JSON 解析成功率: {results['json_parse_success_rate']:.2%}")
+# print(f"字段完整率: {results['field_complete_rate']:.2%}")
+# print(f"准确率: {results['accuracy_rate']:.2%}")</code></pre>
+          </details>
         </section>
 
         <section id="practice" class="section">

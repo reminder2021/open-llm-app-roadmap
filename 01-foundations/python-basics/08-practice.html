@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>综合练习 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="08-practice.html">08 综合练习</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第八章：综合练习</h1>
+      <p>把前面学到的所有知识串联起来，完成一个完整的项目。这是检验你学习成果的最佳方式。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：2-3 天</span>
+        <span class="pill">目标：完成一个完整的数据处理项目</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#project-overview">项目概述</a>
+        <a href="#project-1">项目一：测试报告解析器</a>
+        <a href="#project-2">项目二：简单聊天记录管理</a>
+        <a href="#project-3">项目三：Prompt 模板系统</a>
+        <a href="#next-steps">下一步</a>
+        <a href="07-packages.html">← 上一章：包管理</a>
+        <a href="../index.html">返回 01 阶段 →</a>
+      </aside>
+
+      <article class="content">
+        <section id="project-overview" class="section">
+          <h2>项目概述</h2>
+          <p>完成以下三个项目，每个项目都综合运用前面学到的知识：</p>
+          <div class="grid">
+            <div class="card">
+              <h3>项目一</h3>
+              <p>测试报告解析器 - 练习文件操作、数据结构、函数</p>
+            </div>
+            <div class="card">
+              <h3>项目二</h3>
+              <p>简单聊天记录管理 - 练习 JSON、错误处理、类</p>
+            </div>
+            <div class="card">
+              <h3>项目三</h3>
+              <p>Prompt 模板系统 - 练习字符串操作、文件操作</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="project-1" class="section">
+          <h2>项目一：测试报告解析器</h2>
+          <p>创建一个程序，解析 JSON 格式的测试报告，生成摘要统计。</p>
+
+          <h3>需求</h3>
+          <ul>
+            <li>读取 JSON 格式的测试报告文件</li>
+            <li>统计通过率、失败率、平均耗时</li>
+            <li>输出格式化的报告摘要</li>
+            <li>保存结果到新文件</li>
+          </ul>
+
+          <h3>参考代码</h3>
+          <pre><code class="language-python">"""
+测试报告解析器
+
+功能：
+1. 读取 JSON 格式的测试报告
+2. 统计通过率、失败率、平均耗时
+3. 输出格式化的报告摘要
+4. 保存结果到文件
+"""
+
+import json
+from pathlib import Path
+from datetime import datetime
+
+
+def load_report(file_path: str) -> dict:
+    """加载测试报告
+    
+    Args:
+        file_path: 报告文件路径
+    
+    Returns:
+        报告数据字典，加载失败返回空字典
+    """
+    try:
+        content = Path(file_path).read_text(encoding="utf-8")
+        return json.loads(content)
+    except FileNotFoundError:
+        print(f"文件不存在: {file_path}")
+        return {}
+    except json.JSONDecodeError as e:
+        print(f"JSON 解析错误: {e}")
+        return {}
+
+
+def calculate_stats(results: list) -> dict:
+    """计算统计数据
+    
+    Args:
+        results: 测试结果列表
+    
+    Returns:
+        统计数据字典
+    """
+    if not results:
+        return {
+            "total": 0,
+            "passed": 0,
+            "failed": 0,
+            "pass_rate": "N/A",
+            "avg_duration": "N/A"
+        }
+    
+    total = len(results)
+    passed = sum(1 for r in results if r.get("result") == "通过")
+    failed = total - passed
+    durations = [r.get("duration", 0) for r in results]
+    
+    return {
+        "total": total,
+        "passed": passed,
+        "failed": failed,
+        "pass_rate": f"{passed / total:.1%}" if total > 0 else "N/A",
+        "avg_duration": f"{sum(durations) / len(durations):.2f}s" if durations else "N/A"
+    }
+
+
+def generate_summary(report: dict, stats: dict) -> str:
+    """生成报告摘要
+    
+    Args:
+        report: 原始报告数据
+        stats: 统计数据
+    
+    Returns:
+        格式化的摘要字符串
+    """
+    return f"""
+=== 测试报告摘要 ===
+项目: {report.get("project", "未知")}
+时间: {report.get("timestamp", "未知")}
+总数: {stats["total"]}
+通过: {stats["passed"]}
+失败: {stats["failed"]}
+通过率: {stats["pass_rate"]}
+平均耗时: {stats["avg_duration"]}
+==================
+"""
+
+
+def save_summary(summary: str, output_path: str):
+    """保存摘要到文件
+    
+    Args:
+        summary: 摘要内容
+        output_path: 输出文件路径
+    """
+    Path(output_path).write_text(summary, encoding="utf-8")
+    print(f"摘要已保存到: {output_path}")
+
+
+def main():
+    """主函数"""
+    # 创建示例测试报告
+    sample_report = {
+        "project": "LLM 应用测试",
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "results": [
+            {"case_id": "TC001", "result": "通过", "duration": 1.2},
+            {"case_id": "TC002", "result": "失败", "duration": 0.8},
+            {"case_id": "TC003", "result": "通过", "duration": 1.5},
+            {"case_id": "TC004", "result": "通过", "duration": 1.1},
+            {"case_id": "TC005", "result": "失败", "duration": 0.9},
+        ]
+    }
+    
+    # 保存示例报告
+    report_path = "test_report.json"
+    Path(report_path).write_text(
+        json.dumps(sample_report, ensure_ascii=False, indent=2),
+        encoding="utf-8"
+    )
+    
+    # 加载报告
+    report = load_report(report_path)
+    if not report:
+        print("无法加载报告")
+        return
+    
+    # 计算统计
+    stats = calculate_stats(report.get("results", []))
+    
+    # 生成摘要
+    summary = generate_summary(report, stats)
+    print(summary)
+    
+    # 保存摘要
+    save_summary(summary, "test_summary.txt")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+
+          <h3>扩展挑战</h3>
+          <ul>
+            <li>添加按日期筛选功能</li>
+            <li>生成 CSV 格式的详细报告</li>
+            <li>添加失败案例的详细信息</li>
+          </ul>
+        </section>
+
+        <section id="project-2" class="section">
+          <h2>项目二：简单聊天记录管理</h2>
+          <p>创建一个聊天记录管理系统，支持保存、加载、查询聊天记录。</p>
+
+          <h3>需求</h3>
+          <ul>
+            <li>保存聊天记录到 JSON 文件</li>
+            <li>从文件加载聊天记录</li>
+            <li>添加新消息</li>
+            <li>查询历史消息</li>
+            <li>清空聊天记录</li>
+          </ul>
+
+          <h3>参考代码</h3>
+          <pre><code class="language-python">"""
+简单聊天记录管理
+
+功能：
+1. 保存聊天记录到 JSON 文件
+2. 从文件加载聊天记录
+3. 添加新消息
+4. 查询历史消息
+5. 清空聊天记录
+"""
+
+import json
+from pathlib import Path
+from datetime import datetime
+
+
+class ChatHistory:
+    """聊天记录管理器"""
+    
+    def __init__(self, file_path: str = "chat_history.json"):
+        """初始化
+        
+        Args:
+            file_path: 聊天记录文件路径
+        """
+        self.file_path = Path(file_path)
+        self.messages = self._load()
+    
+    def _load(self) -> list:
+        """从文件加载聊天记录
+        
+        Returns:
+            消息列表
+        """
+        try:
+            if self.file_path.exists():
+                content = self.file_path.read_text(encoding="utf-8")
+                return json.loads(content)
+        except (json.JSONDecodeError, Exception) as e:
+            print(f"加载聊天记录失败: {e}")
+        return []
+    
+    def _save(self):
+        """保存聊天记录到文件"""
+        try:
+            self.file_path.write_text(
+                json.dumps(self.messages, ensure_ascii=False, indent=2),
+                encoding="utf-8"
+            )
+        except Exception as e:
+            print(f"保存聊天记录失败: {e}")
+    
+    def add_message(self, role: str, content: str):
+        """添加一条消息
+        
+        Args:
+            role: 角色（user 或 assistant）
+            content: 消息内容
+        """
+        message = {
+            "role": role,
+            "content": content,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        self.messages.append(message)
+        self._save()
+        print(f"已添加 {role} 消息")
+    
+    def get_history(self, limit: int = None) -> list:
+        """获取聊天历史
+        
+        Args:
+            limit: 返回的最大消息数，None 表示全部
+        
+        Returns:
+            消息列表
+        """
+        if limit:
+            return self.messages[-limit:]
+        return self.messages
+    
+    def search(self, keyword: str) -> list:
+        """搜索包含关键词的消息
+        
+        Args:
+            keyword: 搜索关键词
+        
+        Returns:
+            匹配的消息列表
+        """
+        return [
+            msg for msg in self.messages
+            if keyword.lower() in msg["content"].lower()
+        ]
+    
+    def clear(self):
+        """清空聊天记录"""
+        self.messages = []
+        self._save()
+        print("聊天记录已清空")
+    
+    def get_stats(self) -> dict:
+        """获取统计信息
+        
+        Returns:
+            统计信息字典
+        """
+        user_count = sum(1 for m in self.messages if m["role"] == "user")
+        assistant_count = sum(1 for m in self.messages if m["role"] == "assistant")
+        
+        return {
+            "total": len(self.messages),
+            "user_messages": user_count,
+            "assistant_messages": assistant_count
+        }
+
+
+def main():
+    """主函数"""
+    # 创建聊天记录管理器
+    chat = ChatHistory("demo_chat.json")
+    
+    # 添加一些示例消息
+    chat.add_message("user", "什么是 RAG？")
+    chat.add_message("assistant", "RAG 是检索增强生成（Retrieval-Augmented Generation）的缩写...")
+    chat.add_message("user", "能举个例子吗？")
+    chat.add_message("assistant", "当然！比如你可以用 RAG 构建一个知识库问答系统...")
+    
+    # 打印历史
+    print("\n=== 聊天历史 ===")
+    for msg in chat.get_history():
+        print(f"[{msg['role']}] {msg['content'][:50]}...")
+    
+    # 打印统计
+    print("\n=== 统计信息 ===")
+    stats = chat.get_stats()
+    print(f"总消息数: {stats['total']}")
+    print(f"用户消息: {stats['user_messages']}")
+    print(f"助手消息: {stats['assistant_messages']}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+        </section>
+
+        <section id="project-3" class="section">
+          <h2>项目三：Prompt 模板系统</h2>
+          <p>创建一个 Prompt 模板管理系统，支持模板的创建、加载、填充和保存。</p>
+
+          <h3>需求</h3>
+          <ul>
+            <li>创建和保存 Prompt 模板</li>
+            <li>加载模板文件</li>
+            <li>用参数填充模板</li>
+            <li>管理多个模板</li>
+          </ul>
+
+          <h3>参考代码</h3>
+          <pre><code class="language-python">"""
+Prompt 模板系统
+
+功能：
+1. 创建和保存 Prompt 模板
+2. 加载模板文件
+3. 用参数填充模板
+4. 管理多个模板
+"""
+
+from pathlib import Path
+import json
+
+
+class PromptTemplate:
+    """Prompt 模板"""
+    
+    def __init__(self, name: str, template: str, description: str = ""):
+        """初始化
+        
+        Args:
+            name: 模板名称
+            template: 模板内容
+            description: 模板描述
+        """
+        self.name = name
+        self.template = template
+        self.description = description
+    
+    def fill(self, **kwargs) -> str:
+        """用参数填充模板
+        
+        Args:
+            **kwargs: 模板参数
+        
+        Returns:
+            填充后的 Prompt
+        """
+        result = self.template
+        for key, value in kwargs.items():
+            placeholder = "{{" + key + "}}"
+            result = result.replace(placeholder, str(value))
+        return result
+    
+    def to_dict(self) -> dict:
+        """转换为字典"""
+        return {
+            "name": self.name,
+            "template": self.template,
+            "description": self.description
+        }
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> 'PromptTemplate':
+        """从字典创建模板"""
+        return cls(
+            name=data["name"],
+            template=data["template"],
+            description=data.get("description", "")
+        )
+
+
+class PromptManager:
+    """Prompt 模板管理器"""
+    
+    def __init__(self, templates_dir: str = "prompts"):
+        """初始化
+        
+        Args:
+            templates_dir: 模板目录
+        """
+        self.templates_dir = Path(templates_dir)
+        self.templates_dir.mkdir(parents=True, exist_ok=True)
+        self.templates = {}
+        self._load_all()
+    
+    def _load_all(self):
+        """加载所有模板"""
+        for file in self.templates_dir.glob("*.json"):
+            try:
+                content = file.read_text(encoding="utf-8")
+                data = json.loads(content)
+                template = PromptTemplate.from_dict(data)
+                self.templates[template.name] = template
+            except Exception as e:
+                print(f"加载模板失败 {file}: {e}")
+    
+    def add(self, template: PromptTemplate):
+        """添加模板
+        
+        Args:
+            template: Prompt 模板
+        """
+        self.templates[template.name] = template
+        self._save(template)
+        print(f"模板 '{template.name}' 已添加")
+    
+    def _save(self, template: PromptTemplate):
+        """保存模板到文件"""
+        file_path = self.templates_dir / f"{template.name}.json"
+        file_path.write_text(
+            json.dumps(template.to_dict(), ensure_ascii=False, indent=2),
+            encoding="utf-8"
+        )
+    
+    def get(self, name: str) -> PromptTemplate:
+        """获取模板
+        
+        Args:
+            name: 模板名称
+        
+        Returns:
+            Prompt 模板
+        """
+        return self.templates.get(name)
+    
+    def list_templates(self) -> list:
+        """列出所有模板
+        
+        Returns:
+            模板名称列表
+        """
+        return list(self.templates.keys())
+    
+    def delete(self, name: str):
+        """删除模板
+        
+        Args:
+            name: 模板名称
+        """
+        if name in self.templates:
+            del self.templates[name]
+            file_path = self.templates_dir / f"{name}.json"
+            if file_path.exists():
+                file_path.unlink()
+            print(f"模板 '{name}' 已删除")
+        else:
+            print(f"模板 '{name}' 不存在")
+
+
+def main():
+    """主函数"""
+    # 创建模板管理器
+    manager = PromptManager("demo_prompts")
+    
+    # 创建一些示例模板
+    qa_template = PromptTemplate(
+        name="qa",
+        template="""请根据以下参考资料回答问题。
+
+参考资料：
+{{context}}
+
+问题：
+{{question}}
+
+要求：
+1. 只基于参考资料回答
+2. 如果资料中没有答案，请回答"根据当前资料无法判断"
+3. 回答后列出引用来源""",
+        description="知识库问答模板"
+    )
+    
+    summary_template = PromptTemplate(
+        name="summary",
+        template="""请用简洁的中文总结以下内容，不超过 {{max_words}} 个字。
+
+内容：
+{{content}}
+
+总结：""",
+        description="文本摘要模板"
+    )
+    
+    # 添加模板
+    manager.add(qa_template)
+    manager.add(summary_template)
+    
+    # 列出所有模板
+    print("\n=== 模板列表 ===")
+    for name in manager.list_templates():
+        print(f"- {name}")
+    
+    # 使用模板
+    print("\n=== 使用问答模板 ===")
+    template = manager.get("qa")
+    prompt = template.fill(
+        context="RAG 是检索增强生成技术，通过检索外部知识来增强模型回答。",
+        question="什么是 RAG？"
+    )
+    print(prompt)
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+        </section>
+
+        <section id="next-steps" class="section">
+          <h2>恭喜完成！</h2>
+          <p>如果你完成了以上三个项目，说明你已经掌握了 Python 的基础知识，可以进入 LLM 应用开发的正式学习了！</p>
+
+          <h3>你已经学会了</h3>
+          <div class="grid">
+            <div class="card">
+              <h3>基础语法</h3>
+              <ul>
+                <li>变量、数据类型、字符串操作</li>
+                <li>条件判断、循环</li>
+                <li>函数定义和调用</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>数据处理</h3>
+              <ul>
+                <li>列表、字典、嵌套结构</li>
+                <li>JSON 解析和生成</li>
+                <li>CSV 文件读写</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>工程能力</h3>
+              <ul>
+                <li>文件操作</li>
+                <li>错误处理</li>
+                <li>包管理和虚拟环境</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>准备度检查清单</h3>
+          <div class="note">
+            <p>在进入 01 阶段主内容之前，确认你能完成以下任务：</p>
+            <ul>
+              <li>✅ 能创建和运行 Python 文件</li>
+              <li>✅ 能使用列表和字典存储数据</li>
+              <li>✅ 能解析和生成 JSON</li>
+              <li>✅ 能定义和调用函数</li>
+              <li>✅ 能读写文件</li>
+              <li>✅ 能用 try/except 处理错误</li>
+              <li>✅ 能用 pip 安装包</li>
+            </ul>
+            <p>如果以上都能做到，你已经准备好进入 LLM 应用开发的正式学习了！</p>
+          </div>
+
+          <div style="text-align: center; margin-top: 30px;">
+            <a href="../index.html" class="btn-primary">进入 01 阶段主内容 →</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">恭喜完成 Python 零基础入门！你已经为 LLM 应用开发打下了坚实的基础。</div>
+  </footer>
+</body>
+</html>

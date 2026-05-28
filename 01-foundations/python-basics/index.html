@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="../index.html">01 基础</a>
+        <a class="current" href="index.html">Python 入门</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>Python 零基础入门</h1>
+      <p>专为没有编程基础的学习者设计。如果你是测试人员、产品经理或任何想学习 LLM 应用开发的人，这个模块会帮你从零开始掌握 Python 基础。</p>
+      <div class="meta-row">
+        <span class="pill">建议周期：2-3 周</span>
+        <span class="pill">目标：能看懂并写出 LLM 应用相关代码</span>
+        <span class="pill">前置要求：会用电脑、会用浏览器</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>章节导航</h2>
+        <a class="current" href="index.html">学习指引</a>
+        <a href="01-environment.html">01 环境搭建</a>
+        <a href="02-syntax.html">02 基本语法</a>
+        <a href="03-data-structures.html">03 数据结构</a>
+        <a href="04-functions.html">04 函数</a>
+        <a href="05-files.html">05 文件操作</a>
+        <a href="06-errors.html">06 错误处理</a>
+        <a href="07-packages.html">07 包管理</a>
+        <a href="08-practice.html">08 综合练习</a>
+        <a href="../index.html">返回 01 阶段</a>
+      </aside>
+
+      <article class="content">
+        <section class="section">
+          <h2>这个模块适合谁？</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 适合你</h3>
+              <ul>
+                <li>没有编程基础，但想学 LLM 应用开发</li>
+                <li>测试人员想转型 AI 应用开发</li>
+                <li>产品经理想理解技术实现</li>
+                <li>任何对 LLM 感兴趣的非程序员</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>⏭️ 可以跳过</h3>
+              <ul>
+                <li>已经有 Python 基础</li>
+                <li>熟悉其他编程语言（Java、JavaScript 等）</li>
+                <li>能看懂简单的 Python 代码</li>
+              </ul>
+            </div>
+          </div>
+          <div class="note">如果你有编程基础，可以直接进入 <a href="../index.html">01 阶段主内容</a>。</div>
+        </section>
+
+        <section class="section">
+          <h2>你会学到什么？</h2>
+          <p>这个模块不追求 Python 的全部特性，只教你 LLM 应用开发需要的核心能力：</p>
+          <div class="grid">
+            <div class="card">
+              <h3>环境搭建</h3>
+              <p>安装 Python、配置编辑器、学会用命令行运行代码。</p>
+            </div>
+            <div class="card">
+              <h3>基本语法</h3>
+              <p>变量、数据类型、条件判断、循环——理解代码的基本结构。</p>
+            </div>
+            <div class="card">
+              <h3>数据结构</h3>
+              <p>列表、字典、JSON——处理 LLM 返回的结构化数据。</p>
+            </div>
+            <div class="card">
+              <h3>函数</h3>
+              <p>把重复的代码封装成函数——写更整洁、可复用的代码。</p>
+            </div>
+            <div class="card">
+              <h3>文件操作</h3>
+              <p>读写文本、JSON、CSV——处理 Prompt 模板和测试数据。</p>
+            </div>
+            <div class="card">
+              <h3>错误处理</h3>
+              <p>用 try/except 捕获异常——让程序在出错时不会崩溃。</p>
+            </div>
+            <div class="card">
+              <h3>包管理</h3>
+              <p>用 pip 安装库、管理依赖——使用 httpx、pydantic 等工具。</p>
+            </div>
+            <div class="card">
+              <h3>综合练习</h3>
+              <p>完成一个小项目——把所学知识串联起来。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" style="background: #f0f7ff; border-radius: 8px; margin: 24px 0; padding: 24px;">
+          <h2>📚 示例大全（强烈推荐！）</h2>
+          <p>每个章节都配有<strong>示例大全</strong>，包含大量带详细注释的代码示例和运行结果。建议学习时同时参考：</p>
+          <div class="grid">
+            <div class="card">
+              <h3>📝 基本语法示例</h3>
+              <p>变量、数据类型、字符串、条件判断、循环的详细示例</p>
+              <a href="02-syntax-examples.html" class="btn-primary">查看示例 →</a>
+            </div>
+            <div class="card">
+              <h3>📦 数据结构示例</h3>
+              <p>列表、字典、嵌套结构、JSON的详细示例</p>
+              <a href="03-data-structures-examples.html" class="btn-primary">查看示例 →</a>
+            </div>
+            <div class="card">
+              <h3>🔧 函数示例</h3>
+              <p>定义函数、参数、返回值、实际应用示例</p>
+              <a href="04-functions-examples.html" class="btn-primary">查看示例 →</a>
+            </div>
+            <div class="card">
+              <h3>📁 文件与错误处理示例</h3>
+              <p>文件读写、JSON操作、错误处理示例</p>
+              <a href="05-06-examples.html" class="btn-primary">查看示例 →</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>学习路径</h2>
+          <div class="timeline">
+            <article class="timeline-item">
+              <h3>第 1 周：环境 + 语法 + 数据结构</h3>
+              <p>搭建开发环境，学会 Python 的基本语法和数据处理。这是最基础的部分，需要多练习。</p>
+            </article>
+            <article class="timeline-item">
+              <h3>第 2 周：函数 + 文件操作</h3>
+              <p>学会用函数封装代码，掌握文件读写。这些技能在后续 LLM 应用开发中会频繁使用。</p>
+            </article>
+            <article class="timeline-item">
+              <h3>第 3 周：错误处理 + 包管理 + 综合练习</h3>
+              <p>学会写出健壮的代码，掌握依赖管理，最后完成一个综合练习项目。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>与 LLM 应用开发的关联</h2>
+          <p>你在这里学到的每个知识点，都会在后续的 LLM 应用开发中用到：</p>
+          <div class="note">
+            <ul>
+              <li><strong>字符串操作</strong> → 构造 Prompt 模板</li>
+              <li><strong>字典和 JSON</strong> → 解析模型返回的结构化数据</li>
+              <li><strong>函数</strong> → 封装模型调用逻辑</li>
+              <li><strong>文件操作</strong> → 读取知识库文档、保存测试数据</li>
+              <li><strong>错误处理</strong> → 处理模型调用失败、网络超时</li>
+              <li><strong>包管理</strong> → 安装 httpx、pydantic、fastapi 等库</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>学习建议</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>动手实践</h3>
+              <p>看懂代码不等于会写。每个示例都要自己敲一遍，运行一遍，修改一遍试试。</p>
+            </div>
+            <div class="card">
+              <h3>不怕报错</h3>
+              <p>报错是学习的一部分。学会看错误信息，它会告诉你哪里出了问题。</p>
+            </div>
+            <div class="card">
+              <h3>及时求助</h3>
+              <p>遇到问题不要卡太久。可以搜索错误信息，或者在社区提问。</p>
+            </div>
+            <div class="card">
+              <h3>保持节奏</h3>
+              <p>每天学一点比突击学习更有效。建议每天 1-2 小时，持续 2-3 周。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>准备好了吗？</h2>
+          <p>如果你已经准备好开始学习，点击下面的按钮进入第一章：</p>
+          <div style="text-align: center; margin-top: 20px;">
+            <a href="01-environment.html" class="btn-primary">开始学习：环境搭建 →</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天学习 1-2 小时，持续练习比突击学习更有效。</div>
+  </footer>
+</body>
+</html>

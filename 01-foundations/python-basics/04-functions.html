@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>函数 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="04-functions.html">04 函数</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第四章：函数</h1>
+      <p>函数是组织代码的基本单元。学会用函数封装代码，让你的程序更整洁、可复用、易于维护。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：2-3 天</span>
+        <span class="pill">目标：能用函数封装重复逻辑</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#what-is-function">什么是函数</a>
+        <a href="#defining">定义函数</a>
+        <a href="#parameters">参数</a>
+        <a href="#return-values">返回值</a>
+        <a href="#scope">作用域</a>
+        <a href="#docstrings">函数文档</a>
+        <a href="#practice">练习</a>
+        <a href="03-data-structures.html">← 上一章：数据结构</a>
+        <a href="05-files.html">下一章：文件操作 →</a>
+      </aside>
+
+      <article class="content">
+        <section id="what-is-function" class="section">
+          <h2>什么是函数？</h2>
+          <p>函数是一段有名字的代码块，可以接收输入、执行操作、返回结果。就像一个"黑盒子"：</p>
+          <div style="text-align: center; margin: 20px 0; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+            <p style="font-size: 18px; margin: 0;">输入 → <strong>函数</strong> → 输出</p>
+          </div>
+
+          <h3>为什么要用函数？</h3>
+          <div class="grid">
+            <div class="card">
+              <h3>代码复用</h3>
+              <p>写一次，到处使用，避免重复代码。</p>
+            </div>
+            <div class="card">
+              <h3>逻辑清晰</h3>
+              <p>给代码块起名字，更容易理解程序逻辑。</p>
+            </div>
+            <div class="card">
+              <h3>易于维护</h3>
+              <p>修改逻辑只需要改一个地方。</p>
+            </div>
+            <div class="card">
+              <h3>方便测试</h3>
+              <p>可以单独测试每个函数的功能。</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="defining" class="section">
+          <h2>定义函数</h2>
+          <p>用 <code>def</code> 关键字定义函数：</p>
+
+          <h3>基本语法</h3>
+          <pre><code class="language-python">def 函数名(参数):
+    """函数文档（可选）"""
+    函数体
+    return 返回值  # 可选</code></pre>
+
+          <h3>最简单的函数</h3>
+          <pre><code class="language-python"># 定义一个打招呼的函数
+def say_hello():
+    print("你好！")
+
+# 调用函数
+say_hello()  # 输出: 你好！
+say_hello()  # 输出: 你好！（可以多次调用）</code></pre>
+
+          <h3>带参数的函数</h3>
+          <pre><code class="language-python"># 定义一个打招呼的函数，接收名字参数
+def greet(name):
+    print(f"你好，{name}！")
+
+# 调用函数
+greet("小明")  # 输出: 你好，小明！
+greet("李四")  # 输出: 你好，李四！</code></pre>
+
+          <h3>函数命名规范</h3>
+          <ul>
+            <li>使用小写字母和下划线：<code>greet_user</code>、<code>calculate_score</code></li>
+            <li>名字要有意义：<code>process_data</code> 比 <code>func1</code> 好</li>
+            <li>动词开头更清晰：<code>get_name</code>、<code>is_valid</code>、<code>calculate_sum</code></li>
+          </ul>
+        </section>
+
+        <section id="parameters" class="section">
+          <h2>参数</h2>
+          <p>参数是函数的输入，可以有多个，也可以有默认值。</p>
+
+          <h3>多个参数</h3>
+          <pre><code class="language-python"># 两个参数
+def add(a, b):
+    return a + b
+
+result = add(3, 5)
+print(result)  # 输出: 8
+
+# 三个参数
+def introduce(name, age, city):
+    print(f"我是{name}，{age}岁，来自{city}")
+
+introduce("小明", 25, "北京")  # 输出: 我是小明，25岁，来自北京</code></pre>
+
+          <h3>默认参数</h3>
+          <pre><code class="language-python"># 有默认值的参数
+def greet(name, greeting="你好"):
+    print(f"{greeting}，{name}！")
+
+greet("小明")              # 输出: 你好，小明！
+greet("小明", "早上好")    # 输出: 早上好，小明！
+greet("小明", greeting="晚上好")  # 输出: 晚上好，小明！</code></pre>
+
+          <h3>关键字参数</h3>
+          <pre><code class="language-python">def create_user(name, age, city="北京"):
+    return {"name": name, "age": age, "city": city}
+
+# 位置参数
+user1 = create_user("小明", 25)
+
+# 关键字参数（顺序可以不同）
+user2 = create_user(age=30, name="李四", city="上海")
+
+print(user1)  # 输出: {'name': '小明', 'age': 25, 'city': '北京'}
+print(user2)  # 输出: {'name': '李四', 'age': 30, 'city': '上海'}</code></pre>
+
+          <h3>可变参数</h3>
+          <pre><code class="language-python"># *args：接收任意数量的位置参数
+def sum_all(*args):
+    return sum(args)
+
+print(sum_all(1, 2, 3))       # 输出: 6
+print(sum_all(1, 2, 3, 4, 5)) # 输出: 15
+
+# **kwargs：接收任意数量的关键字参数
+def print_info(**kwargs):
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
+
+print_info(name="小明", age=25, city="北京")
+# 输出:
+# name: 小明
+# age: 25
+# city: 北京</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：你会用函数封装模型调用逻辑，让代码更整洁。
+            <pre><code class="language-python">def call_llm(prompt, model="qwen2.5:7b", temperature=0.7):
+    """调用 LLM 模型"""
+    # 这里是调用模型的代码
+    response = {
+        "model": model,
+        "prompt": prompt,
+        "temperature": temperature,
+        "answer": "这是模型的回答..."
+    }
+    return response
+
+# 使用函数
+result = call_llm("什么是 RAG？")
+print(result["answer"])</code></pre>
+          </div>
+        </section>
+
+        <section id="return-values" class="section">
+          <h2>返回值</h2>
+          <p>函数可以用 <code>return</code> 返回结果给调用者。</p>
+
+          <h3>返回单个值</h3>
+          <pre><code class="language-python">def add(a, b):
+    return a + b
+
+result = add(3, 5)
+print(result)  # 输出: 8</code></pre>
+
+          <h3>返回多个值</h3>
+          <pre><code class="language-python">def get_stats(numbers):
+    """返回平均值、最大值、最小值"""
+    avg = sum(numbers) / len(numbers)
+    return avg, max(numbers), min(numbers)
+
+# 接收多个返回值
+average, maximum, minimum = get_stats([85, 92, 78, 91, 73])
+print(f"平均: {average}, 最大: {maximum}, 最小: {minimum}")
+# 输出: 平均: 83.8, 最大: 92, 最小: 73</code></pre>
+
+          <h3>返回字典</h3>
+          <pre><code class="language-python">def create_user(name, age, skills):
+    return {
+        "name": name,
+        "age": age,
+        "skills": skills,
+        "is_active": True
+    }
+
+user = create_user("小明", 25, ["Python", "LLM"])
+print(user)
+# 输出: {'name': '小明', 'age': 25, 'skills': ['Python', 'LLM'], 'is_active': True}</code></pre>
+
+          <h3>没有返回值</h3>
+          <pre><code class="language-python">def print_report(title, content):
+    """只是打印，不返回任何值"""
+    print(f"=== {title} ===")
+    print(content)
+    print("=============")
+
+# 函数没有 return 语句时，默认返回 None
+result = print_report("测试报告", "所有测试通过")
+print(result)  # 输出: None</code></pre>
+
+          <h3>提前返回</h3>
+          <pre><code class="language-python">def divide(a, b):
+    """安全的除法"""
+    if b == 0:
+        return None  # 提前返回，避免除零错误
+    return a / b
+
+result = divide(10, 0)
+print(result)  # 输出: None
+
+result = divide(10, 3)
+print(result)  # 输出: 3.3333333333333335</code></pre>
+        </section>
+
+        <section id="scope" class="section">
+          <h2>作用域</h2>
+          <p>变量有"作用域"，决定了在哪里可以访问这个变量。</p>
+
+          <h3>局部变量</h3>
+          <pre><code class="language-python">def my_function():
+    x = 10  # 局部变量，只在函数内部有效
+    print(f"函数内部: x = {x}")
+
+my_function()  # 输出: 函数内部: x = 10
+
+# 在函数外部访问 x 会报错
+# print(x)  # NameError: name 'x' is not defined</code></pre>
+
+          <h3>全局变量</h3>
+          <pre><code class="language-python">x = 10  # 全局变量，在整个文件中有效
+
+def my_function():
+    print(f"函数内部: x = {x}")  # 可以读取全局变量
+
+my_function()  # 输出: 函数内部: x = 10
+print(f"函数外部: x = {x}")  # 输出: 函数外部: x = 10</code></pre>
+
+          <h3>修改全局变量</h3>
+          <pre><code class="language-python">count = 0
+
+def increment():
+    global count  # 声明要使用全局变量
+    count += 1
+
+increment()
+increment()
+print(count)  # 输出: 2</code></pre>
+
+          <div class="note warning">
+            <strong>建议</strong>：尽量避免使用 <code>global</code> 关键字。更好的做法是通过参数传入、返回值传出。
+          </div>
+        </section>
+
+        <section id="docstrings" class="section">
+          <h2>函数文档</h2>
+          <p>用三引号 <code>"""</code> 写函数文档，说明函数的用途、参数和返回值。</p>
+
+          <h3>基本格式</h3>
+          <pre><code class="language-python">def calculate_average(numbers):
+    """计算数字列表的平均值
+    
+    Args:
+        numbers: 数字列表
+    
+    Returns:
+        平均值，如果列表为空返回 0
+    """
+    if not numbers:
+        return 0
+    return sum(numbers) / len(numbers)</code></pre>
+
+          <h3>查看函数文档</h3>
+          <pre><code class="language-python">print(calculate_average.__doc__)
+
+# 或者用 help()
+help(calculate_average)</code></pre>
+
+          <h3>完整的函数示例</h3>
+          <pre><code class="language-python">def extract_keywords(text, max_keywords=5):
+    """从文本中提取关键词
+    
+    Args:
+        text: 输入文本
+        max_keywords: 最大关键词数量，默认为 5
+    
+    Returns:
+        关键词列表
+    
+    Raises:
+        ValueError: 如果文本为空
+    """
+    if not text.strip():
+        raise ValueError("文本不能为空")
+    
+    # 简单的关键词提取：按空格分割，去重
+    words = text.split()
+    unique_words = list(dict.fromkeys(words))
+    
+    return unique_words[:max_keywords]</code></pre>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>练习</h2>
+          <p>完成以下练习，巩固所学知识：</p>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：基础函数</h4>
+              <p>定义以下函数并测试：</p>
+              <ul>
+                <li><code>square(n)</code>：返回 n 的平方</li>
+                <li><code>is_even(n)</code>：判断 n 是否为偶数，返回 True 或 False</li>
+                <li><code>max_of_three(a, b, c)</code>：返回三个数中的最大值</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：字符串处理函数</h4>
+              <p>定义以下函数：</p>
+              <ul>
+                <li><code>count_words(text)</code>：统计文本中的单词数量</li>
+                <li><code>capitalize_first(text)</code>：把第一个字母大写</li>
+                <li><code>truncate(text, max_length)</code>：截断文本到指定长度，超出部分用 "..." 代替</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：列表处理函数</h4>
+              <p>定义以下函数：</p>
+              <ul>
+                <li><code>average(numbers)</code>：计算数字列表的平均值</li>
+                <li><code>filter_passing(scores, threshold=60)</code>：筛选出及格的成绩</li>
+                <li><code>find_max_min(numbers)</code>：返回最大值和最小值</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 4：LLM 相关函数</h4>
+              <p>定义以下函数：</p>
+              <pre><code class="language-python">def build_prompt(question, context=""):
+    """构造 LLM 提示词
+    
+    Args:
+        question: 用户问题
+        context: 上下文信息（可选）
+    
+    Returns:
+        完整的提示词字符串
+    """
+    # 如果有上下文，把上下文和问题组合
+    # 如果没有上下文，直接返回问题
+    pass
+
+def parse_llm_response(response):
+    """解析 LLM 响应
+    
+    Args:
+        response: LLM 返回的字典
+    
+    Returns:
+        提取的回答内容，如果解析失败返回空字符串
+    """
+    # 尝试从 response 中提取回答内容
+    # 提示：response 可能是 {"choices": [{"message": {"content": "..."}}]}
+    pass</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 5：综合练习</h4>
+              <p>写一个"成绩处理系统"，包含以下函数：</p>
+              <pre><code class="language-python">def input_scores():
+    """让用户输入成绩，返回成绩列表"""
+    pass
+
+def calculate_stats(scores):
+    """计算统计数据，返回字典"""
+    pass
+
+def generate_report(stats):
+    """生成格式化的报告字符串"""
+    pass
+
+def main():
+    """主函数，协调整个程序"""
+    scores = input_scores()
+    stats = calculate_stats(scores)
+    report = generate_report(stats)
+    print(report)
+
+# 运行程序
+# main()</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>本章小结</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 你学会了</h3>
+              <ul>
+                <li>定义和调用函数</li>
+                <li>使用参数和默认值</li>
+                <li>返回单个和多个值</li>
+                <li>理解变量作用域</li>
+                <li>编写函数文档</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>➡️ 下一步</h3>
+              <p>下一章我们学习文件操作，读写文本、JSON、CSV 文件。</p>
+              <a href="05-files.html" class="btn-primary">继续学习：文件操作 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天练习 1-2 小时，多写代码才能真正掌握。</div>
+  </footer>
+</body>
+</html>

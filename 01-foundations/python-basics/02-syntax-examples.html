@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>基本语法示例大全 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .example-box {
+      background: #f8f9fa;
+      border-left: 4px solid #4CAF50;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .example-title {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 8px;
+    }
+    .output-box {
+      background: #e8f5e9;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 8px;
+      font-family: monospace;
+    }
+    .tip-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .warning-box {
+      background: #ffebee;
+      border-left: 4px solid #f44336;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="02-syntax-examples.html">02 示例大全</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第二章：基本语法 - 示例大全</h1>
+      <p>这里收集了大量的代码示例，每个示例都有详细的注释说明。建议先学习理论，再来看这些示例加深理解。</p>
+      <div class="meta-row">
+        <span class="pill">特点：大量示例 + 详细注释 + 运行结果</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>示例导航</h2>
+        <a href="#variables">变量示例</a>
+        <a href="#data-types">数据类型示例</a>
+        <a href="#strings">字符串示例</a>
+        <a href="#conditions">条件判断示例</a>
+        <a href="#loops">循环示例</a>
+        <a href="02-syntax.html">← 返回理论章节</a>
+      </aside>
+
+      <article class="content">
+        <!-- 变量示例 -->
+        <section id="variables" class="section">
+          <h2>变量示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 1：创建和使用变量</div>
+            <pre><code class="language-python"># ============================================
+# 示例 1：创建和使用变量
+# ============================================
+
+# 创建一个字符串变量，存储名字
+# 注意：字符串要用引号包围（单引号或双引号都可以）
+name = "小明"
+
+# 创建一个整数变量，存储年龄
+# 注意：整数不需要引号
+age = 25
+
+# 创建一个浮点数变量，存储身高
+# 注意：浮点数就是有小数点的数字
+height = 1.75
+
+# 创建一个布尔变量，存储是否是学生
+# 注意：布尔值只有 True 和 False 两种
+is_student = True
+
+# 打印所有变量的值
+# print() 函数会把括号里的内容显示在屏幕上
+print("名字:", name)        # 输出: 名字: 小明
+print("年龄:", age)         # 输出: 年龄: 25
+print("身高:", height)      # 输出: 身高: 1.75
+print("是否是学生:", is_student)  # 输出: 是否是学生: True</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              名字: 小明<br>
+              年龄: 25<br>
+              身高: 1.75<br>
+              是否是学生: True
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 2：变量命名规则</div>
+            <pre><code class="language-python"># ============================================
+# 示例 2：变量命名规则
+# ============================================
+
+# ✅ 正确的变量名
+user_name = "小明"      # 使用下划线连接单词（推荐）
+age2 = 25               # 可以包含数字（但不能以数字开头）
+_private = "私有变量"    # 可以下划线开头
+myName = "小明"         # 驼峰命名法（也可以，但不推荐）
+
+# ❌ 错误的变量名（取消注释会报错）
+# 2name = "小明"        # 错误：不能以数字开头
+# my-name = "小明"      # 错误：不能包含连字符 -
+# my name = "小明"      # 错误：不能包含空格
+# class = "Python"      # 错误：class 是 Python 的保留字
+
+# 命名建议：使用有意义的名字
+# 好的名字：user_name, total_score, is_valid
+# 不好的名字：x, a, b, temp
+
+print("变量命名规则示例运行成功！")</code></pre>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong>变量名要有意义，让人一看就知道它存储的是什么。比如用 <code>user_name</code> 而不是 <code>x</code>。
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 3：修改变量的值</div>
+            <pre><code class="language-python"># ============================================
+# 示例 3：修改变量的值
+# ============================================
+
+# 创建一个变量，初始值是 80
+score = 80
+print("初始分数:", score)  # 输出: 初始分数: 80
+
+# 修改变量的值为 90
+# 注意：不需要重新声明变量类型，直接赋新值即可
+score = 90
+print("修改后的分数:", score)  # 输出: 修改后的分数: 90
+
+# 变量可以被多次修改
+score = 95
+print("再次修改后的分数:", score)  # 输出: 再次修改后的分数: 95
+
+# 变量可以参与计算
+new_score = score + 5  # new_score = 95 + 5 = 100
+print("加5分后的分数:", new_score)  # 输出: 加5分后的分数: 100</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              初始分数: 80<br>
+              修改后的分数: 90<br>
+              再次修改后的分数: 95<br>
+              加5分后的分数: 100
+            </div>
+          </div>
+        </section>
+
+        <!-- 数据类型示例 -->
+        <section id="data-types" class="section">
+          <h2>数据类型示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 4：四种基本数据类型</div>
+            <pre><code class="language-python"># ============================================
+# 示例 4：四种基本数据类型
+# ============================================
+
+# 1. 字符串 (str) - 用引号包围的文本
+name = "小明"           # 双引号
+greeting = '你好'       # 单引号也可以
+message = "Hello"       # 英文也是字符串
+
+# 2. 整数 (int) - 没有小数点的数字
+age = 25
+score = 100
+temperature = -5        # 负数也是整数
+
+# 3. 浮点数 (float) - 有小数点的数字
+height = 1.75
+price = 9.99
+pi = 3.14159
+
+# 4. 布尔值 (bool) - 只有 True 和 False
+is_student = True
+has_passed = False
+
+# 打印每种类型和它的值
+print("字符串:", name, type(name))        # 输出: 字符串: 小明 <class 'str'>
+print("整数:", age, type(age))            # 输出: 整数: 25 <class 'int'>
+print("浮点数:", height, type(height))    # 输出: 浮点数: 1.75 <class 'float'>
+print("布尔值:", is_student, type(is_student))  # 输出: 布尔值: True <class 'bool'></code></pre>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong><code>type()</code> 函数可以查看变量的数据类型。这在调试代码时很有用。
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 5：类型转换</div>
+            <pre><code class="language-python"># ============================================
+# 示例 5：类型转换
+# ============================================
+
+# 场景：LLM 返回的可能是字符串 "85"，需要转换成数字才能计算
+
+# 字符串转整数
+score_str = "85"                    # 这是一个字符串
+score_int = int(score_str)          # 转换成整数
+print("字符串:", score_str, type(score_str))  # 输出: 字符串: 85 <class 'str'>
+print("整数:", score_int, type(score_int))    # 输出: 整数: 85 <class 'int'>
+
+# 现在可以进行数学运算了
+result = score_int + 15
+print("85 + 15 =", result)          # 输出: 85 + 15 = 100
+
+# 整数转字符串
+age = 25
+age_str = str(age)                  # 转换成字符串
+print("我是" + age_str + "岁")      # 输出: 我是25岁
+
+# 字符串转浮点数
+price_str = "9.99"
+price_float = float(price_str)      # 转换成浮点数
+print("价格:", price_float)         # 输出: 价格: 9.99
+print("两件价格:", price_float * 2) # 输出: 两件价格: 19.98
+
+# 注意：不是所有字符串都能转换
+# int("hello")  # 这会报错！"hello" 不能转换成整数</code></pre>
+            <div class="warning-box">
+              <strong>⚠️ 注意：</strong>只有数字格式的字符串才能转换成数字。比如 <code>int("85")</code> 可以，但 <code>int("hello")</code> 会报错。
+            </div>
+          </div>
+        </section>
+
+        <!-- 字符串示例 -->
+        <section id="strings" class="section">
+          <h2>字符串示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 6：字符串拼接和格式化</div>
+            <pre><code class="language-python"># ============================================
+# 示例 6：字符串拼接和格式化
+# ============================================
+
+# 方法一：用 + 号拼接（不推荐，麻烦）
+first_name = "张"
+last_name = "三"
+full_name = first_name + last_name
+print("拼接:", full_name)  # 输出: 拼接: 张三
+
+# 方法二：用 f-string 格式化（推荐！）
+name = "小明"
+age = 25
+message = f"我叫{name}，今年{age}岁"
+print("f-string:", message)  # 输出: f-string: 我叫小明，今年25岁
+
+# f-string 可以放表达式
+price = 9.99
+quantity = 3
+total = f"总价: {price * quantity} 元"
+print(total)  # 输出: 总价: 29.97 元
+
+# f-string 可以格式化数字
+score = 85.6789
+print(f"分数: {score:.2f}")  # 输出: 分数: 85.68（保留2位小数）
+print(f"分数: {score:.0f}")  # 输出: 分数: 86（取整）
+
+# 多行 f-string
+report = f"""
+=== 测试报告 ===
+项目名称: LLM 应用
+测试人员: {name}
+测试分数: {score:.1f}
+是否通过: {'是' if score >= 60 else '否'}
+================
+"""
+print(report)</code></pre>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong>f-string 是 Python 3.6 引入的格式化方式，用 <code>f"..."</code> 表示，花括号 <code>{}</code> 里可以放变量和表达式。
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 7：常用字符串方法</div>
+            <pre><code class="language-python"># ============================================
+# 示例 7：常用字符串方法
+# ============================================
+
+text = "  Hello, World!  "
+
+# 1. 去掉首尾空格
+clean_text = text.strip()
+print(f"去掉空格: '{clean_text}'")  # 输出: 去掉空格: 'Hello, World!'
+
+# 2. 转换大小写
+print(f"大写: {text.upper()}")      # 输出: 大写:   HELLO, WORLD!  
+print(f"小写: {text.lower()}")      # 输出: 小写:   hello, world!  
+
+# 3. 替换内容
+new_text = text.replace("World", "Python")
+print(f"替换后: '{new_text.strip()}'")  # 输出: 替换后: 'Hello, Python!'
+
+# 4. 查找内容
+position = text.find("World")
+print(f"World 的位置: {position}")  # 输出: World 的位置: 9
+
+# 5. 判断是否包含
+has_world = "World" in text
+print(f"是否包含 World: {has_world}")  # 输出: 是否包含 World: True
+
+# 6. 分割字符串
+csv_data = "苹果,香蕉,橙子"
+fruits = csv_data.split(",")
+print(f"分割结果: {fruits}")  # 输出: 分割结果: ['苹果', '香蕉', '橙子']
+
+# 7. 连接字符串
+joined = " | ".join(fruits)
+print(f"连接结果: {joined}")  # 输出: 连接结果: 苹果 | 香蕉 | 橙子</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 8：构造 Prompt 模板（LLM 应用场景）</div>
+            <pre><code class="language-python"># ============================================
+# 示例 8：构造 Prompt 模板（LLM 应用场景）
+# ============================================
+
+# 在 LLM 应用中，我们经常需要用模板构造 Prompt
+
+# 用户的问题
+user_question = "什么是 RAG？"
+
+# 知识库检索到的内容
+context = "RAG（检索增强生成）是一种结合检索和生成的技术。它先从知识库中检索相关信息，然后让模型基于这些信息生成回答。"
+
+# 构造 Prompt 模板
+prompt_template = """请根据以下参考资料回答用户的问题。
+
+参考资料：
+{context}
+
+用户问题：
+{question}
+
+要求：
+1. 只基于参考资料回答
+2. 如果资料中没有答案，请回答"根据当前资料无法判断"
+3. 回答要简洁明了
+"""
+
+# 用 f-string 填充模板
+prompt = prompt_template.format(context=context, question=user_question)
+
+# 打印最终的 Prompt
+print("=== 生成的 Prompt ===")
+print(prompt)</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              === 生成的 Prompt ===<br>
+              请根据以下参考资料回答用户的问题。<br><br>
+              参考资料：<br>
+              RAG（检索增强生成）是一种结合检索和生成的技术。它先从知识库中检索相关信息，然后让模型基于这些信息生成回答。<br><br>
+              用户问题：<br>
+              什么是 RAG？<br><br>
+              要求：<br>
+              1. 只基于参考资料回答<br>
+              2. 如果资料中没有答案，请回答"根据当前资料无法判断"<br>
+              3. 回答要简洁明了
+            </div>
+          </div>
+        </section>
+
+        <!-- 条件判断示例 -->
+        <section id="conditions" class="section">
+          <h2>条件判断示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 9：if-elif-else 条件判断</div>
+            <pre><code class="language-python"># ============================================
+# 示例 9：if-elif-else 条件判断
+# ============================================
+
+# 场景：根据分数判断等级
+score = 85
+
+# if-elif-else 结构
+# Python 用缩进（通常是4个空格）来表示代码块
+if score >= 90:
+    # 条件1：分数 >= 90
+    grade = "优秀"
+    print(f"分数 {score} → 等级: {grade}")
+elif score >= 80:
+    # 条件2：分数 >= 80（且 < 90）
+    grade = "良好"
+    print(f"分数 {score} → 等级: {grade}")
+elif score >= 60:
+    # 条件3：分数 >= 60（且 < 80）
+    grade = "及格"
+    print(f"分数 {score} → 等级: {grade}")
+else:
+    # 其他情况：分数 < 60
+    grade = "不及格"
+    print(f"分数 {score} → 等级: {grade}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              分数 85 → 等级: 良好
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 10：逻辑运算符（and, or, not）</div>
+            <pre><code class="language-python"># ============================================
+# 示例 10：逻辑运算符（and, or, not）
+# ============================================
+
+age = 25
+has_id = True
+score = 85
+
+# and：两个条件都满足才为 True
+if age >= 18 and has_id:
+    print("✅ 年龄和身份证都满足，可以进入")  # 会执行
+
+# or：至少一个条件满足就为 True
+if age < 12 or age > 60:
+    print("免费")  # 不会执行（25岁不在范围内）
+else:
+    print("需要购票")  # 会执行
+
+# not：取反
+is_vip = False
+if not is_vip:
+    print("普通用户")  # 会执行（因为 is_vip 是 False）
+
+# 组合使用
+if (age >= 18 and has_id) or is_vip:
+    print("✅ 允许访问")  # 会执行</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              ✅ 年龄和身份证都满足，可以进入<br>
+              需要购票<br>
+              普通用户<br>
+              ✅ 允许访问
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 11：处理 LLM 响应（LLM 应用场景）</div>
+            <pre><code class="language-python"># ============================================
+# 示例 11：处理 LLM 响应（LLM 应用场景）
+# ============================================
+
+# 模拟 LLM 返回的回答
+response = "根据资料无法判断"
+
+# 判断回答类型
+if "无法判断" in response:
+    print("❌ 模型表示不知道答案")
+    print("建议：尝试提供更多上下文信息")
+elif "根据" in response:
+    print("✅ 模型给出了有依据的回答")
+    print("建议：检查引用来源是否准确")
+else:
+    print("✅ 模型直接回答了问题")
+    print("建议：验证回答的准确性")
+
+# 另一个示例：检查回答是否包含关键词
+response2 = "RAG 是检索增强生成技术，主要用于知识库问答"
+keywords = ["RAG", "检索", "生成"]
+
+for keyword in keywords:
+    if keyword in response2:
+        print(f"✅ 回答包含关键词: {keyword}")
+    else:
+        print(f"❌ 回答缺少关键词: {keyword}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              ❌ 模型表示不知道答案<br>
+              建议：尝试提供更多上下文信息<br>
+              ✅ 回答包含关键词: RAG<br>
+              ✅ 回答包含关键词: 检索<br>
+              ✅ 回答包含关键词: 生成
+            </div>
+          </div>
+        </section>
+
+        <!-- 循环示例 -->
+        <section id="loops" class="section">
+          <h2>循环示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 12：for 循环遍历列表</div>
+            <pre><code class="language-python"># ============================================
+# 示例 12：for 循环遍历列表
+# ============================================
+
+# 创建一个列表
+fruits = ["苹果", "香蕉", "橙子", "葡萄", "西瓜"]
+
+# 方法一：直接遍历
+print("=== 方法一：直接遍历 ===")
+for fruit in fruits:
+    print(f"我喜欢吃: {fruit}")
+
+# 方法二：带索引遍历
+print("\n=== 方法二：带索引遍历 ===")
+for i, fruit in enumerate(fruits):
+    print(f"第 {i+1} 个水果: {fruit}")
+
+# 方法三：使用 range
+print("\n=== 方法三：使用 range ===")
+for i in range(len(fruits)):
+    print(f"索引 {i}: {fruits[i]}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              === 方法一：直接遍历 ===<br>
+              我喜欢吃: 苹果<br>
+              我喜欢吃: 香蕉<br>
+              我喜欢吃: 橙子<br>
+              我喜欢吃: 葡萄<br>
+              我喜欢吃: 西瓜<br><br>
+              === 方法二：带索引遍历 ===<br>
+              第 1 个水果: 苹果<br>
+              第 2 个水果: 香蕉<br>
+              第 3 个水果: 橙子<br>
+              第 4 个水果: 葡萄<br>
+              第 5 个水果: 西瓜
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 13：while 循环和 break</div>
+            <pre><code class="language-python"># ============================================
+# 示例 13：while 循环和 break
+# ============================================
+
+# while 循环：当条件为 True 时重复执行
+count = 0
+print("=== while 循环 ===")
+while count < 5:
+    print(f"第 {count + 1} 次循环")
+    count += 1  # 等同于 count = count + 1
+
+# break：提前退出循环
+print("\n=== break 示例 ===")
+for i in range(10):
+    if i == 5:
+        print("遇到 5，退出循环")
+        break  # 立即退出循环
+    print(f"i = {i}")
+
+# continue：跳过本次循环
+print("\n=== continue 示例 ===")
+for i in range(5):
+    if i == 2:
+        print(f"跳过 i = {i}")
+        continue  # 跳过本次循环，继续下一次
+    print(f"i = {i}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              === while 循环 ===<br>
+              第 1 次循环<br>
+              第 2 次循环<br>
+              第 3 次循环<br>
+              第 4 次循环<br>
+              第 5 次循环<br><br>
+              === break 示例 ===<br>
+              i = 0<br>
+              i = 1<br>
+              i = 2<br>
+              i = 3<br>
+              i = 4<br>
+              遇到 5，退出循环<br><br>
+              === continue 示例 ===<br>
+              i = 0<br>
+              i = 1<br>
+              跳过 i = 2<br>
+              i = 3<br>
+              i = 4
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 14：批量处理数据（LLM 应用场景）</div>
+            <pre><code class="language-python"># ============================================
+# 示例 14：批量处理数据（LLM 应用场景）
+# ============================================
+
+# 场景：批量处理用户问题，统计通过率
+
+# 测试结果列表
+test_results = [
+    {"case_id": "TC001", "result": "通过", "score": 85},
+    {"case_id": "TC002", "result": "失败", "score": 45},
+    {"case_id": "TC003", "result": "通过", "score": 92},
+    {"case_id": "TC004", "result": "通过", "score": 78},
+    {"case_id": "TC005", "result": "失败", "score": 55},
+]
+
+# 统计通过率
+total = len(test_results)      # 总数
+passed = 0                      # 通过数
+failed = 0                      # 失败数
+total_score = 0                 # 总分
+
+print("=== 测试结果统计 ===")
+for result in test_results:
+    # 打印每个结果
+    print(f"{result['case_id']}: {result['result']} (分数: {result['score']})")
+    
+    # 统计
+    if result["result"] == "通过":
+        passed += 1
+    else:
+        failed += 1
+    
+    total_score += result["score"]
+
+# 计算平均分
+average_score = total_score / total
+
+# 打印统计结果
+print(f"\n=== 统计汇总 ===")
+print(f"总数: {total}")
+print(f"通过: {passed}")
+print(f"失败: {failed}")
+print(f"通过率: {passed/total:.1%}")
+print(f"平均分: {average_score:.1f}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              === 测试结果统计 ===<br>
+              TC001: 通过 (分数: 85)<br>
+              TC002: 失败 (分数: 45)<br>
+              TC003: 通过 (分数: 92)<br>
+              TC004: 通过 (分数: 78)<br>
+              TC005: 失败 (分数: 55)<br><br>
+              === 统计汇总 ===<br>
+              总数: 5<br>
+              通过: 3<br>
+              失败: 2<br>
+              通过率: 60.0%<br>
+              平均分: 71.0
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 15：列表推导式</div>
+            <pre><code class="language-python"># ============================================
+# 示例 15：列表推导式
+# ============================================
+
+# 列表推导式是一种简洁的创建列表的方式
+
+# 普通方式：创建 1-10 的平方数列表
+squares = []
+for i in range(1, 11):
+    squares.append(i * i)
+print("普通方式:", squares)
+
+# 列表推导式：更简洁
+squares = [i * i for i in range(1, 11)]
+print("列表推导式:", squares)
+
+# 带条件的列表推导式：只要偶数
+even_squares = [i * i for i in range(1, 11) if i % 2 == 0]
+print("偶数的平方:", even_squares)
+
+# 字符串处理示例
+words = ["hello", "world", "python", "llm"]
+upper_words = [w.upper() for w in words]
+print("转大写:", upper_words)
+
+# 实际应用：筛选高分测试用例
+scores = [85, 45, 92, 58, 76, 63, 91]
+high_scores = [s for s in scores if s >= 80]
+print("高分(>=80):", high_scores)</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              普通方式: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]<br>
+              列表推导式: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]<br>
+              偶数的平方: [4, 16, 36, 64, 100]<br>
+              转大写: ['HELLO', 'WORLD', 'PYTHON', 'LLM']<br>
+              高分(>=80): [85, 92, 91]
+            </div>
+          </div>
+        </section>
+
+        <!-- 练习题 -->
+        <section class="section">
+          <h2>练习题</h2>
+          <p>看完示例后，试试自己完成以下练习：</p>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：变量和类型转换</h4>
+              <p>创建以下变量并打印：</p>
+              <ul>
+                <li>你的名字（字符串）</li>
+                <li>你的年龄（整数）</li>
+                <li>你的身高（浮点数）</li>
+                <li>是否是学生（布尔值）</li>
+              </ul>
+              <p>然后用 f-string 打印一段自我介绍。</p>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：字符串操作</h4>
+              <p>给定字符串 <code>prompt = "请用三句话解释什么是 RAG"</code>，完成以下操作：</p>
+              <ul>
+                <li>打印字符串的长度</li>
+                <li>把 "RAG" 替换成 "LLM"</li>
+                <li>打印前 5 个字符</li>
+                <li>把整个字符串转换成大写</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：条件判断</h4>
+              <p>写一个程序，根据用户输入的分数判断等级：</p>
+              <ul>
+                <li>90-100：优秀</li>
+                <li>80-89：良好</li>
+                <li>60-79：及格</li>
+                <li>0-59：不及格</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 4：循环统计</h4>
+              <p>写一个程序，完成以下任务：</p>
+              <pre><code class="language-python">scores = [85, 92, 78, 65, 58, 91, 73, 88]
+
+# 1. 计算平均分
+# 2. 统计及格人数（>=60）
+# 3. 找出最高分和最低分
+# 4. 打印统计结果</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>下一步</h2>
+          <p>看完这些示例后，建议：</p>
+          <ol>
+            <li>自己动手敲一遍代码（不要复制粘贴）</li>
+            <li>尝试修改示例中的值，看看结果会怎样变化</li>
+            <li>完成上面的练习题</li>
+            <li>进入下一章：<a href="03-data-structures.html">数据结构</a></li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天练习 1-2 小时，多写代码才能真正掌握。</div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数据结构示例大全 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .example-box {
+      background: #f8f9fa;
+      border-left: 4px solid #4CAF50;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .example-title {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 8px;
+    }
+    .output-box {
+      background: #e8f5e9;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 8px;
+      font-family: monospace;
+    }
+    .tip-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .warning-box {
+      background: #ffebee;
+      border-left: 4px solid #f44336;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="03-data-structures-examples.html">03 示例大全</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第三章：数据结构 - 示例大全</h1>
+      <p>列表、字典和JSON是LLM应用中最常用的数据结构。通过大量示例掌握它们的用法。</p>
+      <div class="meta-row">
+        <span class="pill">特点：大量示例 + 详细注释 + 运行结果</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>示例导航</h2>
+        <a href="#lists">列表示例</a>
+        <a href="#dictionaries">字典示例</a>
+        <a href="#nested">嵌套结构示例</a>
+        <a href="#json">JSON示例</a>
+        <a href="03-data-structures.html">← 返回理论章节</a>
+      </aside>
+
+      <article class="content">
+        <!-- 列表示例 -->
+        <section id="lists" class="section">
+          <h2>列表示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 1：创建和访问列表</div>
+            <pre><code class="language-python"># ============================================
+# 示例 1：创建和访问列表
+# ============================================
+
+# 创建列表：用方括号 [] 包围，元素用逗号分隔
+fruits = ["苹果", "香蕉", "橙子", "葡萄", "西瓜"]
+
+# 访问元素：用索引（从 0 开始）
+print("第1个水果:", fruits[0])    # 输出: 第1个水果: 苹果
+print("第3个水果:", fruits[2])    # 输出: 第3个水果: 橙子
+
+# 负数索引：从末尾开始计数
+print("最后一个:", fruits[-1])   # 输出: 最后一个: 西瓜
+print("倒数第二个:", fruits[-2]) # 输出: 倒数第二个: 葡萄
+
+# 获取列表长度
+print("列表长度:", len(fruits))  # 输出: 列表长度: 5</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              第1个水果: 苹果<br>
+              第3个水果: 橙子<br>
+              最后一个: 西瓜<br>
+              倒数第二个: 葡萄<br>
+              列表长度: 5
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 2：列表切片</div>
+            <pre><code class="language-python"># ============================================
+# 示例 2：列表切片
+# ============================================
+
+numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# 切片语法：list[start:end]（包含start，不包含end）
+print("前3个:", numbers[0:3])     # 输出: 前3个: [0, 1, 2]
+print("前3个:", numbers[:3])      # 输出: 前3个: [0, 1, 2]（省略start默认从0开始）
+
+# 从某个位置开始到末尾
+print("从索引5开始:", numbers[5:])  # 输出: 从索引5开始: [5, 6, 7, 8, 9]
+
+# 中间一段
+print("索引2到5:", numbers[2:5])    # 输出: 索引2到5: [2, 3, 4]
+
+# 带步长的切片
+print("每隔一个:", numbers[::2])    # 输出: 每隔一个: [0, 2, 4, 6, 8]
+print("反转列表:", numbers[::-1])   # 输出: 反转列表: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]</code></pre>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong>切片不会修改原列表，而是返回一个新的列表。
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 3：修改列表</div>
+            <pre><code class="language-python"># ============================================
+# 示例 3：修改列表
+# ============================================
+
+# 创建一个空列表
+shopping_cart = []
+
+# 添加元素
+shopping_cart.append("苹果")      # 在末尾添加
+shopping_cart.append("香蕉")
+shopping_cart.append("牛奶")
+print("添加后:", shopping_cart)   # 输出: 添加后: ['苹果', '香蕉', '牛奶']
+
+# 在指定位置插入
+shopping_cart.insert(1, "面包")   # 在索引1的位置插入
+print("插入后:", shopping_cart)   # 输出: 插入后: ['苹果', '面包', '香蕉', '牛奶']
+
+# 删除元素
+shopping_cart.remove("香蕉")      # 删除指定值
+print("删除后:", shopping_cart)   # 输出: 删除后: ['苹果', '面包', '牛奶']
+
+# 弹出元素（获取并删除）
+last_item = shopping_cart.pop()   # 弹出最后一个
+print("弹出的元素:", last_item)   # 输出: 弹出的元素: 牛奶
+print("剩余:", shopping_cart)     # 输出: 剩余: ['苹果', '面包']
+
+# 修改元素
+shopping_cart[0] = "草莓"         # 把第一个元素改成草莓
+print("修改后:", shopping_cart)   # 输出: 修改后: ['草莓', '面包']</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 4：遍历列表</div>
+            <pre><code class="language-python"># ============================================
+# 示例 4：遍历列表
+# ============================================
+
+test_cases = ["登录测试", "搜索测试", "支付测试", "退出测试"]
+
+# 方法一：直接遍历（最常用）
+print("=== 方法一：直接遍历 ===")
+for case in test_cases:
+    print(f"执行: {case}")
+
+# 方法二：带索引遍历
+print("\n=== 方法二：带索引遍历 ===")
+for i, case in enumerate(test_cases):
+    print(f"第 {i+1} 个用例: {case}")
+
+# 方法三：遍历时获取索引和值
+print("\n=== 方法三：使用 range ===")
+for i in range(len(test_cases)):
+    print(f"索引 {i}: {test_cases[i]}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              === 方法一：直接遍历 ===<br>
+              执行: 登录测试<br>
+              执行: 搜索测试<br>
+              执行: 支付测试<br>
+              执行: 退出测试<br><br>
+              === 方法二：带索引遍历 ===<br>
+              第 1 个用例: 登录测试<br>
+              第 2 个用例: 搜索测试<br>
+              第 3 个用例: 支付测试<br>
+              第 4 个用例: 退出测试
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 5：列表推导式</div>
+            <pre><code class="language-python"># ============================================
+# 示例 5：列表推导式
+# ============================================
+
+# 列表推导式是一种简洁的创建列表的方式
+# 语法：[表达式 for 变量 in 可迭代对象 if 条件]
+
+# 普通方式：创建平方数列表
+squares = []
+for i in range(1, 6):
+    squares.append(i * i)
+print("普通方式:", squares)  # 输出: [1, 4, 9, 16, 25]
+
+# 列表推导式：更简洁
+squares = [i * i for i in range(1, 6)]
+print("推导式:", squares)    # 输出: [1, 4, 9, 16, 25]
+
+# 带条件的推导式：只要偶数
+evens = [i for i in range(10) if i % 2 == 0]
+print("偶数:", evens)        # 输出: [0, 2, 4, 6, 8]
+
+# 字符串处理
+words = ["hello", "world", "python"]
+upper_words = [w.upper() for w in words]
+print("大写:", upper_words)  # 输出: ['HELLO', 'WORLD', 'PYTHON']
+
+# 实际应用：筛选高分测试用例
+scores = [85, 45, 92, 58, 76, 63, 91]
+high_scores = [s for s in scores if s >= 80]
+print("高分:", high_scores)  # 输出: [85, 92, 91]</code></pre>
+          </div>
+        </section>
+
+        <!-- 字典示例 -->
+        <section id="dictionaries" class="section">
+          <h2>字典示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 6：创建和访问字典</div>
+            <pre><code class="language-python"># ============================================
+# 示例 6：创建和访问字典
+# ============================================
+
+# 创建字典：用花括号 {} 包围，键值对用冒号分隔
+user = {
+    "name": "小明",        # 键: "name"，值: "小明"
+    "age": 25,              # 键: "age"，值: 25
+    "city": "北京",         # 键: "city"，值: "北京"
+    "is_student": True      # 键: "is_student"，值: True
+}
+
+# 访问值：用方括号加上键名
+print("姓名:", user["name"])    # 输出: 姓名: 小明
+print("年龄:", user["age"])     # 输出: 年龄: 25
+
+# 使用 get 方法（更安全，键不存在时返回默认值）
+print("城市:", user.get("city"))              # 输出: 城市: 北京
+print("电话:", user.get("phone", "未填写"))   # 输出: 电话: 未填写（键不存在）
+
+# 获取所有键和值
+print("所有键:", list(user.keys()))     # 输出: ['name', 'age', 'city', 'is_student']
+print("所有值:", list(user.values()))   # 输出: ['小明', 25, '北京', True]</code></pre>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong>使用 <code>get()</code> 方法比直接用方括号更安全，因为键不存在时不会报错。
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 7：修改字典</div>
+            <pre><code class="language-python"># ============================================
+# 示例 7：修改字典
+# ============================================
+
+# 创建一个用户信息字典
+user = {"name": "小明", "age": 25}
+
+# 修改值
+user["age"] = 26
+print("修改年龄后:", user)  # 输出: {'name': '小明', 'age': 26}
+
+# 添加新键值对
+user["city"] = "北京"
+user["email"] = "xiaoming@example.com"
+print("添加后:", user)
+
+# 删除键值对
+del user["email"]
+print("删除后:", user)
+
+# 使用 pop 删除并返回值
+city = user.pop("city")
+print(f"弹出的城市: {city}")  # 输出: 弹出的城市: 北京
+print("剩余:", user)
+
+# 判断键是否存在
+print("name" in user)    # 输出: True
+print("phone" in user)   # 输出: False</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 8：遍历字典</div>
+            <pre><code class="language-python"># ============================================
+# 示例 8：遍历字典
+# ============================================
+
+user = {
+    "name": "小明",
+    "age": 25,
+    "city": "北京"
+}
+
+# 遍历键
+print("=== 遍历键 ===")
+for key in user:
+    print(f"键: {key}")
+
+# 遍历值
+print("\n=== 遍历值 ===")
+for value in user.values():
+    print(f"值: {value}")
+
+# 遍历键值对（最常用）
+print("\n=== 遍历键值对 ===")
+for key, value in user.items():
+    print(f"{key}: {value}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              === 遍历键 ===<br>
+              键: name<br>
+              键: age<br>
+              键: city<br><br>
+              === 遍历值 ===<br>
+              值: 小明<br>
+              值: 25<br>
+              值: 北京<br><br>
+              === 遍历键值对 ===<br>
+              name: 小明<br>
+              age: 25<br>
+              city: 北京
+            </div>
+          </div>
+        </section>
+
+        <!-- 嵌套结构示例 -->
+        <section id="nested" class="section">
+          <h2>嵌套结构示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 9：列表嵌套字典（LLM API 响应）</div>
+            <pre><code class="language-python"># ============================================
+# 示例 9：列表嵌套字典（LLM API 响应）
+# ============================================
+
+# 模拟 LLM API 的响应结构
+llm_response = {
+    "id": "chatcmpl-123",
+    "choices": [
+        {
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "RAG 是检索增强生成技术..."
+            },
+            "finish_reason": "stop"
+        }
+    ],
+    "usage": {
+        "prompt_tokens": 15,
+        "completion_tokens": 50,
+        "total_tokens": 65
+    }
+}
+
+# 访问嵌套的值
+answer = llm_response["choices"][0]["message"]["content"]
+print("回答:", answer)
+
+# 获取 token 使用量
+total = llm_response["usage"]["total_tokens"]
+print(f"总 token 数: {total}")
+
+# 安全地访问嵌套值（避免 KeyError）
+answer = llm_response.get("choices", [{}])[0].get("message", {}).get("content", "")
+print("安全访问:", answer)</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              回答: RAG 是检索增强生成技术...<br>
+              总 token 数: 65
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 10：遍历嵌套结构（测试用例）</div>
+            <pre><code class="language-python"># ============================================
+# 示例 10：遍历嵌套结构（测试用例）
+# ============================================
+
+# 测试用例列表，每个用例是一个字典
+test_cases = [
+    {"id": "TC001", "name": "登录测试", "result": "通过", "score": 95},
+    {"id": "TC002", "name": "搜索测试", "result": "失败", "score": 45},
+    {"id": "TC003", "name": "支付测试", "result": "通过", "score": 88},
+    {"id": "TC004", "name": "退出测试", "result": "通过", "score": 92},
+]
+
+# 统计通过率
+total = len(test_cases)
+passed = sum(1 for tc in test_cases if tc["result"] == "通过")
+pass_rate = passed / total
+
+print("=== 测试结果统计 ===")
+for tc in test_cases:
+    status = "✅" if tc["result"] == "通过" else "❌"
+    print(f"{status} {tc['id']}: {tc['name']} - {tc['result']} (分数: {tc['score']})")
+
+print(f"\n通过率: {pass_rate:.1%} ({passed}/{total})")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              === 测试结果统计 ===<br>
+              ✅ TC001: 登录测试 - 通过 (分数: 95)<br>
+              ❌ TC002: 搜索测试 - 失败 (分数: 45)<br>
+              ✅ TC003: 支付测试 - 通过 (分数: 88)<br>
+              ✅ TC004: 退出测试 - 通过 (分数: 92)<br><br>
+              通过率: 75.0% (3/4)
+            </div>
+          </div>
+        </section>
+
+        <!-- JSON示例 -->
+        <section id="json" class="section">
+          <h2>JSON示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 11：解析 JSON 字符串</div>
+            <pre><code class="language-python"># ============================================
+# 示例 11：解析 JSON 字符串
+# ============================================
+import json
+
+# JSON 字符串（注意：JSON 用双引号，不是单引号）
+json_string = '{"name": "小明", "age": 25, "skills": ["Python", "LLM"]}'
+
+# 解析 JSON 字符串 → Python 字典
+data = json.loads(json_string)
+
+# 现在可以像普通字典一样使用
+print("姓名:", data["name"])        # 输出: 姓名: 小明
+print("年龄:", data["age"])         # 输出: 年龄: 25
+print("技能:", data["skills"])      # 输出: 技能: ['Python', 'LLM']
+print("第一个技能:", data["skills"][0])  # 输出: 第一个技能: Python
+
+# 检查数据类型
+print(f"类型: {type(data)}")        # 输出: 类型: <class 'dict'></code></pre>
+            <div class="warning-box">
+              <strong>⚠️ 注意：</strong>JSON 字符串必须用双引号，不能用单引号。而且必须是有效的 JSON 格式，否则会报错。
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 12：生成 JSON 字符串</div>
+            <pre><code class="language-python"># ============================================
+# 示例 12：生成 JSON 字符串
+# ============================================
+import json
+
+# Python 字典
+data = {
+    "name": "小明",
+    "age": 25,
+    "skills": ["Python", "LLM"],
+    "is_student": True,
+    "address": None  # None 会变成 null
+}
+
+# 转换成 JSON 字符串
+json_string = json.dumps(data)
+print("紧凑格式:", json_string)
+
+# 格式化输出（带缩进，更易读）
+json_formatted = json.dumps(data, ensure_ascii=False, indent=2)
+print("\n格式化输出:")
+print(json_formatted)</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              紧凑格式: {"name": "小明", "age": 25, "skills": ["Python", "LLM"], "is_student": true, "address": null}<br><br>
+              格式化输出:<br>
+              {<br>
+              &nbsp;&nbsp;"name": "小明",<br>
+              &nbsp;&nbsp;"age": 25,<br>
+              &nbsp;&nbsp;"skills": [<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;"Python",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;"LLM"<br>
+              &nbsp;&nbsp;],<br>
+              &nbsp;&nbsp;"is_student": true,<br>
+              &nbsp;&nbsp;"address": null<br>
+              }
+            </div>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong><code>ensure_ascii=False</code> 让中文正常显示，<code>indent=2</code> 让输出更易读。
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 13：处理 LLM API 请求（实际应用）</div>
+            <pre><code class="language-python"># ============================================
+# 示例 13：处理 LLM API 请求（实际应用）
+# ============================================
+import json
+
+# 构造 LLM API 请求
+request_data = {
+    "model": "qwen2.5:7b",
+    "messages": [
+        {
+            "role": "system",
+            "content": "你是一个专业的AI助手"
+        },
+        {
+            "role": "user",
+            "content": "什么是RAG？"
+        }
+    ],
+    "temperature": 0.7,
+    "max_tokens": 512
+}
+
+# 转换成 JSON 字符串（发送给 API）
+request_json = json.dumps(request_data, ensure_ascii=False)
+print("请求 JSON:")
+print(request_json)
+
+# 解析 API 响应
+response_json = '''
+{
+    "id": "chatcmpl-123",
+    "choices": [
+        {
+            "message": {
+                "role": "assistant",
+                "content": "RAG（检索增强生成）是一种结合检索和生成的技术..."
+            }
+        }
+    ]
+}
+'''
+
+response = json.loads(response_json)
+answer = response["choices"][0]["message"]["content"]
+print(f"\n模型回答: {answer}")</code></pre>
+          </div>
+        </section>
+
+        <!-- 练习题 -->
+        <section class="section">
+          <h2>练习题</h2>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：列表操作</h4>
+              <p>创建一个包含5个编程语言的列表，完成以下操作：</p>
+              <ul>
+                <li>添加一个新的语言</li>
+                <li>删除一个语言</li>
+                <li>打印列表的长度</li>
+                <li>判断 "Python" 是否在列表中</li>
+                <li>用 for 循环打印每个语言</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：字典操作</h4>
+              <p>创建一个表示你的信息的字典，包含 name、age、city、skills，然后：</p>
+              <ul>
+                <li>添加一个新的字段 "hobby"</li>
+                <li>遍历并打印所有键值对</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：JSON 处理</h4>
+              <p>给定以下数据，完成JSON的解析和生成：</p>
+              <pre><code class="language-python">import json
+
+json_data = '''
+{
+    "project": "LLM应用",
+    "version": "1.0",
+    "features": ["RAG", "Agent", "微调"],
+    "team": [
+        {"name": "张三", "role": "开发者"},
+        {"name": "李四", "role": "测试"}
+    ]
+}
+'''
+
+# 1. 解析JSON字符串
+# 2. 打印项目名称和版本
+# 3. 打印所有功能
+# 4. 打印团队成员的名字和角色
+# 5. 把数据转换回JSON字符串（格式化输出）</code></pre>
+            </article>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天练习 1-2 小时，多写代码才能真正掌握。</div>
+  </footer>
+</body>
+</html>

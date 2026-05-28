@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>函数示例大全 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .example-box {
+      background: #f8f9fa;
+      border-left: 4px solid #4CAF50;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .example-title {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 8px;
+    }
+    .output-box {
+      background: #e8f5e9;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 8px;
+      font-family: monospace;
+    }
+    .tip-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .warning-box {
+      background: #ffebee;
+      border-left: 4px solid #f44336;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="04-functions-examples.html">04 示例大全</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第四章：函数 - 示例大全</h1>
+      <p>函数是代码复用的基础。通过大量示例掌握函数的定义、调用和实际应用。</p>
+      <div class="meta-row">
+        <span class="pill">特点：大量示例 + 详细注释 + 运行结果</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>示例导航</h2>
+        <a href="#basic">基础函数</a>
+        <a href="#parameters">参数示例</a>
+        <a href="#return">返回值示例</a>
+        <a href="#practical">实际应用</a>
+        <a href="04-functions.html">← 返回理论章节</a>
+      </aside>
+
+      <article class="content">
+        <!-- 基础函数 -->
+        <section id="basic" class="section">
+          <h2>基础函数</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 1：定义和调用函数</div>
+            <pre><code class="language-python"># ============================================
+# 示例 1：定义和调用函数
+# ============================================
+
+# 定义一个打招呼的函数
+# def 是定义函数的关键字
+# say_hello 是函数名
+# 括号里是参数（这里没有参数）
+def say_hello():
+    print("你好！欢迎学习 Python！")
+
+# 调用函数：函数名 + 括号
+say_hello()  # 输出: 你好！欢迎学习 Python！
+say_hello()  # 可以多次调用
+
+# 定义一个带参数的函数
+def greet(name):
+    print(f"你好，{name}！")
+
+# 调用时传入参数
+greet("小明")  # 输出: 你好，小明！
+greet("李四")  # 输出: 你好，李四！</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              你好！欢迎学习 Python！<br>
+              你好！欢迎学习 Python！<br>
+              你好，小明！<br>
+              你好，李四！
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 2：函数命名规范</div>
+            <pre><code class="language-python"># ============================================
+# 示例 2：函数命名规范
+# ============================================
+
+# ✅ 好的命名：用下划线连接单词，名字有意义
+def calculate_average(numbers):
+    """计算平均值"""
+    return sum(numbers) / len(numbers)
+
+def is_valid_email(email):
+    """检查邮箱格式是否有效"""
+    return "@" in email and "." in email
+
+def get_user_name(user_id):
+    """根据用户ID获取用户名"""
+    # 这里是模拟数据
+    users = {1: "小明", 2: "李四"}
+    return users.get(user_id, "未知用户")
+
+# ❌ 不好的命名：名字没有意义
+def func1(x):
+    return x * 2
+
+def do_stuff(a, b):
+    return a + b
+
+# 测试
+scores = [85, 92, 78, 91]
+print(f"平均分: {calculate_average(scores)}")
+print(f"邮箱有效: {is_valid_email('test@example.com')}")
+print(f"用户名: {get_user_name(1)}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              平均分: 86.5<br>
+              邮箱有效: True<br>
+              用户名: 小明
+            </div>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong>函数名应该清楚地表达函数的功能。动词开头更清晰：<code>get_</code>、<code>is_</code>、<code>calculate_</code>、<code>create_</code> 等。
+            </div>
+          </div>
+        </section>
+
+        <!-- 参数示例 -->
+        <section id="parameters" class="section">
+          <h2>参数示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 3：多个参数和默认参数</div>
+            <pre><code class="language-python"># ============================================
+# 示例 3：多个参数和默认参数
+# ============================================
+
+# 多个参数
+def introduce(name, age, city):
+    """自我介绍"""
+    print(f"我叫{name}，{age}岁，来自{city}")
+
+introduce("小明", 25, "北京")
+# 输出: 我叫小明，25岁，来自北京
+
+# 默认参数：调用时可以省略
+def greet(name, greeting="你好"):
+    """打招呼，greeting 有默认值"""
+    print(f"{greeting}，{name}！")
+
+greet("小明")              # 使用默认值: 你好，小明！
+greet("小明", "早上好")    # 传入新值: 早上好，小明！
+greet("小明", greeting="晚上好")  # 用关键字参数: 晚上好，小明！
+
+# 实际应用：创建用户
+def create_user(name, age, role="viewer", is_active=True):
+    """创建用户，role 和 is_active 有默认值"""
+    return {
+        "name": name,
+        "age": age,
+        "role": role,
+        "is_active": is_active
+    }
+
+user1 = create_user("小明", 25)  # 使用默认值
+user2 = create_user("李四", 30, role="admin")  # 指定角色
+
+print("用户1:", user1)
+print("用户2:", user2)</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              我叫小明，25岁，来自北京<br>
+              你好，小明！<br>
+              早上好，小明！<br>
+              晚上好，小明！<br>
+              用户1: {'name': '小明', 'age': 25, 'role': 'viewer', 'is_active': True}<br>
+              用户2: {'name': '李四', 'age': 30, 'role': 'admin', 'is_active': True}
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 4：可变参数 *args 和 **kwargs</div>
+            <pre><code class="language-python"># ============================================
+# 示例 4：可变参数 *args 和 **kwargs
+# ============================================
+
+# *args：接收任意数量的位置参数
+# args 会变成一个元组
+def sum_all(*args):
+    """计算所有参数的总和"""
+    print(f"接收到的参数: {args}")
+    print(f"参数类型: {type(args)}")
+    return sum(args)
+
+print(f"总和: {sum_all(1, 2, 3)}")       # 输出: 6
+print(f"总和: {sum_all(1, 2, 3, 4, 5)}") # 输出: 15
+
+# **kwargs：接收任意数量的关键字参数
+# kwargs 会变成一个字典
+def print_info(**kwargs):
+    """打印所有关键字参数"""
+    print(f"接收到的参数: {kwargs}")
+    for key, value in kwargs.items():
+        print(f"  {key}: {value}")
+
+print_info(name="小明", age=25, city="北京")
+# 输出:
+# 接收到的参数: {'name': '小明', 'age': 25, 'city': '北京'}
+#   name: 小明
+#   age: 25
+#   city: 北京
+
+# 组合使用
+def create_report(title, *args, **kwargs):
+    """创建报告"""
+    print(f"标题: {title}")
+    print(f"额外参数: {args}")
+    print(f"配置: {kwargs}")
+
+create_report("测试报告", "v1.0", "v2.0", format="pdf", verbose=True)</code></pre>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong><code>*args</code> 用于接收不确定数量的位置参数，<code>**kwargs</code> 用于接收不确定数量的关键字参数。
+            </div>
+          </div>
+        </section>
+
+        <!-- 返回值示例 -->
+        <section id="return" class="section">
+          <h2>返回值示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 5：返回单个值和多个值</div>
+            <pre><code class="language-python"># ============================================
+# 示例 5：返回单个值和多个值
+# ============================================
+
+# 返回单个值
+def add(a, b):
+    """返回两个数的和"""
+    return a + b
+
+result = add(3, 5)
+print(f"3 + 5 = {result}")  # 输出: 3 + 5 = 8
+
+# 返回多个值（实际上返回一个元组）
+def get_stats(numbers):
+    """返回平均值、最大值、最小值"""
+    avg = sum(numbers) / len(numbers)
+    return avg, max(numbers), min(numbers)
+
+# 接收多个返回值
+average, maximum, minimum = get_stats([85, 92, 78, 91, 73])
+print(f"平均: {average:.1f}")
+print(f"最大: {maximum}")
+print(f"最小: {minimum}")
+
+# 返回字典
+def create_user(name, age, skills):
+    """创建用户信息字典"""
+    return {
+        "name": name,
+        "age": age,
+        "skills": skills,
+        "is_active": True
+    }
+
+user = create_user("小明", 25, ["Python", "LLM"])
+print(f"用户: {user}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              3 + 5 = 8<br>
+              平均: 83.8<br>
+              最大: 92<br>
+              最小: 73<br>
+              用户: {'name': '小明', 'age': 25, 'skills': ['Python', 'LLM'], 'is_active': True}
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 6：提前返回和无返回值</div>
+            <pre><code class="language-python"># ============================================
+# 示例 6：提前返回和无返回值
+# ============================================
+
+# 提前返回：遇到 return 会立即结束函数
+def divide(a, b):
+    """安全的除法"""
+    if b == 0:
+        return None  # 提前返回，避免除零错误
+    return a / b
+
+print(divide(10, 3))   # 输出: 3.3333333333333335
+print(divide(10, 0))   # 输出: None
+
+# 无返回值：函数执行完后默认返回 None
+def print_report(title, content):
+    """只是打印，不返回任何值"""
+    print(f"=== {title} ===")
+    print(content)
+    print("=============")
+
+result = print_report("测试报告", "所有测试通过")
+print(f"返回值: {result}")  # 输出: 返回值: None
+
+# 实际应用：处理 LLM 响应
+def extract_answer(response):
+    """从 LLM 响应中提取回答"""
+    if not response:
+        return "无响应"
+    
+    choices = response.get("choices", [])
+    if not choices:
+        return "无回答"
+    
+    return choices[0].get("message", {}).get("content", "")
+
+# 测试
+response1 = {"choices": [{"message": {"content": "RAG是..."}}]}
+response2 = {"choices": []}
+response3 = {}
+
+print(extract_answer(response1))  # 输出: RAG是...
+print(extract_answer(response2))  # 输出: 无回答
+print(extract_answer(response3))  # 输出: 无回答</code></pre>
+          </div>
+        </section>
+
+        <!-- 实际应用 -->
+        <section id="practical" class="section">
+          <h2>实际应用</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 7：封装 LLM 调用函数</div>
+            <pre><code class="language-python"># ============================================
+# 示例 7：封装 LLM 调用函数
+# ============================================
+
+def build_prompt(question, context="", system_prompt="你是一个专业的AI助手"):
+    """构造 LLM 提示词
+    
+    Args:
+        question: 用户问题
+        context: 上下文信息（可选）
+        system_prompt: 系统提示词
+    
+    Returns:
+        完整的消息列表
+    """
+    messages = [
+        {"role": "system", "content": system_prompt}
+    ]
+    
+    if context:
+        # 如果有上下文，添加到用户消息中
+        user_content = f"参考资料：\n{context}\n\n问题：{question}"
+    else:
+        user_content = question
+    
+    messages.append({"role": "user", "content": user_content})
+    
+    return messages
+
+def parse_llm_response(response):
+    """解析 LLM 响应
+    
+    Args:
+        response: LLM 返回的字典
+    
+    Returns:
+        提取的回答内容，如果解析失败返回空字符串
+    """
+    try:
+        choices = response.get("choices", [])
+        if choices:
+            return choices[0].get("message", {}).get("content", "")
+    except (KeyError, IndexError, TypeError):
+        pass
+    return ""
+
+# 测试
+messages = build_prompt(
+    question="什么是RAG？",
+    context="RAG是检索增强生成技术"
+)
+print("构造的消息:")
+for msg in messages:
+    print(f"  [{msg['role']}] {msg['content'][:50]}...")
+
+# 模拟解析响应
+response = {
+    "choices": [{
+        "message": {
+            "content": "RAG（检索增强生成）是一种结合检索和生成的技术..."
+        }
+    }]
+}
+answer = parse_llm_response(response)
+print(f"\n提取的回答: {answer}")</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 8：函数组合 - 成绩处理系统</div>
+            <pre><code class="language-python"># ============================================
+# 示例 8：函数组合 - 成绩处理系统
+# ============================================
+
+def input_scores():
+    """模拟输入成绩（实际项目中可以从文件读取）"""
+    return [85, 92, 78, 65, 58, 91, 73, 88]
+
+def calculate_stats(scores):
+    """计算统计数据
+    
+    Args:
+        scores: 分数列表
+    
+    Returns:
+        统计数据字典
+    """
+    if not scores:
+        return {"total": 0, "average": 0, "pass_rate": 0}
+    
+    total = len(scores)
+    average = sum(scores) / total
+    passed = sum(1 for s in scores if s >= 60)
+    
+    return {
+        "total": total,
+        "average": average,
+        "pass_rate": passed / total,
+        "max": max(scores),
+        "min": min(scores)
+    }
+
+def generate_report(stats):
+    """生成格式化的报告
+    
+    Args:
+        stats: 统计数据字典
+    
+    Returns:
+        报告字符串
+    """
+    return f"""
+=== 成绩统计报告 ===
+总人数: {stats['total']}
+平均分: {stats['average']:.1f}
+及格率: {stats['pass_rate']:.1%}
+最高分: {stats['max']}
+最低分: {stats['min']}
+==================
+"""
+
+def main():
+    """主函数：协调整个程序"""
+    # 1. 获取数据
+    scores = input_scores()
+    
+    # 2. 计算统计
+    stats = calculate_stats(scores)
+    
+    # 3. 生成报告
+    report = generate_report(stats)
+    
+    # 4. 输出
+    print(report)
+
+# 运行程序
+main()</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              === 成绩统计报告 ===<br>
+              总人数: 8<br>
+              平均分: 78.8<br>
+              及格率: 87.5%<br>
+              最高分: 92<br>
+              最低分: 58<br>
+              ==================
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 9：Lambda 匿名函数</div>
+            <pre><code class="language-python"># ============================================
+# 示例 9：Lambda 匿名函数
+# ============================================
+
+# Lambda 是一种简短的匿名函数
+# 语法：lambda 参数: 表达式
+
+# 普通函数
+def square(x):
+    return x * x
+
+# Lambda 函数（等价）
+square_lambda = lambda x: x * x
+
+print(f"普通函数: {square(5)}")      # 输出: 25
+print(f"Lambda: {square_lambda(5)}") # 输出: 25
+
+# Lambda 常用于排序
+students = [
+    {"name": "小明", "score": 85},
+    {"name": "李四", "score": 92},
+    {"name": "王五", "score": 78},
+]
+
+# 按分数排序
+sorted_students = sorted(students, key=lambda s: s["score"], reverse=True)
+print("按分数排序:")
+for s in sorted_students:
+    print(f"  {s['name']}: {s['score']}")
+
+# Lambda 用于 filter
+scores = [85, 45, 92, 58, 76, 63, 91]
+high_scores = list(filter(lambda s: s >= 80, scores))
+print(f"高分: {high_scores}")  # 输出: [85, 92, 91]</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              普通函数: 25<br>
+              Lambda: 25<br>
+              按分数排序:<br>
+              &nbsp;&nbsp;李四: 92<br>
+              &nbsp;&nbsp;小明: 85<br>
+              &nbsp;&nbsp;王五: 78<br>
+              高分: [85, 92, 91]
+            </div>
+          </div>
+        </section>
+
+        <!-- 练习题 -->
+        <section class="section">
+          <h2>练习题</h2>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：基础函数</h4>
+              <p>定义以下函数并测试：</p>
+              <ul>
+                <li><code>square(n)</code>：返回 n 的平方</li>
+                <li><code>is_even(n)</code>：判断 n 是否为偶数</li>
+                <li><code>max_of_three(a, b, c)</code>：返回三个数中的最大值</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：字符串处理函数</h4>
+              <p>定义以下函数：</p>
+              <ul>
+                <li><code>count_words(text)</code>：统计文本中的单词数量</li>
+                <li><code>truncate(text, max_length)</code>：截断文本，超出部分用 "..." 代替</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：LLM 相关函数</h4>
+              <p>实现以下函数：</p>
+              <pre><code class="language-python">def build_prompt(question, context=""):
+    """构造 LLM 提示词
+    如果有 context，把 context 和 question 组合
+    如果没有 context，直接返回 question
+    """
+    pass
+
+def parse_llm_response(response):
+    """解析 LLM 响应
+    从 response 字典中提取回答内容
+    如果解析失败返回空字符串
+    """
+    pass</code></pre>
+            </article>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天练习 1-2 小时，多写代码才能真正掌握。</div>
+  </footer>
+</body>
+</html>

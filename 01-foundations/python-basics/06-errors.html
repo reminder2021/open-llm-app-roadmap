@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>错误处理 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="06-errors.html">06 错误处理</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第六章：错误处理</h1>
+      <p>程序出错是正常的，关键是让程序在出错时不会崩溃，而是优雅地处理错误。这在 LLM 应用中尤其重要，因为模型调用可能失败。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：1-2 天</span>
+        <span class="pill">目标：能用 try/except 处理程序异常</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#what-is-error">什么是错误</a>
+        <a href="#try-except">try/except</a>
+        <a href="#common-errors">常见错误类型</a>
+        <a href="#finally">finally</a>
+        <a href="#raise">抛出异常</a>
+        <a href="#practice">练习</a>
+        <a href="05-files.html">← 上一章：文件操作</a>
+        <a href="07-packages.html">下一章：包管理 →</a>
+      </aside>
+
+      <article class="content">
+        <section id="what-is-error" class="section">
+          <h2>什么是错误？</h2>
+          <p>程序运行时可能会遇到各种问题，比如文件不存在、网络连接失败、数据格式错误等。这些问题会导致程序"崩溃"（停止运行）。</p>
+
+          <h3>错误示例</h3>
+          <pre><code class="language-python"># 这些代码会报错
+print(1 / 0)  # ZeroDivisionError: division by zero
+
+int("hello")  # ValueError: invalid literal for int()
+
+print(undefined_variable)  # NameError: name 'undefined_variable' is not defined
+
+my_list = [1, 2, 3]
+print(my_list[10])  # IndexError: list index out of range</code></pre>
+
+          <h3>为什么要处理错误？</h3>
+          <div class="grid">
+            <div class="card">
+              <h3>程序不会崩溃</h3>
+              <p>即使遇到错误，程序也能继续运行。</p>
+            </div>
+            <div class="card">
+              <h3>用户体验更好</h3>
+              <p>给用户友好的提示，而不是一堆错误信息。</p>
+            </div>
+            <div class="card">
+              <h3>方便调试</h3>
+              <p>记录错误信息，方便排查问题。</p>
+            </div>
+            <div class="card">
+              <h3>LLM 应用必备</h3>
+              <p>模型调用可能失败，必须有错误处理。</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="try-except" class="section">
+          <h2>try/except</h2>
+          <p>用 <code>try/except</code> 捕获和处理异常。</p>
+
+          <h3>基本语法</h3>
+          <pre><code class="language-python">try:
+    # 可能出错的代码
+    result = 1 / 0
+except:
+    # 出错时执行的代码
+    print("发生了错误")</code></pre>
+
+          <h3>捕获特定类型的错误</h3>
+          <pre><code class="language-python"># 捕获除零错误
+try:
+    result = 1 / 0
+except ZeroDivisionError:
+    print("不能除以零")
+
+# 捕获类型错误
+try:
+    result = int("hello")
+except ValueError:
+    print("无法转换成数字")
+
+# 捕获多种错误
+try:
+    # 可能出错的代码
+    pass
+except (ValueError, TypeError) as e:
+    print(f"发生了错误: {e}")</code></pre>
+
+          <h3>获取错误信息</h3>
+          <pre><code class="language-python">try:
+    result = int("hello")
+except ValueError as e:
+    print(f"错误类型: {type(e).__name__}")
+    print(f"错误信息: {e}")
+    # 输出:
+    # 错误类型: ValueError
+    # 错误信息: invalid literal for int() with base 10: 'hello'</code></pre>
+
+          <h3>else 子句</h3>
+          <pre><code class="language-python">try:
+    result = 10 / 2
+except ZeroDivisionError:
+    print("除零错误")
+else:
+    # 没有错误时执行
+    print(f"计算成功: {result}")
+# 输出: 计算成功: 5.0</code></pre>
+        </section>
+
+        <section id="common-errors" class="section">
+          <h2>常见错误类型</h2>
+          <p>了解常见的错误类型，能帮你更快地定位问题。</p>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>ValueError</h4>
+              <p>值不正确</p>
+              <pre><code class="language-python">try:
+    number = int("abc")
+except ValueError as e:
+    print(f"值错误: {e}")
+    # 输出: 值错误: invalid literal for int()</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>TypeError</h4>
+              <p>类型不匹配</p>
+              <pre><code class="language-python">try:
+    result = "hello" + 123
+except TypeError as e:
+    print(f"类型错误: {e}")
+    # 输出: 类型错误: can only concatenate str to str</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>KeyError</h4>
+              <p>字典键不存在</p>
+              <pre><code class="language-python">try:
+    data = {"name": "小明"}
+    print(data["age"])
+except KeyError as e:
+    print(f"键错误: {e}")
+    # 输出: 键错误: 'age'</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>IndexError</h4>
+              <p>列表索引超出范围</p>
+              <pre><code class="language-python">try:
+    my_list = [1, 2, 3]
+    print(my_list[10])
+except IndexError as e:
+    print(f"索引错误: {e}")
+    # 输出: 索引错误: list index out of range</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>FileNotFoundError</h4>
+              <p>文件不存在</p>
+              <pre><code class="language-python">try:
+    with open("nonexistent.txt", "r") as f:
+        content = f.read()
+except FileNotFoundError as e:
+    print(f"文件不存在: {e}")</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>JSONDecodeError</h4>
+              <p>JSON 格式错误</p>
+              <pre><code class="language-python">import json
+
+try:
+    data = json.loads("{invalid json}")
+except json.JSONDecodeError as e:
+    print(f"JSON 解析错误: {e}")</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section id="finally" class="section">
+          <h2>finally</h2>
+          <p><code>finally</code> 子句无论是否发生错误都会执行，通常用于清理资源。</p>
+
+          <h3>基本用法</h3>
+          <pre><code class="language-python">try:
+    # 可能出错的代码
+    result = 1 / 0
+except ZeroDivisionError:
+    print("发生了错误")
+finally:
+    # 无论是否出错都会执行
+    print("清理工作完成")</code></pre>
+
+          <h3>文件操作中的使用</h3>
+          <pre><code class="language-python"># 读取文件，确保文件被关闭
+try:
+    f = open("data.txt", "r")
+    content = f.read()
+    print(content)
+except FileNotFoundError:
+    print("文件不存在")
+finally:
+    # 确保文件被关闭
+    f.close()
+    print("文件已关闭")</code></pre>
+
+          <h3>with 语句（推荐）</h3>
+          <pre><code class="language-python"># 使用 with 语句更简洁
+try:
+    with open("data.txt", "r") as f:
+        content = f.read()
+        print(content)
+except FileNotFoundError:
+    print("文件不存在")
+# with 语句会自动关闭文件，不需要 finally</code></pre>
+        </section>
+
+        <section id="raise" class="section">
+          <h2>抛出异常</h2>
+          <p>有时候你需要主动抛出异常，比如参数不合法时。</p>
+
+          <h3>raise 语句</h3>
+          <pre><code class="language-python">def divide(a, b):
+    """安全的除法"""
+    if b == 0:
+        raise ValueError("除数不能为零")
+    return a / b
+
+try:
+    result = divide(10, 0)
+except ValueError as e:
+    print(f"错误: {e}")
+    # 输出: 错误: 除数不能为零</code></pre>
+
+          <h3>自定义异常</h3>
+          <pre><code class="language-python">class LLMError(Exception):
+    """LLM 相关的错误"""
+    pass
+
+class ModelNotFoundError(LLMError):
+    """模型不存在"""
+    pass
+
+class APIError(LLMError):
+    """API 调用失败"""
+    pass
+
+def call_model(model_name):
+    if model_name not in ["qwen2.5:7b", "glm4:9b"]:
+        raise ModelNotFoundError(f"模型 {model_name} 不存在")
+    # 调用模型的代码...
+    pass
+
+try:
+    call_model("unknown-model")
+except ModelNotFoundError as e:
+    print(f"模型错误: {e}")
+except APIError as e:
+    print(f"API 错误: {e}")</code></pre>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>练习</h2>
+          <p>完成以下练习，巩固所学知识：</p>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：基础错误处理</h4>
+              <p>处理以下可能出错的代码：</p>
+              <pre><code class="language-python"># 1. 安全地转换字符串为整数
+def safe_int(value):
+    """安全地转换为整数，失败返回 None"""
+    pass
+
+# 2. 安全地访问字典值
+def safe_get(data, key, default=None):
+    """安全地获取字典值"""
+    pass
+
+# 3. 安全地读取文件
+def safe_read(file_path):
+    """安全地读取文件，失败返回空字符串"""
+    pass</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：JSON 解析错误处理</h4>
+              <p>写一个安全的 JSON 解析函数：</p>
+              <pre><code class="language-python">import json
+
+def safe_parse_json(json_string, default=None):
+    """安全地解析 JSON 字符串
+    
+    Args:
+        json_string: JSON 字符串
+        default: 解析失败时返回的默认值
+    
+    Returns:
+        解析后的数据，或默认值
+    """
+    pass
+
+# 测试
+print(safe_parse_json('{"name": "小明"}'))  # 应该返回字典
+print(safe_parse_json('{invalid json}'))     # 应该返回 None
+print(safe_parse_json('{invalid json}', {})) # 应该返回 {}</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：LLM 调用错误处理</h4>
+              <p>模拟处理 LLM 调用可能遇到的错误：</p>
+              <pre><code class="language-python">import random
+
+def simulate_llm_call(prompt):
+    """模拟 LLM 调用（可能失败）"""
+    # 随机模拟不同的错误
+    error_type = random.choice(["success", "timeout", "rate_limit", "invalid_response"])
+    
+    if error_type == "timeout":
+        raise TimeoutError("请求超时")
+    elif error_type == "rate_limit":
+        raise Exception("API 限流")
+    elif error_type == "invalid_response":
+        return "无效响应"
+    else:
+        return f"回答: {prompt}"
+
+def call_llm_with_retry(prompt, max_retries=3):
+    """带重试的 LLM 调用"""
+    # 实现重试逻辑
+    pass
+
+# 测试
+result = call_llm_with_retry("什么是 RAG？")
+print(result)</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 4：数据验证</h4>
+              <p>写一个数据验证函数：</p>
+              <pre><code class="language-python">def validate_user_data(data):
+    """验证用户数据
+    
+    Args:
+        data: 用户数据字典
+    
+    Returns:
+        (is_valid, errors) 元组
+    
+    验证规则：
+    - name: 必须存在，且为字符串
+    - age: 必须存在，且为 0-150 之间的整数
+    - email: 必须存在，且包含 @
+    """
+    pass
+
+# 测试
+test_data = [
+    {"name": "小明", "age": 25, "email": "test@example.com"},  # 有效
+    {"name": "", "age": 25, "email": "test@example.com"},       # 无效：name 为空
+    {"name": "小明", "age": -1, "email": "test@example.com"},   # 无效：age 为负数
+    {"name": "小明", "age": 25, "email": "invalid-email"},      # 无效：email 格式错误
+]
+
+for data in test_data:
+    is_valid, errors = validate_user_data(data)
+    print(f"数据: {data}")
+    print(f"有效: {is_valid}, 错误: {errors}\n")</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>本章小结</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 你学会了</h3>
+              <ul>
+                <li>使用 try/except 捕获异常</li>
+                <li>捕获特定类型的错误</li>
+                <li>使用 finally 清理资源</li>
+                <li>使用 raise 抛出异常</li>
+                <li>创建自定义异常类</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>➡️ 下一步</h3>
+              <p>下一章我们学习包管理，学会使用 pip 安装和管理 Python 包。</p>
+              <a href="07-packages.html" class="btn-primary">继续学习：包管理 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天练习 1-2 小时，多写代码才能真正掌握。</div>
+  </footer>
+</body>
+</html>

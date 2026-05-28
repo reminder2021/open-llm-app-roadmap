@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>基本语法 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="02-syntax.html">02 基本语法</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第二章：基本语法</h1>
+      <p>学习 Python 的基本语法：变量、数据类型、条件判断、循环。这些是所有程序的基础。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：2-3 天</span>
+        <span class="pill">目标：能写简单的数据处理脚本</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#variables">变量</a>
+        <a href="#data-types">数据类型</a>
+        <a href="#strings">字符串操作</a>
+        <a href="#conditions">条件判断</a>
+        <a href="#loops">循环</a>
+        <a href="#practice">练习</a>
+        <a href="01-environment.html">← 上一章：环境搭建</a>
+        <a href="03-data-structures.html">下一章：数据结构 →</a>
+      </aside>
+
+      <article class="content">
+        <section id="variables" class="section">
+          <h2>变量</h2>
+          <p>变量是用来存储数据的"盒子"。你可以把数据放进去，之后用变量名来使用它。</p>
+
+          <h3>创建变量</h3>
+          <pre><code class="language-python"># 用 = 号给变量赋值
+name = "小明"
+age = 25
+height = 1.75
+is_student = True
+
+# 打印变量的值
+print(name)      # 输出: 小明
+print(age)       # 输出: 25
+print(height)    # 输出: 1.75
+print(is_student) # 输出: True</code></pre>
+
+          <h3>变量命名规则</h3>
+          <ul>
+            <li>只能包含字母、数字和下划线 <code>_</code></li>
+            <li>不能以数字开头</li>
+            <li>区分大小写：<code>name</code> 和 <code>Name</code> 是不同的变量</li>
+            <li>建议用有意义的名字：<code>user_name</code> 比 <code>x</code> 好</li>
+          </ul>
+
+          <h3>合法和非法的变量名</h3>
+          <pre><code class="language-python"># ✅ 合法的变量名
+user_name = "小明"
+age_25 = 25
+_private = "私有"
+
+# ❌ 非法的变量名（会报错）
+# 2name = "小明"      # 数字开头
+# my-name = "小明"    # 包含连字符
+# class = "Python"    # 使用了保留字</code></pre>
+
+          <h3>修改变量</h3>
+          <pre><code class="language-python">score = 80
+print(score)  # 输出: 80
+
+score = 90    # 修改变量的值
+print(score)  # 输出: 90</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：在 LLM 应用中，你会用变量存储模型返回的结果、用户的输入、API 的响应等。
+            <pre><code class="language-python">user_input = "什么是 RAG？"
+model_response = "RAG 是检索增强生成的缩写..."</code></pre>
+          </div>
+        </section>
+
+        <section id="data-types" class="section">
+          <h2>数据类型</h2>
+          <p>Python 中的数据有不同的类型，最常见的有四种：</p>
+
+          <div class="grid">
+            <div class="card">
+              <h3>字符串 (str)</h3>
+              <p>文本数据，用引号包围</p>
+              <pre><code class="language-python">name = "小明"
+message = '你好'
+multi_line = """这是
+多行
+文本"""</code></pre>
+            </div>
+            <div class="card">
+              <h3>整数 (int)</h3>
+              <p>没有小数点的数字</p>
+              <pre><code class="language-python">age = 25
+count = 0
+negative = -10</code></pre>
+            </div>
+            <div class="card">
+              <h3>浮点数 (float)</h3>
+              <p>有小数点的数字</p>
+              <pre><code class="language-python">height = 1.75
+price = 9.99
+pi = 3.14159</code></pre>
+            </div>
+            <div class="card">
+              <h3>布尔值 (bool)</h3>
+              <p>只有 True 或 False</p>
+              <pre><code class="language-python">is_student = True
+has_passed = False</code></pre>
+            </div>
+          </div>
+
+          <h3>检查数据类型</h3>
+          <pre><code class="language-python">print(type(name))        # &lt;class 'str'&gt;
+print(type(age))         # &lt;class 'int'&gt;
+print(type(height))      # &lt;class 'float'&gt;
+print(type(is_student))  # &lt;class 'bool'&gt;</code></pre>
+
+          <h3>类型转换</h3>
+          <pre><code class="language-python"># 字符串转整数
+age_str = "25"
+age_int = int(age_str)
+print(age_int + 5)  # 输出: 30
+
+# 整数转字符串
+score = 85
+score_str = str(score)
+print("分数是：" + score_str)  # 输出: 分数是：85
+
+# 字符串转浮点数
+price_str = "9.99"
+price_float = float(price_str)
+print(price_float * 2)  # 输出: 19.98</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：LLM 返回的数据通常是字符串，你需要根据情况转换类型。
+            <pre><code class="language-python"># LLM 返回的可能是字符串 "85"
+model_output = "85"
+
+# 需要转换成数字才能计算
+score = int(model_output)
+if score >= 60:
+    print("及格了")</code></pre>
+          </div>
+        </section>
+
+        <section id="strings" class="section">
+          <h2>字符串操作</h2>
+          <p>字符串是 LLM 应用中最常用的数据类型，因为模型输入输出都是文本。</p>
+
+          <h3>字符串拼接</h3>
+          <pre><code class="language-python"># 用 + 号拼接
+first_name = "张"
+last_name = "三"
+full_name = first_name + last_name
+print(full_name)  # 输出: 张三
+
+# 用 f-string 格式化（推荐）
+age = 25
+message = f"我今年 {age} 岁"
+print(message)  # 输出: 我今年 25 岁
+
+# f-string 可以放表达式
+price = 9.99
+quantity = 3
+total = f"总价: {price * quantity} 元"
+print(total)  # 输出: 总价: 29.97 元</code></pre>
+
+          <h3>字符串方法</h3>
+          <pre><code class="language-python">text = "  Hello, World!  "
+
+# 去掉首尾空格
+print(text.strip())  # 输出: Hello, World!
+
+# 转换大小写
+print(text.upper())  # 输出:   HELLO, WORLD!  
+print(text.lower())  # 输出:   hello, world!  
+
+# 替换
+print(text.replace("World", "Python"))  # 输出:   Hello, Python!  
+
+# 查找
+print(text.find("World"))  # 输出: 9（位置）
+
+# 切割
+print(text.split(","))  # 输出: ['  Hello', ' World!  ']</code></pre>
+
+          <h3>字符串切片</h3>
+          <pre><code class="language-python">text = "Hello, World!"
+
+# 获取单个字符
+print(text[0])   # 输出: H
+print(text[7])   # 输出: W
+
+# 获取子串
+print(text[0:5])   # 输出: Hello
+print(text[7:12])  # 输出: World
+
+# 从开头或结尾
+print(text[:5])    # 输出: Hello
+print(text[7:])    # 输出: World!
+
+# 负数索引（从末尾开始）
+print(text[-1])    # 输出: !
+print(text[-6:])   # 输出:orld!</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：构造 Prompt 模板时，你会大量使用 f-string 和字符串操作。
+            <pre><code class="language-python">user_question = "什么是 RAG？"
+system_prompt = "你是一个专业的 AI 助手。"
+full_prompt = f"{system_prompt}\n\n用户问题：{user_question}"</code></pre>
+          </div>
+        </section>
+
+        <section id="conditions" class="section">
+          <h2>条件判断</h2>
+          <p>让程序根据不同情况执行不同的代码。</p>
+
+          <h3>if 语句</h3>
+          <pre><code class="language-python">score = 85
+
+if score >= 60:
+    print("及格了")
+    print("恭喜！")</code></pre>
+
+          <h3>if-else 语句</h3>
+          <pre><code class="language-python">score = 45
+
+if score >= 60:
+    print("及格了")
+else:
+    print("不及格，继续努力")</code></pre>
+
+          <h3>if-elif-else 语句</h3>
+          <pre><code class="language-python">score = 85
+
+if score >= 90:
+    print("优秀")
+elif score >= 80:
+    print("良好")
+elif score >= 60:
+    print("及格")
+else:
+    print("不及格")</code></pre>
+
+          <h3>比较运算符</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>常用比较</h4>
+              <pre><code class="language-python">a = 10
+b = 20
+
+print(a == b)   # False，等于
+print(a != b)   # True，不等于
+print(a > b)    # False，大于
+print(a < b)    # True，小于
+print(a >= 10)  # True，大于等于
+print(a <= 5)   # False，小于等于</code></pre>
+            </article>
+          </div>
+
+          <h3>逻辑运算符</h3>
+          <pre><code class="language-python">age = 25
+has_id = True
+
+# and：两个条件都满足
+if age >= 18 and has_id:
+    print("可以进入")
+
+# or：至少一个条件满足
+if age < 12 or age > 60:
+    print("免费")
+
+# not：取反
+if not has_id:
+    print("请出示身份证")</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：你会用条件判断来处理模型的输出。
+            <pre><code class="language-python">response = "根据资料无法判断"
+
+if "无法判断" in response:
+    print("模型表示不知道答案")
+elif "根据" in response:
+    print("模型给出了有依据的回答")
+else:
+    print("模型直接回答了")</code></pre>
+          </div>
+        </section>
+
+        <section id="loops" class="section">
+          <h2>循环</h2>
+          <p>让程序重复执行某段代码。</p>
+
+          <h3>for 循环</h3>
+          <pre><code class="language-python"># 遍历列表
+fruits = ["苹果", "香蕉", "橙子"]
+for fruit in fruits:
+    print(f"我喜欢{fruit}")
+
+# 使用 range 生成数字序列
+for i in range(5):
+    print(i)  # 输出: 0, 1, 2, 3, 4
+
+# 带索引的遍历
+for i, fruit in enumerate(fruits):
+    print(f"{i}: {fruit}")</code></pre>
+
+          <h3>while 循环</h3>
+          <pre><code class="language-python"># 当条件为 True 时重复执行
+count = 0
+while count < 5:
+    print(count)
+    count += 1  # 等同于 count = count + 1
+
+# 注意：一定要有退出条件，否则会无限循环</code></pre>
+
+          <h3>break 和 continue</h3>
+          <pre><code class="language-python"># break：提前退出循环
+for i in range(10):
+    if i == 5:
+        break  # 当 i 等于 5 时退出循环
+    print(i)   # 输出: 0, 1, 2, 3, 4
+
+# continue：跳过本次循环
+for i in range(5):
+    if i == 2:
+        continue  # 跳过 i 等于 2 的情况
+    print(i)      # 输出: 0, 1, 3, 4</code></pre>
+
+          <h3>实用示例</h3>
+          <pre><code class="language-python"># 统计列表中及格的人数
+scores = [85, 45, 92, 58, 76, 63, 91]
+pass_count = 0
+
+for score in scores:
+    if score >= 60:
+        pass_count += 1
+
+print(f"及格人数: {pass_count}")  # 输出: 及格人数: 5
+
+# 批量处理数据
+names = ["张三", "李四", "王五"]
+for name in names:
+    greeting = f"你好，{name}！欢迎使用 LLM 应用。"
+    print(greeting)</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：循环在 LLM 应用中非常常用，比如批量处理用户输入、遍历测试数据、重试请求等。
+            <pre><code class="language-python"># 重试机制示例
+max_retries = 3
+for attempt in range(max_retries):
+    try:
+        # 调用模型 API
+        response = call_llm("什么是 RAG？")
+        print(response)
+        break  # 成功了就退出循环
+    except Exception as e:
+        print(f"第 {attempt + 1} 次尝试失败: {e}")
+        if attempt == max_retries - 1:
+            print("重试次数用完，放弃")</code></pre>
+          </div>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>练习</h2>
+          <p>完成以下练习，巩固所学知识：</p>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：变量和类型</h4>
+              <p>创建以下变量并打印它们：</p>
+              <ul>
+                <li>你的名字（字符串）</li>
+                <li>你的年龄（整数）</li>
+                <li>你的身高（浮点数）</li>
+                <li>是否是学生（布尔值）</li>
+              </ul>
+              <p>然后用 f-string 打印一段自我介绍。</p>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：字符串操作</h4>
+              <p>给定字符串 <code>prompt = "请用三句话解释什么是 RAG"</code>，完成以下操作：</p>
+              <ul>
+                <li>打印字符串的长度</li>
+                <li>把 "RAG" 替换成 "LLM"</li>
+                <li>打印前 5 个字符</li>
+                <li>把整个字符串转换成大写</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：条件判断</h4>
+              <p>写一个程序，根据用户输入的分数判断等级：</p>
+              <ul>
+                <li>90-100：优秀</li>
+                <li>80-89：良好</li>
+                <li>60-79：及格</li>
+                <li>0-59：不及格</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 4：循环</h4>
+              <p>写一个程序，完成以下任务：</p>
+              <ul>
+                <li>用 for 循环打印 1 到 10 的所有数字</li>
+                <li>用 for 循环计算 1 到 100 的总和</li>
+                <li>用 while 循环，让用户输入数字，直到输入 "quit" 退出</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 5：综合练习</h4>
+              <p>写一个简单的成绩统计程序：</p>
+              <pre><code class="language-python">scores = [85, 92, 78, 65, 58, 91, 73, 88]
+
+# 1. 计算平均分
+# 2. 统计及格人数
+# 3. 找出最高分和最低分
+# 4. 打印统计结果</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>本章小结</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 你学会了</h3>
+              <ul>
+                <li>创建和使用变量</li>
+                <li>理解四种基本数据类型</li>
+                <li>字符串的拼接、格式化和操作</li>
+                <li>使用 if-elif-else 进行条件判断</li>
+                <li>使用 for 和 while 循环</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>➡️ 下一步</h3>
+              <p>下一章我们学习数据结构：列表、字典、JSON，这些是处理 LLM 返回数据的基础。</p>
+              <a href="03-data-structures.html" class="btn-primary">继续学习：数据结构 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天练习 1-2 小时，多写代码才能真正掌握。</div>
+  </footer>
+</body>
+</html>

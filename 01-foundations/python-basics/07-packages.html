@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>包管理 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="07-packages.html">07 包管理</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第七章：包管理</h1>
+      <p>Python 的强大之处在于丰富的第三方库。学会使用 pip 安装和管理这些库，是 LLM 应用开发的基础。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：1-2 天</span>
+        <span class="pill">目标：能用 pip 安装和管理依赖</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#what-is-pip">什么是 pip</a>
+        <a href="#install-packages">安装包</a>
+        <a href="#virtual-env">虚拟环境</a>
+        <a href="#requirements">依赖管理</a>
+        <a href="#common-packages">常用包</a>
+        <a href="#practice">练习</a>
+        <a href="06-errors.html">← 上一章：错误处理</a>
+        <a href="08-practice.html">下一章：综合练习 →</a>
+      </aside>
+
+      <article class="content">
+        <section id="what-is-pip" class="section">
+          <h2>什么是 pip？</h2>
+          <p>pip 是 Python 的包管理工具，用来安装和管理第三方库。就像手机的应用商店一样，pip 让你可以轻松获取别人写好的代码。</p>
+
+          <h3>为什么需要第三方库？</h3>
+          <div class="grid">
+            <div class="card">
+              <h3>不用重复造轮子</h3>
+              <p>别人已经写好的功能，直接用就行。</p>
+            </div>
+            <div class="card">
+              <h3>专业且稳定</h3>
+              <p>经过大量用户验证，比自己写的更可靠。</p>
+            </div>
+            <div class="card">
+              <h3>社区支持</h3>
+              <p>遇到问题可以搜索、提问，有人维护更新。</p>
+            </div>
+          </div>
+
+          <h3>验证 pip</h3>
+          <pre><code class="language-bash"># 检查 pip 是否已安装
+pip3 --version
+
+# 如果显示版本号，说明已安装
+# 输出类似: pip 23.x.x from ...</code></pre>
+        </section>
+
+        <section id="install-packages" class="section">
+          <h2>安装包</h2>
+          <p>使用 <code>pip install</code> 命令安装第三方库。</p>
+
+          <h3>基本安装</h3>
+          <pre><code class="language-bash"># 安装单个包
+pip3 install httpx
+
+# 安装指定版本
+pip3 install httpx==0.25.0
+
+# 安装最低版本
+pip3 install httpx>=0.24.0
+
+# 升级已安装的包
+pip3 install --upgrade httpx</code></pre>
+
+          <h3>卸载包</h3>
+          <pre><code class="language-bash"># 卸载包
+pip3 uninstall httpx
+
+# 卸载时不询问确认
+pip3 uninstall -y httpx</code></pre>
+
+          <h3>查看已安装的包</h3>
+          <pre><code class="language-bash"># 列出所有已安装的包
+pip3 list
+
+# 查看特定包的信息
+pip3 show httpx
+
+# 查看哪些包可以升级
+pip3 list --outdated</code></pre>
+
+          <h3>使用国内镜像（可选）</h3>
+          <p>如果安装速度慢，可以使用国内镜像源：</p>
+          <pre><code class="language-bash"># 临时使用清华镜像
+pip3 install httpx -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 永久设置（推荐）
+pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</code></pre>
+        </section>
+
+        <section id="virtual-env" class="section">
+          <h2>虚拟环境</h2>
+          <p>虚拟环境是 Python 的"隔离空间"，每个项目可以有自己独立的依赖，互不干扰。</p>
+
+          <h3>为什么需要虚拟环境？</h3>
+          <div class="note">
+            <ul>
+              <li><strong>避免冲突</strong>：不同项目可能需要不同版本的同一个库</li>
+              <li><strong>便于部署</strong>：可以精确知道项目依赖了哪些库</li>
+              <li><strong>保持整洁</strong>：不会污染系统的 Python 环境</li>
+            </ul>
+          </div>
+
+          <h3>创建虚拟环境</h3>
+          <pre><code class="language-bash"># 创建虚拟环境（在项目目录下执行）
+python3 -m venv .venv
+
+# 激活虚拟环境
+# Mac/Linux:
+source .venv/bin/activate
+
+# Windows:
+.venv\Scripts\activate
+
+# 激活后，命令行前面会显示 (.venv)，表示在虚拟环境中</code></pre>
+
+          <h3>在虚拟环境中安装包</h3>
+          <pre><code class="language-bash"># 确保已激活虚拟环境
+(.venv) $ pip3 install httpx pydantic
+
+# 查看已安装的包
+(.venv) $ pip3 list</code></pre>
+
+          <h3>退出虚拟环境</h3>
+          <pre><code class="language-bash"># 退出虚拟环境
+deactivate</code></pre>
+
+          <h3>删除虚拟环境</h3>
+          <pre><code class="language-bash"># 删除虚拟环境（直接删除 .venv 文件夹即可）
+rm -rf .venv</code></pre>
+        </section>
+
+        <section id="requirements" class="section">
+          <h2>依赖管理</h2>
+          <p>用 <code>requirements.txt</code> 记录项目依赖，方便别人复现你的环境。</p>
+
+          <h3>导出依赖</h3>
+          <pre><code class="language-bash"># 导出当前环境的所有依赖
+pip3 freeze > requirements.txt
+
+# 查看文件内容
+cat requirements.txt
+# 输出类似:
+# httpx==0.25.0
+# pydantic==2.5.0
+# ...</code></pre>
+
+          <h3>从文件安装依赖</h3>
+          <pre><code class="language-bash"># 从 requirements.txt 安装所有依赖
+pip3 install -r requirements.txt</code></pre>
+
+          <h3>requirements.txt 示例</h3>
+          <pre><code># requirements.txt
+httpx>=0.24.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+fastapi>=0.100.0
+uvicorn>=0.23.0</code></pre>
+
+          <h3>最佳实践</h3>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 推荐</h3>
+              <ul>
+                <li>每个项目一个虚拟环境</li>
+                <li>提交 requirements.txt 到 Git</li>
+                <li>不提交 .venv 文件夹</li>
+                <li>指定版本范围而非精确版本</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>❌ 避免</h3>
+              <ul>
+                <li>在系统 Python 中安装项目依赖</li>
+                <li>忘记记录依赖</li>
+                <li>提交 .venv 到 Git</li>
+                <li>不指定版本</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="common-packages" class="section">
+          <h2>LLM 应用常用包</h2>
+          <p>以下是 LLM 应用开发中常用的第三方包：</p>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>httpx</h4>
+              <p>现代 HTTP 客户端，支持异步请求</p>
+              <pre><code class="language-python">import httpx
+
+# 同步请求
+response = httpx.get("https://api.example.com")
+print(response.json())
+
+# 异步请求
+async with httpx.AsyncClient() as client:
+    response = await client.get("https://api.example.com")</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>pydantic</h4>
+              <p>数据校验和设置管理</p>
+              <pre><code class="language-python">from pydantic import BaseModel, Field
+
+class User(BaseModel):
+    name: str
+    age: int = Field(ge=0, le=150)
+    email: str
+
+# 自动校验
+user = User(name="小明", age=25, email="test@example.com")
+print(user.model_dump())</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>python-dotenv</h4>
+              <p>从 .env 文件加载环境变量</p>
+              <pre><code class="language-python">from dotenv import load_dotenv
+import os
+
+# 加载 .env 文件
+load_dotenv()
+
+# 读取环境变量
+api_key = os.getenv("API_KEY")
+model_name = os.getenv("MODEL_NAME", "qwen2.5:7b")</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>fastapi + uvicorn</h4>
+              <p>Web API 框架</p>
+              <pre><code class="language-python">from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+# 运行: uvicorn main:app --reload</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>tiktoken</h4>
+              <p>OpenAI 的 Token 计数工具</p>
+              <pre><code class="language-python">import tiktoken
+
+encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+tokens = encoding.encode("Hello, world!")
+print(len(tokens))  # 输出: 4</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>练习</h2>
+          <p>完成以下练习，巩固所学知识：</p>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：创建虚拟环境</h4>
+              <p>完成以下任务：</p>
+              <ol>
+                <li>在项目目录创建虚拟环境</li>
+                <li>激活虚拟环境</li>
+                <li>安装 httpx 和 pydantic</li>
+                <li>导出 requirements.txt</li>
+                <li>退出虚拟环境</li>
+              </ol>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：使用 httpx</h4>
+              <p>用 httpx 调用一个公开 API：</p>
+              <pre><code class="language-python">import httpx
+
+# 调用公开 API 获取随机名言
+response = httpx.get("https://api.quotable.io/random")
+data = response.json()
+print(f"名言: {data['content']}")
+print(f"作者: {data['author']}")</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：使用 pydantic</h4>
+              <p>定义一个 LLM 请求模型：</p>
+              <pre><code class="language-python">from pydantic import BaseModel, Field
+from typing import List
+
+class Message(BaseModel):
+    role: str
+    content: str
+
+class LLMRequest(BaseModel):
+    model: str = "qwen2.5:7b"
+    messages: List[Message]
+    temperature: float = Field(default=0.7, ge=0, le=2)
+    max_tokens: int = Field(default=512, ge=1, le=4096)
+
+# 测试
+request = LLMRequest(
+    messages=[
+        Message(role="user", content="什么是 RAG？")
+    ]
+)
+print(request.model_dump_json(indent=2))</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 4：环境变量管理</h4>
+              <p>创建一个配置管理系统：</p>
+              <pre><code class="language-python">import os
+from pathlib import Path
+
+# 1. 创建 .env 文件
+env_content = """
+MODEL_NAME=qwen2.5:7b
+API_KEY=your-api-key-here
+TEMPERATURE=0.7
+MAX_TOKENS=512
+"""
+Path(".env").write_text(env_content)
+
+# 2. 创建配置加载函数
+def load_config():
+    """加载配置"""
+    # 如果安装了 python-dotenv，使用它
+    # 否则手动解析 .env 文件
+    pass
+
+# 3. 测试
+config = load_config()
+print(config)</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>本章小结</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 你学会了</h3>
+              <ul>
+                <li>使用 pip 安装和管理包</li>
+                <li>创建和使用虚拟环境</li>
+                <li>管理项目依赖（requirements.txt）</li>
+                <li>了解 LLM 应用常用包</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>➡️ 下一步</h3>
+              <p>下一章是综合练习，把前面学到的所有知识串联起来，完成一个小项目。</p>
+              <a href="08-practice.html" class="btn-primary">继续学习：综合练习 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天练习 1-2 小时，多写代码才能真正掌握。</div>
+  </footer>
+</body>
+</html>

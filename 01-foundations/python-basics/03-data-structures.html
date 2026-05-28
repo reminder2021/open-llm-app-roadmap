@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数据结构 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="03-data-structures.html">03 数据结构</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第三章：数据结构</h1>
+      <p>学习 Python 最重要的两种数据结构：列表和字典，以及如何处理 JSON 数据。这些是处理 LLM 返回数据的基础。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：2-3 天</span>
+        <span class="pill">目标：能解析和处理 JSON 数据</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#lists">列表</a>
+        <a href="#dictionaries">字典</a>
+        <a href="#nested">嵌套结构</a>
+        <a href="#json">JSON</a>
+        <a href="#practice">练习</a>
+        <a href="02-syntax.html">← 上一章：基本语法</a>
+        <a href="04-functions.html">下一章：函数 →</a>
+      </aside>
+
+      <article class="content">
+        <section id="lists" class="section">
+          <h2>列表 (List)</h2>
+          <p>列表是有序的数据集合，可以存储多个值。用方括号 <code>[]</code> 创建。</p>
+
+          <h3>创建列表</h3>
+          <pre><code class="language-python"># 创建列表
+fruits = ["苹果", "香蕉", "橙子"]
+numbers = [1, 2, 3, 4, 5]
+mixed = ["hello", 42, 3.14, True]  # 可以混合不同类型
+
+# 空列表
+empty = []
+
+print(fruits)  # 输出: ['苹果', '香蕉', '橙子']</code></pre>
+
+          <h3>访问元素</h3>
+          <pre><code class="language-python">fruits = ["苹果", "香蕉", "橙子", "葡萄", "西瓜"]
+
+# 用索引访问（从 0 开始）
+print(fruits[0])   # 输出: 苹果
+print(fruits[2])   # 输出: 橙子
+
+# 负数索引（从末尾开始）
+print(fruits[-1])  # 输出: 西瓜（最后一个）
+print(fruits[-2])  # 输出: 葡萄（倒数第二个）
+
+# 切片
+print(fruits[1:3])  # 输出: ['香蕉', '橙子']（索引 1 到 2）
+print(fruits[:3])   # 输出: ['苹果', '香蕉', '橙子']（前 3 个）
+print(fruits[2:])   # 输出: ['橙子', '葡萄', '西瓜']（从索引 2 开始）</code></pre>
+
+          <h3>修改列表</h3>
+          <pre><code class="language-python">fruits = ["苹果", "香蕉", "橙子"]
+
+# 修改元素
+fruits[0] = "草莓"
+print(fruits)  # 输出: ['草莓', '香蕉', '橙子']
+
+# 添加元素
+fruits.append("葡萄")  # 在末尾添加
+print(fruits)  # 输出: ['草莓', '香蕉', '橙子', '葡萄']
+
+# 插入元素
+fruits.insert(1, "西瓜")  # 在索引 1 的位置插入
+print(fruits)  # 输出: ['草莓', '西瓜', '香蕉', '橙子', '葡萄']
+
+# 删除元素
+fruits.remove("香蕉")  # 删除指定值
+print(fruits)  # 输出: ['草莓', '西瓜', '橙子', '葡萄']
+
+# 弹出元素（获取并删除）
+last = fruits.pop()  # 弹出最后一个
+print(last)    # 输出: 葡萄
+print(fruits)  # 输出: ['草莓', '西瓜', '橙子']</code></pre>
+
+          <h3>列表操作</h3>
+          <pre><code class="language-python">numbers = [3, 1, 4, 1, 5, 9, 2, 6]
+
+# 长度
+print(len(numbers))  # 输出: 8
+
+# 排序
+numbers.sort()
+print(numbers)  # 输出: [1, 1, 2, 3, 4, 5, 6, 9]
+
+# 反转
+numbers.reverse()
+print(numbers)  # 输出: [9, 6, 5, 4, 3, 2, 1, 1]
+
+# 计数
+print(numbers.count(1))  # 输出: 2
+
+# 查找位置
+print(numbers.index(5))  # 输出: 2
+
+# 判断是否存在
+print(5 in numbers)   # 输出: True
+print(10 in numbers)  # 输出: False</code></pre>
+
+          <h3>遍历列表</h3>
+          <pre><code class="language-python">fruits = ["苹果", "香蕉", "橙子"]
+
+# 方式一：直接遍历
+for fruit in fruits:
+    print(fruit)
+
+# 方式二：带索引遍历
+for i, fruit in enumerate(fruits):
+    print(f"{i}: {fruit}")
+
+# 方式三：用 range
+for i in range(len(fruits)):
+    print(f"{i}: {fruits[i]}")</code></pre>
+
+          <h3>列表推导式</h3>
+          <pre><code class="language-python"># 创建一个数字列表
+numbers = [1, 2, 3, 4, 5]
+
+# 每个数字乘以 2
+doubled = [x * 2 for x in numbers]
+print(doubled)  # 输出: [2, 4, 6, 8, 10]
+
+# 只保留偶数
+evens = [x for x in numbers if x % 2 == 0]
+print(evens)  # 输出: [2, 4]
+
+# 字符串处理
+words = ["hello", "world", "python"]
+upper_words = [w.upper() for w in words]
+print(upper_words)  # 输出: ['HELLO', 'WORLD', 'PYTHON']</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：列表在 LLM 应用中非常常用，比如存储对话历史、批量处理数据、保存测试用例等。
+            <pre><code class="language-python"># 存储对话历史
+conversation = [
+    {"role": "user", "content": "什么是 RAG？"},
+    {"role": "assistant", "content": "RAG 是检索增强生成..."},
+    {"role": "user", "content": "能举个例子吗？"},
+]
+
+# 批量处理用户问题
+questions = ["什么是 RAG？", "什么是 LLM？", "什么是 Agent？"]
+for q in questions:
+    response = call_llm(q)
+    print(response)</code></pre>
+          </div>
+        </section>
+
+        <section id="dictionaries" class="section">
+          <h2>字典 (Dictionary)</h2>
+          <p>字典是键值对的数据结构，用花括号 <code>{}</code> 创建。每个元素都有一个"键"和对应的"值"。</p>
+
+          <h3>创建字典</h3>
+          <pre><code class="language-python"># 创建字典
+person = {
+    "name": "小明",
+    "age": 25,
+    "city": "北京"
+}
+
+# 空字典
+empty = {}
+
+# 访问值
+print(person["name"])  # 输出: 小明
+print(person["age"])   # 输出: 25
+
+# 用 get 方法（更安全，键不存在时返回默认值）
+print(person.get("name"))        # 输出: 小明
+print(person.get("phone", "无")) # 输出: 无（键不存在）</code></pre>
+
+          <h3>修改字典</h3>
+          <pre><code class="language-python">person = {"name": "小明", "age": 25}
+
+# 修改值
+person["age"] = 26
+print(person)  # 输出: {'name': '小明', 'age': 26}
+
+# 添加新键值对
+person["city"] = "北京"
+print(person)  # 输出: {'name': '小明', 'age': 26, 'city': '北京'}
+
+# 删除键值对
+del person["city"]
+print(person)  # 输出: {'name': '小明', 'age': 26}
+
+# 使用 pop 删除并返回值
+age = person.pop("age")
+print(age)     # 输出: 26
+print(person)  # 输出: {'name': '小明'}</code></pre>
+
+          <h3>字典操作</h3>
+          <pre><code class="language-python">person = {"name": "小明", "age": 25, "city": "北京"}
+
+# 获取所有键
+print(person.keys())   # 输出: dict_keys(['name', 'age', 'city'])
+
+# 获取所有值
+print(person.values()) # 输出: dict_values(['小明', 25, '北京'])
+
+# 获取所有键值对
+print(person.items())  # 输出: dict_items([('name', '小明'), ('age', 25), ('city', '北京')])
+
+# 判断键是否存在
+print("name" in person)    # 输出: True
+print("phone" in person)   # 输出: False
+
+# 获取长度
+print(len(person))  # 输出: 3</code></pre>
+
+          <h3>遍历字典</h3>
+          <pre><code class="language-python">person = {"name": "小明", "age": 25, "city": "北京"}
+
+# 遍历键
+for key in person:
+    print(key)
+
+# 遍历值
+for value in person.values():
+    print(value)
+
+# 遍历键值对
+for key, value in person.items():
+    print(f"{key}: {value}")</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：字典是 LLM 应用中最常用的数据结构，因为 API 的请求和响应通常都是字典格式。
+            <pre><code class="language-python"># LLM API 请求
+request = {
+    "model": "qwen2.5:7b",
+    "messages": [
+        {"role": "user", "content": "什么是 RAG？"}
+    ],
+    "temperature": 0.7
+}
+
+# LLM API 响应
+response = {
+    "id": "chatcmpl-123",
+    "choices": [
+        {
+            "message": {
+                "content": "RAG 是检索增强生成..."
+            }
+        }
+    ],
+    "usage": {
+        "prompt_tokens": 10,
+        "completion_tokens": 50
+    }
+}</code></pre>
+          </div>
+        </section>
+
+        <section id="nested" class="section">
+          <h2>嵌套结构</h2>
+          <p>字典和列表可以嵌套使用，形成复杂的数据结构。这在处理 LLM 返回数据时非常常见。</p>
+
+          <h3>列表嵌套字典</h3>
+          <pre><code class="language-python"># 用户列表
+users = [
+    {"name": "张三", "age": 25},
+    {"name": "李四", "age": 30},
+    {"name": "王五", "age": 28}
+]
+
+# 访问第一个用户的名字
+print(users[0]["name"])  # 输出: 张三
+
+# 遍历所有用户
+for user in users:
+    print(f"{user['name']}，{user['age']}岁")</code></pre>
+
+          <h3>字典嵌套列表</h3>
+          <pre><code class="language-python"># 学生成绩
+student = {
+    "name": "张三",
+    "scores": [85, 92, 78, 91]
+}
+
+# 访问第一个成绩
+print(student["scores"][0])  # 输出: 85
+
+# 计算平均分
+average = sum(student["scores"]) / len(student["scores"])
+print(f"平均分: {average}")  # 输出: 平均分: 86.5</code></pre>
+
+          <h3>字典嵌套字典</h3>
+          <pre><code class="language-python"># API 响应
+response = {
+    "status": 200,
+    "data": {
+        "user": {
+            "name": "张三",
+            "email": "zhangsan@example.com"
+        },
+        "token": "abc123"
+    }
+}
+
+# 访问嵌套的值
+print(response["data"]["user"]["name"])  # 输出: 张三</code></pre>
+
+          <h3>复杂嵌套示例</h3>
+          <pre><code class="language-python"># 模拟 LLM API 响应
+llm_response = {
+    "id": "chatcmpl-123",
+    "object": "chat.completion",
+    "choices": [
+        {
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "RAG（检索增强生成）是一种结合检索和生成的技术..."
+            },
+            "finish_reason": "stop"
+        }
+    ],
+    "usage": {
+        "prompt_tokens": 15,
+        "completion_tokens": 50,
+        "total_tokens": 65
+    }
+}
+
+# 提取回答内容
+answer = llm_response["choices"][0]["message"]["content"]
+print(answer)
+
+# 提取 token 使用量
+total_tokens = llm_response["usage"]["total_tokens"]
+print(f"总共使用了 {total_tokens} 个 token")</code></pre>
+
+          <div class="note">
+            <strong>访问嵌套数据的技巧</strong>：如果不确定某个键是否存在，可以使用 <code>.get()</code> 方法避免报错。
+            <pre><code class="language-python"># 安全地访问嵌套数据
+answer = llm_response.get("choices", [{}])[0].get("message", {}).get("content", "")
+print(answer)</code></pre>
+          </div>
+        </section>
+
+        <section id="json" class="section">
+          <h2>JSON</h2>
+          <p>JSON 是一种轻量级的数据交换格式，在 LLM 应用中无处不在。Python 可以轻松地处理 JSON 数据。</p>
+
+          <h3>什么是 JSON？</h3>
+          <p>JSON（JavaScript Object Notation）是一种文本格式，看起来很像 Python 的字典：</p>
+          <pre><code class="language-json">{
+  "name": "小明",
+  "age": 25,
+  "skills": ["Python", "LLM", "RAG"]
+}</code></pre>
+
+          <h3>JSON 和 Python 的对应关系</h3>
+          <div class="grid">
+            <div class="card">
+              <h3>JSON → Python</h3>
+              <ul>
+                <li>对象 <code>{}</code> → 字典 <code>{}</code></li>
+                <li>数组 <code>[]</code> → 列表 <code>[]</code></li>
+                <li>字符串 <code>""</code> → 字符串 <code>""</code></li>
+                <li>数字 → 整数或浮点数</li>
+                <li>true/false → True/False</li>
+                <li>null → None</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Python → JSON</h3>
+              <ul>
+                <li>字典 <code>{}</code> → 对象 <code>{}</code></li>
+                <li>列表 <code>[]</code> → 数组 <code>[]</code></li>
+                <li>字符串 <code>""</code> → 字符串 <code>""</code></li>
+                <li>整数/浮点数 → 数字</li>
+                <li>True/False → true/false</li>
+                <li>None → null</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>解析 JSON（JSON → Python）</h3>
+          <pre><code class="language-python">import json
+
+# JSON 字符串
+json_string = '{"name": "小明", "age": 25, "skills": ["Python", "LLM"]}'
+
+# 解析 JSON
+data = json.loads(json_string)
+
+# 现在 data 是一个 Python 字典
+print(data)           # 输出: {'name': '小明', 'age': 25, 'skills': ['Python', 'LLM']}
+print(data["name"])   # 输出: 小明
+print(data["skills"]) # 输出: ['Python', 'LLM']</code></pre>
+
+          <h3>生成 JSON（Python → JSON）</h3>
+          <pre><code class="language-python">import json
+
+# Python 字典
+data = {
+    "name": "小明",
+    "age": 25,
+    "skills": ["Python", "LLM"]
+}
+
+# 转换成 JSON 字符串
+json_string = json.dumps(data, ensure_ascii=False, indent=2)
+print(json_string)
+
+# 输出:
+# {
+#   "name": "小明",
+#   "age": 25,
+#   "skills": [
+#     "Python",
+#     "LLM"
+#   ]
+# }</code></pre>
+
+          <h3>参数说明</h3>
+          <pre><code class="language-python">import json
+
+data = {"name": "小明", "age": 25}
+
+# ensure_ascii=False：让中文正常显示，不转成 \uXXXX
+print(json.dumps(data, ensure_ascii=False))
+# 输出: {"name": "小明", "age": 25}
+
+# indent=2：格式化输出，缩进 2 个空格
+print(json.dumps(data, ensure_ascii=False, indent=2))
+# 输出:
+# {
+#   "name": "小明",
+#   "age": 25
+# }</code></pre>
+
+          <h3>处理 JSON 错误</h3>
+          <pre><code class="language-python">import json
+
+# 无效的 JSON 字符串
+bad_json = '{"name": "小明", "age": 25,}'  # 注意末尾的逗号
+
+try:
+    data = json.loads(bad_json)
+except json.JSONDecodeError as e:
+    print(f"JSON 解析错误: {e}")</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：LLM 的 API 请求和响应都是 JSON 格式，你需要熟练地解析和生成 JSON。
+            <pre><code class="language-python">import json
+
+# 构造 LLM API 请求
+request = {
+    "model": "qwen2.5:7b",
+    "messages": [
+        {"role": "user", "content": "什么是 RAG？"}
+    ]
+}
+
+# 转换成 JSON 发送给 API
+request_json = json.dumps(request)
+print(request_json)
+
+# 解析 API 响应
+response_json = '{"choices": [{"message": {"content": "RAG 是..."}}]}'
+response = json.loads(response_json)
+answer = response["choices"][0]["message"]["content"]
+print(answer)</code></pre>
+          </div>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>练习</h2>
+          <p>完成以下练习，巩固所学知识：</p>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：列表操作</h4>
+              <p>创建一个包含 5 个编程语言的列表，完成以下操作：</p>
+              <ul>
+                <li>添加一个新的语言</li>
+                <li>删除一个语言</li>
+                <li>打印列表的长度</li>
+                <li>判断 "Python" 是否在列表中</li>
+                <li>用 for 循环打印每个语言</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：字典操作</h4>
+              <p>创建一个表示你的信息的字典，包含以下字段：</p>
+              <ul>
+                <li>name：你的名字</li>
+                <li>age：你的年龄</li>
+                <li>city：你的城市</li>
+                <li>skills：你的技能列表</li>
+              </ul>
+              <p>然后添加一个新的字段 "hobby"，并打印所有键值对。</p>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：嵌套结构</h4>
+              <p>给定以下数据结构：</p>
+              <pre><code class="language-python">students = [
+    {"name": "张三", "scores": [85, 92, 78]},
+    {"name": "李四", "scores": [90, 88, 95]},
+    {"name": "王五", "scores": [75, 80, 82]}
+]</code></pre>
+              <p>完成以下任务：</p>
+              <ul>
+                <li>打印每个学生的平均分</li>
+                <li>找出平均分最高的学生</li>
+                <li>统计所有学生的总平均分</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 4：JSON 处理</h4>
+              <p>给定以下 JSON 字符串：</p>
+              <pre><code class="language-python">import json
+
+json_data = '''
+{
+    "project": "LLM 应用",
+    "version": "1.0",
+    "features": ["RAG", "Agent", "微调"],
+    "team": [
+        {"name": "张三", "role": "开发者"},
+        {"name": "李四", "role": "测试"}
+    ]
+}
+'''</code></pre>
+              <p>完成以下任务：</p>
+              <ul>
+                <li>解析这个 JSON 字符串</li>
+                <li>打印项目名称和版本</li>
+                <li>打印所有功能</li>
+                <li>打印团队成员的名字和角色</li>
+                <li>把数据转换回 JSON 字符串（格式化输出）</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 5：处理 LLM 响应</h4>
+              <p>模拟处理 LLM API 响应：</p>
+              <pre><code class="language-python">import json
+
+# 模拟 LLM API 响应
+response_json = '''
+{
+    "id": "chatcmpl-123",
+    "choices": [
+        {
+            "message": {
+                "role": "assistant",
+                "content": "RAG（检索增强生成）是一种结合检索和生成的技术。它通过检索外部知识库来增强模型的回答能力。"
+            },
+            "finish_reason": "stop"
+        }
+    ],
+    "usage": {
+        "prompt_tokens": 20,
+        "completion_tokens": 50,
+        "total_tokens": 70
+    }
+}
+'''
+
+# 完成以下任务：
+# 1. 解析 JSON 响应
+# 2. 提取回答内容
+# 3. 提取 token 使用量
+# 4. 计算 token 使用率（completion / prompt）</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>本章小结</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 你学会了</h3>
+              <ul>
+                <li>创建和操作列表</li>
+                <li>创建和操作字典</li>
+                <li>处理嵌套的数据结构</li>
+                <li>解析和生成 JSON 数据</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>➡️ 下一步</h3>
+              <p>下一章我们学习函数，把代码封装成可复用的模块。</p>
+              <a href="04-functions.html" class="btn-primary">继续学习：函数 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天练习 1-2 小时，多写代码才能真正掌握。</div>
+  </footer>
+</body>
+</html>

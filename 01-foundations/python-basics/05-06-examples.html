@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文件操作与错误处理示例大全 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .example-box {
+      background: #f8f9fa;
+      border-left: 4px solid #4CAF50;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .example-title {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 8px;
+    }
+    .output-box {
+      background: #e8f5e9;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 8px;
+      font-family: monospace;
+    }
+    .tip-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .warning-box {
+      background: #ffebee;
+      border-left: 4px solid #f44336;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="05-06-examples.html">05-06 示例大全</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第五、六章：文件操作与错误处理 - 示例大全</h1>
+      <p>文件操作和错误处理是LLM应用开发的基础技能。通过示例掌握读写文件和处理异常的方法。</p>
+      <div class="meta-row">
+        <span class="pill">特点：大量示例 + 详细注释 + 运行结果</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>示例导航</h2>
+        <a href="#text-files">文本文件</a>
+        <a href="#json-files">JSON文件</a>
+        <a href="#csv-files">CSV文件</a>
+        <a href="#error-handling">错误处理</a>
+        <a href="05-files.html">← 文件操作章节</a>
+        <a href="06-errors.html">← 错误处理章节</a>
+      </aside>
+
+      <article class="content">
+        <!-- 文本文件 -->
+        <section id="text-files" class="section">
+          <h2>文本文件示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 1：读写文本文件</div>
+            <pre><code class="language-python"># ============================================
+# 示例 1：读写文本文件
+# ============================================
+from pathlib import Path
+
+# 写入文本文件
+content = """第一行：Hello
+第二行：World
+第三行：Python"""
+
+# write_text() 会自动创建文件
+Path("output.txt").write_text(content, encoding="utf-8")
+print("文件已写入")
+
+# 读取文本文件
+read_content = Path("output.txt").read_text(encoding="utf-8")
+print("文件内容:")
+print(read_content)
+
+# 逐行读取
+lines = Path("output.txt").read_text(encoding="utf-8").splitlines()
+print(f"共 {len(lines)} 行")
+for i, line in enumerate(lines):
+    print(f"  第 {i+1} 行: {line}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              文件已写入<br>
+              文件内容:<br>
+              第一行：Hello<br>
+              第二行：World<br>
+              第三行：Python<br><br>
+              共 3 行<br>
+              &nbsp;&nbsp;第 1 行: 第一行：Hello<br>
+              &nbsp;&nbsp;第 2 行: 第二行：World<br>
+              &nbsp;&nbsp;第 3 行: 第三行：Python
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 2：使用 with 语句（推荐）</div>
+            <pre><code class="language-python"># ============================================
+# 示例 2：使用 with 语句（推荐）
+# ============================================
+
+# with 语句会自动关闭文件，更安全
+# 写入文件
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write("第一行\n")
+    f.write("第二行\n")
+    f.write("第三行\n")
+print("写入完成")
+
+# 读取文件
+with open("output.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+    print("读取内容:")
+    print(content)
+
+# 逐行读取
+with open("output.txt", "r", encoding="utf-8") as f:
+    for line_num, line in enumerate(f, 1):
+        print(f"  第 {line_num} 行: {line.strip()}")  # strip() 去掉换行符</code></pre>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong><code>with</code> 语句会自动关闭文件，即使发生错误也会关闭。推荐总是使用 <code>with</code> 语句来操作文件。
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 3：追加内容</div>
+            <pre><code class="language-python"># ============================================
+# 示例 3：追加内容
+# ============================================
+
+# 追加模式：不会覆盖原有内容
+with open("log.txt", "a", encoding="utf-8") as f:
+    f.write("2024-01-01 10:00:00 - 用户登录\n")
+    f.write("2024-01-01 10:05:00 - 查询数据\n")
+
+# 再次追加
+with open("log.txt", "a", encoding="utf-8") as f:
+    f.write("2024-01-01 10:10:00 - 退出登录\n")
+
+# 读取查看
+with open("log.txt", "r", encoding="utf-8") as f:
+    print(f.read())</code></pre>
+          </div>
+        </section>
+
+        <!-- JSON文件 -->
+        <section id="json-files" class="section">
+          <h2>JSON文件示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 4：读写JSON文件</div>
+            <pre><code class="language-python"># ============================================
+# 示例 4：读写JSON文件
+# ============================================
+import json
+from pathlib import Path
+
+# 准备数据
+config = {
+    "model": "qwen2.5:7b",
+    "temperature": 0.7,
+    "max_tokens": 512,
+    "features": ["RAG", "Agent", "微调"]
+}
+
+# 写入 JSON 文件
+Path("config.json").write_text(
+    json.dumps(config, ensure_ascii=False, indent=2),
+    encoding="utf-8"
+)
+print("配置已保存到 config.json")
+
+# 读取 JSON 文件
+content = Path("config.json").read_text(encoding="utf-8")
+loaded_config = json.loads(content)
+
+print("读取的配置:")
+print(f"  模型: {loaded_config['model']}")
+print(f"  温度: {loaded_config['temperature']}")
+print(f"  功能: {loaded_config['features']}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              配置已保存到 config.json<br>
+              读取的配置:<br>
+              &nbsp;&nbsp;模型: qwen2.5:7b<br>
+              &nbsp;&nbsp;温度: 0.7<br>
+              &nbsp;&nbsp;功能: ['RAG', 'Agent', '微调']
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 5：JSON Lines 格式（微调数据）</div>
+            <pre><code class="language-python"># ============================================
+# 示例 5：JSON Lines 格式（微调数据）
+# ============================================
+import json
+
+# JSONL 格式：每行一个 JSON 对象
+# 常用于存储微调数据和评估数据集
+
+# 写入 JSONL
+samples = [
+    {"instruction": "什么是RAG？", "output": "RAG是检索增强生成"},
+    {"instruction": "什么是LLM？", "output": "LLM是大语言模型"},
+    {"instruction": "什么是Agent？", "output": "Agent是智能代理"},
+]
+
+with open("train_data.jsonl", "w", encoding="utf-8") as f:
+    for sample in samples:
+        # ensure_ascii=False 让中文正常显示
+        f.write(json.dumps(sample, ensure_ascii=False) + "\n")
+print("训练数据已保存")
+
+# 读取 JSONL
+print("\n读取训练数据:")
+with open("train_data.jsonl", "r", encoding="utf-8") as f:
+    for line_num, line in enumerate(f, 1):
+        data = json.loads(line.strip())
+        print(f"  第{line_num}条: {data['instruction']} -> {data['output']}")</code></pre>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong>JSONL 格式常用于存储 LLM 微调数据，每行一个训练样本。
+            </div>
+          </div>
+        </section>
+
+        <!-- CSV文件 -->
+        <section id="csv-files" class="section">
+          <h2>CSV文件示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 6：读写CSV文件</div>
+            <pre><code class="language-python"># ============================================
+# 示例 6：读写CSV文件
+# ============================================
+import csv
+
+# 准备数据
+test_results = [
+    ["case_id", "question", "score", "result"],
+    ["TC001", "什么是RAG？", 95, "通过"],
+    ["TC002", "什么是LLM？", 88, "通过"],
+    ["TC003", "什么是Agent？", 55, "失败"],
+]
+
+# 写入 CSV
+with open("test_results.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerows(test_results)
+print("测试结果已保存到 test_results.csv")
+
+# 读取 CSV（使用 DictReader 更方便）
+print("\n读取测试结果:")
+with open("test_results.csv", "r", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        status = "✅" if row["result"] == "通过" else "❌"
+        print(f"  {status} {row['case_id']}: {row['question']} - {row['score']}分")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              测试结果已保存到 test_results.csv<br><br>
+              读取测试结果:<br>
+              &nbsp;&nbsp;✅ TC001: 什么是RAG？ - 95分<br>
+              &nbsp;&nbsp;✅ TC002: 什么是LLM？ - 88分<br>
+              &nbsp;&nbsp;❌ TC003: 什么是Agent？ - 55分
+            </div>
+          </div>
+        </section>
+
+        <!-- 错误处理 -->
+        <section id="error-handling" class="section">
+          <h2>错误处理示例</h2>
+
+          <div class="example-box">
+            <div class="example-title">示例 7：try/except 基础</div>
+            <pre><code class="language-python"># ============================================
+# 示例 7：try/except 基础
+# ============================================
+
+# 基本用法：捕获错误，程序不会崩溃
+try:
+    result = 1 / 0
+except ZeroDivisionError:
+    print("错误：不能除以零")
+
+# 捕获特定类型的错误
+try:
+    number = int("hello")
+except ValueError as e:
+    print(f"值错误: {e}")
+
+# 获取错误信息
+try:
+    data = {"name": "小明"}
+    print(data["age"])
+except KeyError as e:
+    print(f"键错误: 键 {e} 不存在")
+
+print("程序继续运行...")</code></pre>
+            <div class="output-box">
+              <strong>运行结果：</strong><br>
+              错误：不能除以零<br>
+              值错误: invalid literal for int() with base 10: 'hello'<br>
+              键错误: 键 'age' 不存在<br>
+              程序继续运行...
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 8：安全的文件读取</div>
+            <pre><code class="language-python"># ============================================
+# 示例 8：安全的文件读取
+# ============================================
+import json
+
+def safe_read_json(file_path):
+    """安全地读取 JSON 文件
+    
+    Args:
+        file_path: 文件路径
+    
+    Returns:
+        解析后的数据，如果失败返回空字典
+    """
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"文件不存在: {file_path}")
+        return {}
+    except json.JSONDecodeError as e:
+        print(f"JSON 解析错误: {e}")
+        return {}
+    except Exception as e:
+        print(f"未知错误: {e}")
+        return {}
+
+# 测试
+config = safe_read_json("config.json")
+print(f"配置: {config}")
+
+config2 = safe_read_json("nonexistent.json")
+print(f"不存在的文件: {config2}")</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 9：带重试的函数调用</div>
+            <pre><code class="language-python"># ============================================
+# 示例 9：带重试的函数调用
+# ============================================
+import random
+
+def simulate_api_call():
+    """模拟 API 调用（可能失败）"""
+    if random.random() < 0.7:  # 70% 概率失败
+        raise ConnectionError("网络连接失败")
+    return {"status": "success", "data": "API 响应数据"}
+
+def call_with_retry(max_retries=3):
+    """带重试的 API 调用
+    
+    Args:
+        max_retries: 最大重试次数
+    
+    Returns:
+        API 响应，如果全部失败返回 None
+    """
+    for attempt in range(max_retries):
+        try:
+            result = simulate_api_call()
+            print(f"  第 {attempt + 1} 次尝试成功！")
+            return result
+        except ConnectionError as e:
+            print(f"  第 {attempt + 1} 次尝试失败: {e}")
+            if attempt == max_retries - 1:
+                print("  重试次数用完，放弃")
+                return None
+
+# 测试
+print("调用 API:")
+result = call_with_retry()
+print(f"结果: {result}")</code></pre>
+            <div class="output-box">
+              <strong>运行结果（示例）：</strong><br>
+              调用 API:<br>
+              &nbsp;&nbsp;第 1 次尝试失败: 网络连接失败<br>
+              &nbsp;&nbsp;第 2 次尝试失败: 网络连接失败<br>
+              &nbsp;&nbsp;第 3 次尝试成功！<br>
+              结果: {'status': 'success', 'data': 'API 响应数据'}
+            </div>
+            <div class="tip-box">
+              <strong>💡 小贴士：</strong>在 LLM 应用中，网络请求可能失败，使用重试机制可以提高程序的健壮性。
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">示例 10：finally 清理资源</div>
+            <pre><code class="language-python"># ============================================
+# 示例 10：finally 清理资源
+# ============================================
+
+def read_file_with_cleanup(file_path):
+    """读取文件，确保资源被清理"""
+    f = None
+    try:
+        f = open(file_path, "r", encoding="utf-8")
+        content = f.read()
+        return content
+    except FileNotFoundError:
+        print(f"文件不存在: {file_path}")
+        return None
+    finally:
+        # finally 无论如何都会执行
+        if f:
+            f.close()
+            print("文件已关闭")
+
+# 测试
+content = read_file_with_cleanup("test.txt")
+print(f"内容: {content}")</code></pre>
+          </div>
+        </section>
+
+        <!-- 练习题 -->
+        <section class="section">
+          <h2>练习题</h2>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：JSON 文件操作</h4>
+              <p>创建一个保存用户配置的 JSON 文件：</p>
+              <pre><code class="language-python">import json
+from pathlib import Path
+
+# 创建配置
+config = {
+    "model": "qwen2.5:7b",
+    "temperature": 0.7,
+    "max_tokens": 512,
+    "system_prompt": "你是一个专业的 AI 助手"
+}
+
+# 1. 保存到 config.json
+# 2. 读取并打印配置
+# 3. 修改 temperature 为 0.5
+# 4. 重新保存</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：错误处理</h4>
+              <p>实现一个安全的 JSON 解析函数：</p>
+              <pre><code class="language-python">import json
+
+def safe_parse_json(json_string, default=None):
+    """安全地解析 JSON 字符串
+    
+    Args:
+        json_string: JSON 字符串
+        default: 解析失败时返回的默认值
+    
+    Returns:
+        解析后的数据，或默认值
+    """
+    # 你的代码
+    pass
+
+# 测试
+print(safe_parse_json('{"name": "小明"}'))  # 应该返回字典
+print(safe_parse_json('{invalid json}'))     # 应该返回 None
+print(safe_parse_json('{invalid json}', {})) # 应该返回 {}</code></pre>
+            </article>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天练习 1-2 小时，多写代码才能真正掌握。</div>
+  </footer>
+</body>
+</html>

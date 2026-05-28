@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文件操作 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="05-files.html">05 文件操作</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第五章：文件操作</h1>
+      <p>学会读写文件是编程的基本技能。在 LLM 应用中，你需要读取 Prompt 模板、保存测试数据、处理配置文件等。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：2-3 天</span>
+        <span class="pill">目标：能读写文本、JSON、CSV 文件</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#pathlib">Path 对象</a>
+        <a href="#text-files">文本文件</a>
+        <a href="#json-files">JSON 文件</a>
+        <a href="#csv-files">CSV 文件</a>
+        <a href="#practice">练习</a>
+        <a href="04-functions.html">← 上一章：函数</a>
+        <a href="06-errors.html">下一章：错误处理 →</a>
+      </aside>
+
+      <article class="content">
+        <section id="pathlib" class="section">
+          <h2>Path 对象</h2>
+          <p>Python 的 <code>pathlib</code> 模块提供了面向对象的文件路径操作，比传统的字符串拼接更方便、更安全。</p>
+
+          <h3>导入 Path</h3>
+          <pre><code class="language-python">from pathlib import Path</code></pre>
+
+          <h3>创建路径</h3>
+          <pre><code class="language-python">from pathlib import Path
+
+# 当前目录
+current = Path(".")
+print(current)  # 输出: .
+
+# 用户主目录
+home = Path.home()
+print(home)  # 输出: /Users/username 或 C:\Users\username
+
+# 拼接路径（用 / 运算符）
+data_dir = Path("data")
+file_path = data_dir / "test.json"
+print(file_path)  # 输出: data/test.json
+
+# 绝对路径
+abs_path = Path("/Users/username/project/data.txt")
+print(abs_path)</code></pre>
+
+          <h3>常用属性</h3>
+          <pre><code class="language-python">from pathlib import Path
+
+p = Path("data/test.json")
+
+print(p.name)       # 输出: test.json（文件名）
+print(p.stem)       # 输出: test（不带扩展名的文件名）
+print(p.suffix)     # 输出: .json（扩展名）
+print(p.parent)     # 输出: data（父目录）
+print(p.exists())   # 输出: True 或 False（是否存在）
+print(p.is_file())  # 输出: True 或 False（是否是文件）
+print(p.is_dir())   # 输出: True 或 False（是否是目录）</code></pre>
+
+          <h3>常用操作</h3>
+          <pre><code class="language-python">from pathlib import Path
+
+# 创建目录（包括父目录）
+Path("output/reports").mkdir(parents=True, exist_ok=True)
+
+# 列出目录下的文件
+for file in Path(".").iterdir():
+    print(file.name)
+
+# 列出所有 .py 文件
+for file in Path(".").glob("*.py"):
+    print(file.name)
+
+# 递归列出所有 .py 文件
+for file in Path(".").rglob("*.py"):
+    print(file)</code></pre>
+        </section>
+
+        <section id="text-files" class="section">
+          <h2>文本文件</h2>
+          <p>读写文本文件是最基本的文件操作。</p>
+
+          <h3>写入文本文件</h3>
+          <pre><code class="language-python">from pathlib import Path
+
+# 写入文本
+content = """第一行：Hello
+第二行：World
+第三行：Python"""
+
+Path("output.txt").write_text(content, encoding="utf-8")
+print("文件已写入")</code></pre>
+
+          <h3>读取文本文件</h3>
+          <pre><code class="language-python">from pathlib import Path
+
+# 读取整个文件
+content = Path("output.txt").read_text(encoding="utf-8")
+print(content)
+
+# 逐行读取
+lines = Path("output.txt").read_text(encoding="utf-8").splitlines()
+for i, line in enumerate(lines):
+    print(f"第 {i+1} 行: {line}")</code></pre>
+
+          <h3>使用 with 语句（推荐）</h3>
+          <pre><code class="language-python"># 写入文件
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write("第一行\n")
+    f.write("第二行\n")
+    f.write("第三行\n")
+
+# 读取文件
+with open("output.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+    print(content)
+
+# 逐行读取
+with open("output.txt", "r", encoding="utf-8") as f:
+    for line in f:
+        print(line.strip())  # strip() 去掉换行符</code></pre>
+
+          <h3>追加内容</h3>
+          <pre><code class="language-python"># 追加内容（不会覆盖原有内容）
+with open("log.txt", "a", encoding="utf-8") as f:
+    f.write("新的日志内容\n")</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：在 LLM 应用中，你会读取 Prompt 模板、保存对话历史、记录日志等。
+            <pre><code class="language-python">from pathlib import Path
+
+# 读取 Prompt 模板
+prompt_template = Path("prompts/qa_template.txt").read_text(encoding="utf-8")
+
+# 填充模板
+question = "什么是 RAG？"
+prompt = prompt_template.replace("{{question}}", question)
+
+# 保存对话历史
+history = [
+    {"role": "user", "content": "什么是 RAG？"},
+    {"role": "assistant", "content": "RAG 是检索增强生成..."}
+]
+
+Path("conversation_history.json").write_text(
+    json.dumps(history, ensure_ascii=False, indent=2),
+    encoding="utf-8"
+)</code></pre>
+          </div>
+        </section>
+
+        <section id="json-files" class="section">
+          <h2>JSON 文件</h2>
+          <p>JSON 是 LLM 应用中最常用的数据格式，Python 可以轻松读写 JSON 文件。</p>
+
+          <h3>写入 JSON 文件</h3>
+          <pre><code class="language-python">import json
+from pathlib import Path
+
+# 准备数据
+data = {
+    "project": "LLM 应用",
+    "version": "1.0",
+    "features": ["RAG", "Agent", "微调"],
+    "team": [
+        {"name": "张三", "role": "开发者"},
+        {"name": "李四", "role": "测试"}
+    ]
+}
+
+# 写入 JSON 文件
+Path("config.json").write_text(
+    json.dumps(data, ensure_ascii=False, indent=2),
+    encoding="utf-8"
+)
+print("JSON 文件已写入")</code></pre>
+
+          <h3>读取 JSON 文件</h3>
+          <pre><code class="language-python">import json
+from pathlib import Path
+
+# 读取 JSON 文件
+content = Path("config.json").read_text(encoding="utf-8")
+data = json.loads(content)
+
+print(data["project"])    # 输出: LLM 应用
+print(data["features"])   # 输出: ['RAG', 'Agent', '微调']
+
+# 遍历团队成员
+for member in data["team"]:
+    print(f"{member['name']} - {member['role']}")</code></pre>
+
+          <h3>JSON Lines 格式</h3>
+          <p>JSONL 是一种每行一个 JSON 对象的格式，常用于存储大量数据：</p>
+          <pre><code class="language-python">import json
+from pathlib import Path
+
+# 写入 JSONL
+samples = [
+    {"instruction": "什么是 RAG？", "output": "RAG 是检索增强生成"},
+    {"instruction": "什么是 LLM？", "output": "LLM 是大语言模型"},
+]
+
+with open("samples.jsonl", "w", encoding="utf-8") as f:
+    for sample in samples:
+        f.write(json.dumps(sample, ensure_ascii=False) + "\n")
+
+# 读取 JSONL
+with open("samples.jsonl", "r", encoding="utf-8") as f:
+    for line in f:
+        data = json.loads(line.strip())
+        print(data["instruction"], "->", data["output"])</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：JSONL 格式常用于存储微调数据和评估数据集。
+          </div>
+        </section>
+
+        <section id="csv-files" class="section">
+          <h2>CSV 文件</h2>
+          <p>CSV（逗号分隔值）是一种简单的表格数据格式，常用于存储测试数据、评估结果等。</p>
+
+          <h3>写入 CSV 文件</h3>
+          <pre><code class="language-python">import csv
+from pathlib import Path
+
+# 准备数据
+data = [
+    ["case_id", "question", "expected_answer", "score"],
+    ["TC001", "什么是 RAG？", "RAG 是检索增强生成", 0.95],
+    ["TC002", "什么是 LLM？", "LLM 是大语言模型", 0.90],
+    ["TC003", "什么是 Agent？", "Agent 是智能代理", 0.85],
+]
+
+# 写入 CSV
+with open("test_results.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerows(data)
+
+print("CSV 文件已写入")</code></pre>
+
+          <h3>读取 CSV 文件</h3>
+          <pre><code class="language-python">import csv
+from pathlib import Path
+
+# 读取 CSV
+with open("test_results.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)
+
+# 使用 DictReader（更方便）
+with open("test_results.csv", "r", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(f"案例 {row['case_id']}: {row['question']} -> 得分 {row['score']}")</code></pre>
+
+          <h3>使用 pandas（可选）</h3>
+          <pre><code class="language-python"># 如果安装了 pandas，处理 CSV 更方便
+import pandas as pd
+
+# 读取 CSV
+df = pd.read_csv("test_results.csv")
+print(df)
+
+# 筛选高分案例
+high_scores = df[df["score"] > 0.9]
+print(high_scores)
+
+# 计算平均分
+avg_score = df["score"].mean()
+print(f"平均分: {avg_score}")</code></pre>
+
+          <div class="note">
+            <strong>与 LLM 应用的关联</strong>：CSV 格式常用于存储批量测试数据、评估结果、标注数据等。
+            <pre><code class="language-python">import csv
+from pathlib import Path
+
+# 保存评估结果
+results = [
+    {"case_id": "TC001", "model": "qwen2.5:7b", "score": 0.95, "latency": 1.2},
+    {"case_id": "TC002", "model": "qwen2.5:7b", "score": 0.90, "latency": 1.1},
+]
+
+with open("eval_results.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["case_id", "model", "score", "latency"])
+    writer.writeheader()
+    writer.writerows(results)</code></pre>
+          </div>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>练习</h2>
+          <p>完成以下练习，巩固所学知识：</p>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：文本文件操作</h4>
+              <p>完成以下任务：</p>
+              <ul>
+                <li>创建一个文本文件 <code>notes.txt</code>，写入 3 行笔记</li>
+                <li>读取文件并打印内容</li>
+                <li>在文件末尾追加一行新内容</li>
+                <li>再次读取并打印完整内容</li>
+              </ul>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：JSON 文件操作</h4>
+              <p>创建一个保存用户配置的 JSON 文件：</p>
+              <pre><code class="language-python">import json
+from pathlib import Path
+
+# 创建配置
+config = {
+    "model": "qwen2.5:7b",
+    "temperature": 0.7,
+    "max_tokens": 512,
+    "system_prompt": "你是一个专业的 AI 助手",
+    "history": []
+}
+
+# 保存到 config.json
+# 然后读取并打印配置</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：CSV 文件操作</h4>
+              <p>创建一个保存测试结果的 CSV 文件：</p>
+              <pre><code class="language-python">import csv
+from pathlib import Path
+
+# 准备测试数据
+test_results = [
+    {"case_id": "TC001", "input": "什么是 RAG？", "score": 95},
+    {"case_id": "TC002", "input": "什么是 LLM？", "score": 88},
+    {"case_id": "TC003", "input": "什么是 Agent？", "score": 72},
+    {"case_id": "TC004", "input": "什么是微调？", "score": 91},
+]
+
+# 保存到 CSV
+# 读取 CSV 并计算平均分</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 4：Prompt 模板管理</h4>
+              <p>创建一个 Prompt 模板系统：</p>
+              <pre><code class="language-python">from pathlib import Path
+import json
+
+# 1. 创建一个 Prompt 模板文件 qa_template.txt
+#    内容包含占位符，如 {{context}} 和 {{question}}
+
+# 2. 写一个函数加载模板
+def load_template(template_path):
+    """加载 Prompt 模板"""
+    pass
+
+# 3. 写一个函数填充模板
+def fill_template(template, **kwargs):
+    """用参数填充模板"""
+    pass
+
+# 4. 测试：加载模板，填充参数，打印结果</code></pre>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 5：综合练习</h4>
+              <p>创建一个"对话历史管理器"：</p>
+              <pre><code class="language-python">import json
+from pathlib import Path
+
+class ConversationManager:
+    """管理对话历史"""
+    
+    def __init__(self, file_path="conversation.json"):
+        self.file_path = Path(file_path)
+        self.history = self.load()
+    
+    def load(self):
+        """从文件加载对话历史"""
+        pass
+    
+    def save(self):
+        """保存对话历史到文件"""
+        pass
+    
+    def add_message(self, role, content):
+        """添加一条消息"""
+        pass
+    
+    def get_history(self):
+        """获取对话历史"""
+        pass
+    
+    def clear(self):
+        """清空对话历史"""
+        pass
+
+# 测试
+# manager = ConversationManager()
+# manager.add_message("user", "什么是 RAG？")
+# manager.add_message("assistant", "RAG 是检索增强生成...")
+# print(manager.get_history())</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>本章小结</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 你学会了</h3>
+              <ul>
+                <li>使用 Path 对象处理文件路径</li>
+                <li>读写文本文件</li>
+                <li>读写 JSON 和 JSONL 文件</li>
+                <li>读写 CSV 文件</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>➡️ 下一步</h3>
+              <p>下一章我们学习错误处理，让你的程序在出错时不会崩溃。</p>
+              <a href="06-errors.html" class="btn-primary">继续学习：错误处理 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">建议每天练习 1-2 小时，多写代码才能真正掌握。</div>
+  </footer>
+</body>
+</html>

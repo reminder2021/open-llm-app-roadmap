@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python 虚拟环境详解 - Python 零基础入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .example-box {
+      background: #f8f9fa;
+      border-left: 4px solid #4CAF50;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .example-title {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 8px;
+    }
+    .output-box {
+      background: #e8f5e9;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 8px;
+      font-family: monospace;
+    }
+    .tip-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .warning-box {
+      background: #ffebee;
+      border-left: 4px solid #f44336;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .step-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196F3;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .screenshot-placeholder {
+      background: #f5f5f5;
+      border: 2px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      margin: 16px 0;
+      border-radius: 8px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Python 入门</a>
+        <a class="current" href="virtual-env.html">虚拟环境详解</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>Python 虚拟环境详解</h1>
+      <p>虚拟环境是 Python 开发的基础，掌握它能让你的项目更整洁、更专业。本章详细讲解虚拟环境的创建、使用，以及在 PyCharm 和 VS Code 中的配置方法。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：1-2 小时</span>
+        <span class="pill">目标：熟练使用虚拟环境管理项目依赖</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#what-is-venv">什么是虚拟环境</a>
+        <a href="#why-venv">为什么需要虚拟环境</a>
+        <a href="#command-line">命令行创建虚拟环境</a>
+        <a href="#pycharm">PyCharm 中使用虚拟环境</a>
+        <a href="#vscode">VS Code 中使用虚拟环境</a>
+        <a href="#pip-usage">在虚拟环境中安装包</a>
+        <a href="#requirements">依赖管理</a>
+        <a href="#common-issues">常见问题</a>
+        <a href="index.html">← 返回入口</a>
+      </aside>
+
+      <article class="content">
+        <!-- 什么是虚拟环境 -->
+        <section id="what-is-venv" class="section">
+          <h2>什么是虚拟环境？</h2>
+          <p>虚拟环境是 Python 的一个"隔离空间"，每个项目可以有自己独立的 Python 包，互不干扰。</p>
+
+          <div class="note">
+            <h3>通俗理解</h3>
+            <p>想象你有两个项目：</p>
+            <ul>
+              <li><strong>项目 A</strong>：需要使用 <code>requests 2.28</code> 版本</li>
+              <li><strong>项目 B</strong>：需要使用 <code>requests 2.31</code> 版本</li>
+            </ul>
+            <p>如果没有虚拟环境，这两个项目会冲突。有了虚拟环境，每个项目都有自己的"小房间"，互不影响。</p>
+          </div>
+
+          <div class="grid">
+            <div class="card">
+              <h3>🏠 系统 Python</h3>
+              <p>就像你电脑的"公共客厅"，所有东西都放在一起。</p>
+            </div>
+            <div class="card">
+              <h3>🚪 虚拟环境</h3>
+              <p>就像每个项目的"独立房间"，各自有各自的家具。</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 为什么需要虚拟环境 -->
+        <section id="why-venv" class="section">
+          <h2>为什么需要虚拟环境？</h2>
+
+          <div class="grid">
+            <div class="card">
+              <h3>🔄 避免版本冲突</h3>
+              <p>不同项目可以使用不同版本的同一个包。</p>
+            </div>
+            <div class="card">
+              <h3>📦 依赖隔离</h3>
+              <p>项目 A 安装的包不会影响项目 B。</p>
+            </div>
+            <div class="card">
+              <h3>🚀 便于部署</h3>
+              <p>可以精确导出项目依赖，在其他机器上复现环境。</p>
+            </div>
+            <div class="card">
+              <h3>🧹 保持整洁</h3>
+              <p>不会污染系统的 Python 环境。</p>
+            </div>
+          </div>
+
+          <div class="warning-box">
+            <strong>⚠️ 最佳实践</strong>：每个 Python 项目都应该使用虚拟环境！
+          </div>
+        </section>
+
+        <!-- 命令行创建虚拟环境 -->
+        <section id="command-line" class="section">
+          <h2>命令行创建虚拟环境</h2>
+          <p>使用 Python 自带的 <code>venv</code> 模块创建虚拟环境。</p>
+
+          <div class="example-box">
+            <div class="example-title">步骤 1：创建项目文件夹</div>
+            <pre><code class="language-bash"># 创建项目文件夹
+mkdir my_project
+cd my_project</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">步骤 2：创建虚拟环境</div>
+            <pre><code class="language-bash"># 创建虚拟环境（venv 是虚拟环境的名字，可以随便取）
+python3 -m venv venv
+
+# 查看是否创建成功
+ls
+# 会看到一个 venv 文件夹</code></pre>
+            <div class="tip-box">
+              <strong>💡 命名建议</strong>：虚拟环境文件夹通常命名为 <code>venv</code> 或 <code>.venv</code>。
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">步骤 3：激活虚拟环境</div>
+            <div class="grid">
+              <div class="card">
+                <h3>Mac / Linux</h3>
+                <pre><code class="language-bash">source venv/bin/activate</code></pre>
+              </div>
+              <div class="card">
+                <h3>Windows (CMD)</h3>
+                <pre><code class="language-bash">venv\Scripts\activate.bat</code></pre>
+              </div>
+              <div class="card">
+                <h3>Windows (PowerShell)</h3>
+                <pre><code class="language-bash">venv\Scripts\Activate.ps1</code></pre>
+              </div>
+            </div>
+
+            <p>激活后，命令行前面会显示 <code>(venv)</code>，表示你在虚拟环境中：</p>
+            <div class="output-box">
+              (venv) user@mac my_project $
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">步骤 4：验证虚拟环境</div>
+            <pre><code class="language-bash"># 查看 Python 路径（应该指向 venv 目录）
+which python3
+# 输出: /Users/xxx/my_project/venv/bin/python3
+
+# 查看 pip 路径
+which pip3
+# 输出: /Users/xxx/my_project/venv/bin/pip3</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">步骤 5：退出虚拟环境</div>
+            <pre><code class="language-bash"># 退出虚拟环境
+deactivate
+
+# 退出后，(venv) 前缀消失
+user@mac my_project $</code></pre>
+          </div>
+
+          <div class="step-box">
+            <h3>完整流程总结</h3>
+            <pre><code class="language-bash"># 1. 创建项目文件夹
+mkdir my_project && cd my_project
+
+# 2. 创建虚拟环境
+python3 -m venv venv
+
+# 3. 激活虚拟环境
+source venv/bin/activate        # Mac/Linux
+# venv\Scripts\activate.bat     # Windows CMD
+
+# 4. 现在可以安装包了
+pip install requests
+
+# 5. 退出虚拟环境
+deactivate</code></pre>
+          </div>
+        </section>
+
+        <!-- PyCharm 中使用虚拟环境 -->
+        <section id="pycharm" class="section">
+          <h2>PyCharm 中使用虚拟环境</h2>
+          <p>PyCharm 是很多 Python 开发者使用的 IDE，它对虚拟环境有很好的支持。</p>
+
+          <h3>方式一：创建项目时创建虚拟环境</h3>
+          <div class="step-box">
+            <h4>步骤 1：新建项目</h4>
+            <ol>
+              <li>打开 PyCharm</li>
+              <li>点击 <strong>File → New Project</strong>（或欢迎界面的 New Project）</li>
+            </ol>
+          </div>
+
+          <div class="step-box">
+            <h4>步骤 2：配置项目</h4>
+            <ol>
+              <li><strong>Location</strong>：选择项目保存位置，比如 <code>~/Projects/my_project</code></li>
+              <li><strong>Interpreter type</strong>：选择 <strong>Virtualenv</strong></li>
+              <li><strong>Base interpreter</strong>：选择你安装的 Python 版本（如 Python 3.11）</li>
+              <li><strong>Location of new virtual environment</strong>：默认即可，通常在项目目录下的 <code>.venv</code></li>
+              <li>勾选 <strong>Inherit global site-packages</strong>（可选，继承系统已安装的包）</li>
+              <li>勾选 <strong>Make available to all projects</strong>（可选）</li>
+            </ol>
+            <div class="screenshot-placeholder">
+              📸 PyCharm 新建项目界面<br>
+              Interpreter type 选择 Virtualenv
+            </div>
+          </div>
+
+          <div class="step-box">
+            <h4>步骤 3：点击 Create</h4>
+            <p>PyCharm 会自动创建虚拟环境，等待创建完成即可。</p>
+          </div>
+
+          <h3>方式二：为已有项目创建虚拟环境</h3>
+          <div class="step-box">
+            <h4>步骤 1：打开设置</h4>
+            <ol>
+              <li>点击 <strong>File → Settings</strong>（Mac 上是 <strong>PyCharm → Preferences</strong>）</li>
+              <li>找到 <strong>Project: 项目名 → Python Interpreter</strong></li>
+            </ol>
+          </div>
+
+          <div class="step-box">
+            <h4>步骤 2：添加解释器</h4>
+            <ol>
+              <li>点击右上角的 <strong>齿轮图标 ⚙️</strong></li>
+              <li>选择 <strong>Add</strong></li>
+              <li>选择 <strong>Virtualenv Environment → New environment</strong></li>
+              <li><strong>Location</strong>：默认即可</li>
+              <li><strong>Base interpreter</strong>：选择你的 Python 版本</li>
+              <li>点击 <strong>OK</strong></li>
+            </ol>
+            <div class="screenshot-placeholder">
+              📸 PyCharm 添加解释器界面<br>
+              选择 Virtualenv Environment → New environment
+            </div>
+          </div>
+
+          <h3>方式三：使用已有的虚拟环境</h3>
+          <div class="step-box">
+            <h4>步骤 1：打开设置</h4>
+            <ol>
+              <li>点击 <strong>File → Settings</strong></li>
+              <li>找到 <strong>Project: 项目名 → Python Interpreter</strong></li>
+            </ol>
+          </div>
+
+          <div class="step-box">
+            <h4>步骤 2：选择已有解释器</h4>
+            <ol>
+              <li>点击右上角的 <strong>齿轮图标 ⚙️</strong></li>
+              <li>选择 <strong>Add</strong></li>
+              <li>选择 <strong>Virtualenv Environment → Existing environment</strong></li>
+              <li><strong>Interpreter</strong>：点击 <strong>...</strong> 按钮，找到虚拟环境中的 Python
+                <ul>
+                  <li>Mac/Linux: <code>项目目录/venv/bin/python3</code></li>
+                  <li>Windows: <code>项目目录\venv\Scripts\python.exe</code></li>
+                </ul>
+              </li>
+              <li>点击 <strong>OK</strong></li>
+            </ol>
+          </div>
+
+          <div class="tip-box">
+            <strong>💡 PyCharm 小技巧</strong>：
+            <ul>
+              <li>PyCharm 底部的 <strong>Terminal</strong> 会自动激活虚拟环境</li>
+              <li>在 PyCharm 中安装包：Settings → Python Interpreter → 点击 <strong>+</strong> 号</li>
+              <li>PyCharm 会自动识别项目目录下的 <code>.venv</code> 文件夹</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- VS Code 中使用虚拟环境 -->
+        <section id="vscode" class="section">
+          <h2>VS Code 中使用虚拟环境</h2>
+          <p>VS Code 也能很好地支持虚拟环境。</p>
+
+          <div class="step-box">
+            <h4>步骤 1：创建虚拟环境</h4>
+            <pre><code class="language-bash"># 在项目目录下创建虚拟环境
+python3 -m venv venv</code></pre>
+          </div>
+
+          <div class="step-box">
+            <h4>步骤 2：选择 Python 解释器</h4>
+            <ol>
+              <li>按 <code>Cmd + Shift + P</code>（Mac）或 <code>Ctrl + Shift + P</code>（Windows）打开命令面板</li>
+              <li>输入 <strong>Python: Select Interpreter</strong></li>
+              <li>选择 <strong>./venv/bin/python</strong>（或 <strong>.\venv\Scripts\python</strong>）</li>
+            </ol>
+          </div>
+
+          <div class="step-box">
+            <h4>步骤 3：使用终端</h4>
+            <p>VS Code 的终端会自动激活虚拟环境，你会看到 <code>(venv)</code> 前缀。</p>
+          </div>
+
+          <div class="tip-box">
+            <strong>💡 VS Code 小技巧</strong>：
+            <ul>
+              <li>VS Code 会自动识别项目目录下的 <code>.venv</code> 文件夹</li>
+              <li>如果终端没有自动激活，可以手动运行 <code>source venv/bin/activate</code></li>
+              <li>安装 Python 扩展后，VS Code 会提示你选择解释器</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- 在虚拟环境中安装包 -->
+        <section id="pip-usage" class="section">
+          <h2>在虚拟环境中安装包</h2>
+          <p>激活虚拟环境后，使用 <code>pip install</code> 安装的包只会安装到当前虚拟环境中。</p>
+
+          <div class="example-box">
+            <div class="example-title">安装单个包</div>
+            <pre><code class="language-bash"># 确保已激活虚拟环境
+(venv) $ pip install requests
+
+# 安装指定版本
+(venv) $ pip install requests==2.28.0
+
+# 升级包
+(venv) $ pip install --upgrade requests</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">安装多个包</div>
+            <pre><code class="language-bash"># 一次安装多个包
+(venv) $ pip install requests httpx pydantic</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">查看已安装的包</div>
+            <pre><code class="language-bash"># 列出所有已安装的包
+(venv) $ pip list
+
+# 查看特定包的信息
+(venv) $ pip show requests</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">卸载包</div>
+            <pre><code class="language-bash"># 卸载包
+(venv) $ pip uninstall requests</code></pre>
+          </div>
+        </section>
+
+        <!-- 依赖管理 -->
+        <section id="requirements" class="section">
+          <h2>依赖管理（requirements.txt）</h2>
+          <p>使用 <code>requirements.txt</code> 记录项目依赖，方便别人复现你的环境。</p>
+
+          <div class="example-box">
+            <div class="example-title">导出依赖</div>
+            <pre><code class="language-bash"># 导出当前环境的所有依赖
+(venv) $ pip freeze > requirements.txt
+
+# 查看文件内容
+(venv) $ cat requirements.txt
+# 输出类似:
+# httpx==0.25.0
+# pydantic==2.5.0
+# requests==2.31.0</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">从文件安装依赖</div>
+            <pre><code class="language-bash"># 创建新的虚拟环境
+python3 -m venv venv
+source venv/bin/activate
+
+# 从 requirements.txt 安装所有依赖
+(venv) $ pip install -r requirements.txt</code></pre>
+          </div>
+
+          <div class="tip-box">
+            <strong>💡 最佳实践</strong>：
+            <ul>
+              <li>把 <code>requirements.txt</code> 提交到 Git</li>
+              <li>不要把 <code>venv</code> 文件夹提交到 Git（在 <code>.gitignore</code> 中添加 <code>venv/</code>）</li>
+              <li>每次安装新包后，更新 <code>requirements.txt</code></li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- 常见问题 -->
+        <section id="common-issues" class="section">
+          <h2>常见问题</h2>
+
+          <div class="example-box">
+            <div class="example-title">问题 1：激活虚拟环境后，python3 还是指向系统 Python</div>
+            <pre><code class="language-bash"># 检查 Python 路径
+which python3
+
+# 如果输出不是 venv 目录下的 Python，说明激活失败
+# 解决：重新激活
+source venv/bin/activate</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">问题 2：Windows 上运行 PowerShell 脚本报错</div>
+            <pre><code class="language-bash"># 错误信息：
+# cannot be loaded because running scripts is disabled on this system
+
+# 解决：以管理员身份运行 PowerShell，执行：
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">问题 3：PyCharm 没有自动识别虚拟环境</div>
+            <ol>
+              <li>打开 Settings → Python Interpreter</li>
+              <li>点击齿轮图标 → Add</li>
+              <li>选择 Existing environment</li>
+              <li>找到 <code>venv/bin/python3</code>（Mac/Linux）或 <code>venv\Scripts\python.exe</code>（Windows）</li>
+            </ol>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">问题 4：如何删除虚拟环境？</div>
+            <pre><code class="language-bash"># 直接删除 venv 文件夹即可
+rm -rf venv
+
+# 然后可以重新创建
+python3 -m venv venv</code></pre>
+          </div>
+        </section>
+
+        <!-- 练习 -->
+        <section class="section">
+          <h2>练习</h2>
+
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>练习 1：创建虚拟环境</h4>
+              <p>完成以下任务：</p>
+              <ol>
+                <li>创建一个项目文件夹 <code>my_llm_project</code></li>
+                <li>创建虚拟环境</li>
+                <li>激活虚拟环境</li>
+                <li>验证 Python 路径指向 venv</li>
+                <li>退出虚拟环境</li>
+              </ol>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 2：安装包并导出依赖</h4>
+              <p>在虚拟环境中完成以下任务：</p>
+              <ol>
+                <li>激活虚拟环境</li>
+                <li>安装 <code>httpx</code> 和 <code>pydantic</code></li>
+                <li>查看已安装的包列表</li>
+                <li>导出 <code>requirements.txt</code></li>
+                <li>查看 <code>requirements.txt</code> 内容</li>
+              </ol>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：在 PyCharm 中使用虚拟环境</h4>
+              <p>如果你使用 PyCharm：</p>
+              <ol>
+                <li>创建一个新项目，选择 Virtualenv 解释器</li>
+                <li>在 PyCharm 的 Terminal 中验证虚拟环境已激活</li>
+                <li>在 PyCharm 中安装一个包</li>
+              </ol>
+            </article>
+          </div>
+        </section>
+
+        <!-- 小结 -->
+        <section class="section">
+          <h2>本章小结</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 你学会了</h3>
+              <ul>
+                <li>理解虚拟环境的概念和作用</li>
+                <li>用命令行创建和管理虚拟环境</li>
+                <li>在 PyCharm 中配置虚拟环境</li>
+                <li>在 VS Code 中使用虚拟环境</li>
+                <li>使用 pip 安装和管理包</li>
+                <li>使用 requirements.txt 管理依赖</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>➡️ 下一步</h3>
+              <p>现在你已经掌握了虚拟环境，可以开始写 Python 代码了！</p>
+              <a href="02-syntax.html" class="btn-primary">继续学习：基本语法 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">每个 Python 项目都应该使用虚拟环境，这是专业开发者的习惯。</div>
+  </footer>
+</body>
+</html>

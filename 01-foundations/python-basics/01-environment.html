@@ -179,7 +179,61 @@ mkdir my_project</code></pre>
         </section>
 
         <section id="first-program" class="section">
-          <h2>第四步：写第一个程序</h2>
+          <h2>第四步：创建虚拟环境（重要！）</h2>
+          <p>在写代码之前，先创建一个虚拟环境。这是 Python 开发的最佳实践。</p>
+
+          <div class="note">
+            <h3>什么是虚拟环境？</h3>
+            <p>虚拟环境是 Python 的"隔离空间"，每个项目可以有自己独立的依赖，互不干扰。</p>
+            <ul>
+              <li><strong>避免冲突</strong>：不同项目可能需要不同版本的同一个库</li>
+              <li><strong>便于部署</strong>：可以精确知道项目依赖了哪些库</li>
+              <li><strong>保持整洁</strong>：不会污染系统的 Python 环境</li>
+            </ul>
+          </div>
+
+          <h3>步骤 1：创建项目文件夹</h3>
+          <pre><code class="language-bash"># 创建项目文件夹
+mkdir my_first_project
+cd my_first_project</code></pre>
+
+          <h3>步骤 2：创建虚拟环境</h3>
+          <pre><code class="language-bash"># 创建虚拟环境（venv 是虚拟环境的名字，可以随便取）
+python3 -m venv venv
+
+# 查看是否创建成功
+ls
+# 会看到一个 venv 文件夹</code></pre>
+
+          <h3>步骤 3：激活虚拟环境</h3>
+          <div class="grid">
+            <div class="card">
+              <h3>Mac / Linux</h3>
+              <pre><code class="language-bash">source venv/bin/activate</code></pre>
+            </div>
+            <div class="card">
+              <h3>Windows</h3>
+              <pre><code class="language-bash">venv\Scripts\activate</code></pre>
+            </div>
+          </div>
+
+          <p>激活后，命令行前面会显示 <code>(venv)</code>，表示你在虚拟环境中：</p>
+          <pre><code class="language-bash">(venv) $ </code></pre>
+
+          <h3>步骤 4：退出虚拟环境</h3>
+          <pre><code class="language-bash"># 退出虚拟环境
+deactivate
+
+# 退出后，(venv) 消失了
+$ </code></pre>
+
+          <div class="note">
+            <strong>记住</strong>：每次开始写代码前，都要先激活虚拟环境！
+          </div>
+        </section>
+
+        <section id="first-program" class="section">
+          <h2>第五步：写第一个程序</h2>
           <p>现在让我们写一个最简单的 Python 程序。</p>
 
           <h3>步骤 1：创建文件</h3>
@@ -226,7 +280,7 @@ print("我开始学 Python 了！")</code></pre>
         </section>
 
         <section id="interactive" class="section">
-          <h2>第五步：交互模式</h2>
+          <h2>第六步：交互模式</h2>
           <p>除了写文件运行，Python 还有一个"交互模式"，可以一行一行地执行代码，适合快速测试。</p>
 
           <h3>进入交互模式</h3>
@@ -271,14 +325,26 @@ print("我开始学 Python 了！")</code></pre>
             </article>
 
             <article class="practice-item">
-              <h4>练习 2：创建并运行文件</h4>
+              <h4>练习 2：创建虚拟环境</h4>
+              <p>完成以下任务：</p>
+              <ol>
+                <li>在桌面创建一个文件夹 <code>python_learning</code></li>
+                <li>进入这个文件夹</li>
+                <li>创建虚拟环境：<code>python3 -m venv venv</code></li>
+                <li>激活虚拟环境（看到 <code>(venv)</code> 前缀）</li>
+                <li>退出虚拟环境</li>
+              </ol>
+            </article>
+
+            <article class="practice-item">
+              <h4>练习 3：创建并运行文件</h4>
               <p>创建一个文件 <code>my_name.py</code>，写入以下代码并运行：</p>
               <pre><code class="language-python">print("我的名字是：______")  # 把 ______ 换成你的名字
 print("我正在学习 Python！")</code></pre>
             </article>
 
             <article class="practice-item">
-              <h4>练习 3：使用交互模式</h4>
+              <h4>练习 4：使用交互模式</h4>
               <p>进入 Python 交互模式，试试这些计算：</p>
               <pre><code class="language-python">>>> 10 + 20
 >>> 100 - 50
@@ -288,13 +354,15 @@ print("我正在学习 Python！")</code></pre>
             </article>
 
             <article class="practice-item">
-              <h4>练习 4：命令行操作</h4>
+              <h4>练习 5：完整工作流程</h4>
               <p>用命令行完成以下操作：</p>
               <ol>
-                <li>在桌面创建一个文件夹 <code>python_learning</code></li>
+                <li>在桌面创建一个文件夹 <code>my_project</code></li>
                 <li>进入这个文件夹</li>
+                <li>创建虚拟环境并激活</li>
                 <li>创建一个文件 <code>hello.py</code> 并在里面写 <code>print("Hello!")</code></li>
                 <li>用命令行运行这个文件</li>
+                <li>退出虚拟环境</li>
               </ol>
             </article>
           </div>
@@ -309,6 +377,7 @@ print("我正在学习 Python！")</code></pre>
                 <li>安装 Python</li>
                 <li>安装 VS Code 和 Python 插件</li>
                 <li>使用基本的命令行命令</li>
+                <li>创建和使用虚拟环境</li>
                 <li>创建和运行 Python 文件</li>
                 <li>使用交互模式快速测试</li>
               </ul>

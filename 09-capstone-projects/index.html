@@ -36,14 +36,18 @@
         <section id="rag" class="section">
           <span class="tag">项目二</span><h2>个人知识库问答系统</h2>
           <p>目标是掌握 RAG 全链路：文档解析、切分、索引、检索、引用、评估。</p>
-          <ul><li>支持上传 Markdown/PDF。</li><li>支持索引和重新索引。</li><li>答案带引用来源。</li><li>有测试集和评估脚本。</li></ul>
+          <div style="background: #f0f7ff; border-left: 4px solid #667eea; padding: 16px; margin: 16px 0; border-radius: 0 8px 8px 0;">
+            <p style="margin: 0;"><strong>💡 实战建议</strong>：推荐结合 <a href="../04-rag/index.html#real-case" style="color: #667eea;">04-RAG 实战案例：企业知识库问答系统</a> 来完成此项目。该案例提供了基于公司产品文档构建客户问答系统的完整5周实施计划、代码示例和验收标准。</p>
+          </div>
+          <ul><li>支持上传 Markdown/PDF/Word/HTML。</li><li>支持索引和重新索引。</li><li>答案带引用来源（文档名 + 章节 + 页码）。</li><li>有测试集和评估脚本。</li></ul>
           <details class="example"><summary>查看模块拆分</summary><pre><code class="language-text">modules:
-- document_loader: 文档加载
-- chunker: 文档切分
-- indexer: 建立索引
-- retriever: 检索相关片段
-- answerer: 生成带引用答案
-- evaluator: 运行测试集</code></pre></details>
+- document_loader: 文档加载（PDF/Word/HTML/Markdown）
+- chunker: 文档切分（按章节/段落/固定长度）
+- indexer: 建立索引（向量库 + 关键词索引）
+- retriever: 检索相关片段（向量检索 + Rerank）
+- answerer: 生成带引用答案（防幻觉Prompt）
+- evaluator: 运行测试集（Ragas评估）
+- updater: 增量更新（文档变更检测）</code></pre></details>
         </section>
         <section id="agent" class="section">
           <span class="tag">项目三</span><h2>带工具调用的业务助手</h2>

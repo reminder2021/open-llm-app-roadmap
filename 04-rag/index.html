@@ -15,7 +15,7 @@
       <div class="meta-row"><span class="pill">建议周期：3-5 周</span><span class="pill">产出：带引用的知识库问答系统</span><span class="pill">重点：召回、引用、防幻觉</span></div>
     </section>
     <div class="layout">
-      <aside class="sidebar"><h2>本阶段模块</h2><a href="#pipeline">完整流程</a><a href="#chunking">文档切分</a><a href="#retrieval">检索与重排</a><a href="#answer">答案生成</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
+      <aside class="sidebar"><h2>本阶段模块</h2><a href="#pipeline">完整流程</a><a href="#chunking">文档切分</a><a href="#retrieval">检索与重排</a><a href="#answer">答案生成</a><a href="#practice">练习任务</a><a href="#project">实践项目</a><a href="#real-case">实战案例</a><a href="#resources">推荐资料</a><a href="../index.html">返回主页</a></aside>
       <article class="content">
         <section id="pipeline" class="section">
           <h2>完整流程</h2>
@@ -165,6 +165,710 @@ print(context)</code></pre>
             <li>保存每次问题召回了哪些 chunk。</li>
           </ul>
         </section>
+        <section id="real-case" class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px; padding: 32px; margin: 32px 0;">
+          <span class="tag" style="background: rgba(255,255,255,0.2); color: white;">实战案例</span>
+          <h2 style="color: white; margin-top: 16px;">企业知识库问答系统</h2>
+          <p style="color: rgba(255,255,255,0.9); font-size: 1.1em;">基于公司产品说明和技术手册，为客户打造智能问答Agent。这是RAG技术最典型的商业应用场景。</p>
+
+          <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 20px; margin: 24px 0;">
+            <h3 style="color: white; margin-top: 0;">为什么选择这个案例？</h3>
+            <ul style="color: rgba(255,255,255,0.9);">
+              <li><strong>真实业务场景</strong>：产品文档格式混乱、术语专业、更新频繁</li>
+              <li><strong>覆盖RAG全链路</strong>：文档解析 → 切分 → 检索 → 生成 → 评估</li>
+              <li><strong>工程挑战丰富</strong>：多格式处理、增量更新、权限控制、成本优化</li>
+              <li><strong>可交付成果</strong>：做成原型可直接用于朋友公司</li>
+            </ul>
+          </div>
+
+          <h3 style="color: white;">学习目标</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 20px 0;">
+            <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 8px;">
+              <h4 style="color: white; margin-top: 0;">技术能力</h4>
+              <ul style="color: rgba(255,255,255,0.9); margin-bottom: 0;">
+                <li>多格式文档解析（PDF/Word/HTML）</li>
+                <li>智能切分策略设计</li>
+                <li>向量检索与Rerank</li>
+                <li>Prompt工程与防幻觉</li>
+              </ul>
+            </div>
+            <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 8px;">
+              <h4 style="color: white; margin-top: 0;">工程能力</h4>
+              <ul style="color: rgba(255,255,255,0.9); margin-bottom: 0;">
+                <li>RAG系统架构设计</li>
+                <li>评估体系构建</li>
+                <li>增量更新机制</li>
+                <li>生产环境部署</li>
+              </ul>
+            </div>
+            <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 8px;">
+              <h4 style="color: white; margin-top: 0;">产品能力</h4>
+              <ul style="color: rgba(255,255,255,0.9); margin-bottom: 0;">
+                <li>需求分析与场景设计</li>
+                <li>用户体验优化</li>
+                <li>成本与效果权衡</li>
+                <li>项目交付与演示</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 style="color: white;">推荐技术栈</h3>
+          <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <pre style="color: #fff; margin: 0; white-space: pre-wrap;"><code>文档处理层：
+├── PyMuPDF / pdfplumber  → PDF解析
+├── python-docx           → Word解析
+├── BeautifulSoup4        → HTML解析
+└── unstructured          → 统一文档处理
+
+向量存储层：
+├── ChromaDB              → 轻量级向量库（开发阶段）
+├── Qdrant / Milvus       → 生产级向量库（部署阶段）
+└── sentence-transformers → 本地Embedding模型
+
+检索生成层：
+├── FlagReranker / Cohere → Rerank模型
+├── vLLM / Ollama         → 本地LLM推理（可选）
+├── DeepSeek / GLM / MiniMax → 云端API（推荐）
+└── FastAPI               → API服务
+
+评估监控层：
+├── Ragas                 → RAG评估框架
+├── LangSmith             → 调试追踪（可选）
+└── Prometheus + Grafana  → 监控面板（可选）</code></pre>
+          </div>
+
+          <h3 style="color: white;">5周实施计划</h3>
+          <div style="margin: 20px 0;">
+            <div style="background: rgba(255,255,255,0.1); border-left: 4px solid #fff; padding: 16px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+              <h4 style="color: white; margin-top: 0;">Week 1：文档处理基础</h4>
+              <p style="color: rgba(255,255,255,0.9); margin-bottom: 8px;">学习文档解析技术，处理朋友公司的真实文档</p>
+              <details style="color: rgba(255,255,255,0.9);">
+                <summary style="cursor: pointer;">查看详细任务</summary>
+                <ul style="margin-top: 8px;">
+                  <li>收集样本文档：产品说明书、技术手册、FAQ</li>
+                  <li>实现PDF/Word/HTML解析器</li>
+                  <li>清洗文本：去页眉页脚、目录、特殊字符</li>
+                  <li>提取结构信息：标题层级、表格、列表</li>
+                </ul>
+              </details>
+              <details style="color: rgba(255,255,255,0.9); margin-top: 8px;">
+                <summary style="cursor: pointer;">查看代码示例</summary>
+                <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; margin-top: 8px;"><code style="color: #fff;">import pdfplumber
+from pathlib import Path
+
+def extract_pdf_with_structure(pdf_path: str) -> list[dict]:
+    """提取PDF内容，保留页码和结构"""
+    pages = []
+    with pdfplumber.open(pdf_path) as pdf:
+        for i, page in enumerate(pdf.pages):
+            text = page.extract_text()
+            tables = page.extract_tables()
+            pages.append({
+                "page_num": i + 1,
+                "text": text,
+                "tables": tables,
+                "source": Path(pdf_path).name
+            })
+    return pages
+
+# 处理产品说明书
+pages = extract_pdf_with_structure("product_manual.pdf")
+print(f"提取了 {len(pages)} 页内容")</code></pre>
+              </details>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.1); border-left: 4px solid #fff; padding: 16px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+              <h4 style="color: white; margin-top: 0;">Week 2：切分与索引</h4>
+              <p style="color: rgba(255,255,255,0.9); margin-bottom: 8px;">设计切分策略，建立向量索引</p>
+              <details style="color: rgba(255,255,255,0.9);">
+                <summary style="cursor: pointer;">查看详细任务</summary>
+                <ul style="margin-top: 8px;">
+                  <li>设计切分策略：按章节/段落/固定长度</li>
+                  <li>为每个chunk添加metadata（来源、页码、章节）</li>
+                  <li>选择Embedding模型，生成向量</li>
+                  <li>写入向量数据库，建立索引</li>
+                </ul>
+              </details>
+              <details style="color: rgba(255,255,255,0.9); margin-top: 8px;">
+                <summary style="cursor: pointer;">查看代码示例</summary>
+                <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; margin-top: 8px;"><code style="color: #fff;">from dataclasses import dataclass
+import chromadb
+from sentence_transformers import SentenceTransformer
+
+@dataclass
+class DocumentChunk:
+    text: str
+    source: str
+    page_num: int
+    section: str
+    chunk_id: str
+
+class TechnicalDocChunker:
+    """技术文档智能切分器"""
+    def __init__(self, chunk_size=500, overlap=50):
+        self.chunk_size = chunk_size
+        self.overlap = overlap
+
+    def chunk_by_section(self, pages: list[dict]) -> list[DocumentChunk]:
+        """按章节切分，保留结构信息"""
+        chunks = []
+        for page in pages:
+            sections = self._split_by_headers(page["text"])
+            for section_title, section_text in sections.items():
+                if len(section_text) > self.chunk_size:
+                    sub_chunks = self._split_long_text(section_text)
+                    for i, sub_text in enumerate(sub_chunks):
+                        chunks.append(DocumentChunk(
+                            text=sub_text,
+                            source=page["source"],
+                            page_num=page["page_num"],
+                            section=section_title,
+                            chunk_id=f"{page['source']}_{page['page_num']}_{section_title}_{i}"
+                        ))
+                else:
+                    chunks.append(DocumentChunk(
+                        text=section_text,
+                        source=page["source"],
+                        page_num=page["page_num"],
+                        section=section_title,
+                        chunk_id=f"{page['source']}_{page['page_num']}_{section_title}"
+                    ))
+        return chunks</code></pre>
+              </details>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.1); border-left: 4px solid #fff; padding: 16px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+              <h4 style="color: white; margin-top: 0;">Week 3：检索与生成</h4>
+              <p style="color: rgba(255,255,255,0.9); margin-bottom: 8px;">实现检索流程，设计防幻觉Prompt</p>
+              <details style="color: rgba(255,255,255,0.9);">
+                <summary style="cursor: pointer;">查看详细任务</summary>
+                <ul style="margin-top: 8px;">
+                  <li>实现向量检索，返回Top-K结果</li>
+                  <li>集成Rerank模型，优化排序</li>
+                  <li>设计技术问答Prompt模板</li>
+                  <li>实现"只基于文档回答"的生成逻辑</li>
+                </ul>
+              </details>
+              <details style="color: rgba(255,255,255,0.9); margin-top: 8px;">
+                <summary style="cursor: pointer;">查看Prompt设计示例</summary>
+                <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; margin-top: 8px;"><code style="color: #fff;">TECHNICAL_QA_PROMPT = """你是一个专业的技术客服助手。请严格基于【参考资料】回答客户问题。
+
+规则：
+1. 只使用参考资料中的信息回答，不要添加任何推测
+2. 如果资料中没有相关信息，请回答"根据当前资料无法回答此问题，建议联系技术支持"
+3. 引用来源时使用格式：[文档名 - 章节 - 页码]
+4. 对于技术参数，必须准确引用，不要四舍五入或修改
+5. 如果问题涉及多个产品，分别说明
+
+参考资料：
+{context}
+
+客户问题：
+{question}
+
+请提供准确、专业的回答："""</code></pre>
+              </details>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.1); border-left: 4px solid #fff; padding: 16px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+              <h4 style="color: white; margin-top: 0;">Week 4：评估与优化</h4>
+              <p style="color: rgba(255,255,255,0.9); margin-bottom: 8px;">构建评估体系，持续优化效果</p>
+              <details style="color: rgba(255,255,255,0.9);">
+                <summary style="cursor: pointer;">查看详细任务</summary>
+                <ul style="margin-top: 8px;">
+                  <li>收集真实客户问题，构建测试集（至少50条）</li>
+                  <li>设计评估指标：召回率、准确率、相关性</li>
+                  <li>运行评估，识别薄弱环节</li>
+                  <li>优化切分策略、检索参数、Prompt</li>
+                </ul>
+              </details>
+              <details style="color: rgba(255,255,255,0.9); margin-top: 8px;">
+                <summary style="cursor: pointer;">查看评估代码示例</summary>
+                <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; margin-top: 8px;"><code style="color: #fff;">from dataclasses import dataclass
+from ragas import evaluate
+from ragas.metrics import faithfulness, answer_relevancy
+
+@dataclass
+class EvalCase:
+    question: str
+    ground_truth: str
+    retrieved_contexts: list[str]
+
+def evaluate_rag_system(eval_cases: list[EvalCase], rag_pipeline):
+    """评估RAG系统效果"""
+    results = []
+    for case in eval_cases:
+        answer, contexts = rag_pipeline(case.question)
+        results.append({
+            "question": case.question,
+            "answer": answer,
+            "contexts": contexts,
+            "ground_truth": case.ground_truth
+        })
+
+    # 使用Ragas评估
+    dataset = Dataset.from_list(results)
+    scores = evaluate(dataset, metrics=[faithfulness, answer_relevancy])
+    return scores</code></pre>
+              </details>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.1); border-left: 4px solid #fff; padding: 16px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+              <h4 style="color: white; margin-top: 0;">Week 5：工程化与交付</h4>
+              <p style="color: rgba(255,255,255,0.9); margin-bottom: 8px;">做成可交付的原型系统</p>
+              <details style="color: rgba(255,255,255,0.9);">
+                <summary style="cursor: pointer;">查看详细任务</summary>
+                <ul style="margin-top: 8px;">
+                  <li>实现增量更新：文档变更后自动重新索引</li>
+                  <li>添加简单前端：Gradio或Streamlit</li>
+                  <li>容器化部署：Docker + docker-compose</li>
+                  <li>编写README和使用文档</li>
+                  <li>向朋友演示，收集反馈</li>
+                </ul>
+              </details>
+            </div>
+          </div>
+
+          <h3 style="color: white;">验收标准</h3>
+          <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <ul style="color: rgba(255,255,255,0.9); margin: 0;">
+              <li>✅ 能处理PDF/Word/HTML三种格式的技术文档</li>
+              <li>✅ 答案带引用来源（文档名 + 章节 + 页码）</li>
+              <li>✅ 无法回答时明确告知，不编造答案</li>
+              <li>✅ 测试集50+问题，准确率 > 85%</li>
+              <li>✅ 支持文档更新后重新索引</li>
+              <li>✅ 有可演示的Web界面</li>
+              <li>✅ 能本地Docker一键启动</li>
+            </ul>
+          </div>
+
+          <h3 style="color: white;">常见挑战与解决方案</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 20px 0;">
+            <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px;">
+              <h4 style="color: white; margin-top: 0;">挑战1：表格数据</h4>
+              <p style="color: rgba(255,255,255,0.9); margin-bottom: 0;">技术文档中的参数表格容易被切碎</p>
+              <p style="color: #ffd700; margin-bottom: 0;"><strong>方案</strong>：检测表格边界，整体作为单个chunk，或转为Markdown格式</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px;">
+              <h4 style="color: white; margin-top: 0;">挑战2：专业术语</h4>
+              <p style="color: rgba(255,255,255,0.9); margin-bottom: 0;">通用Embedding模型对领域术语理解不足</p>
+              <p style="color: #ffd700; margin-bottom: 0;"><strong>方案</strong>：混合检索（向量+关键词），或微调Embedding</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px;">
+              <h4 style="color: white; margin-top: 0;">挑战3：多版本文档</h4>
+              <p style="color: rgba(255,255,255,0.9); margin-bottom: 0;">产品迭代导致文档有多个版本</p>
+              <p style="color: #ffd700; margin-bottom: 0;"><strong>方案</strong>：metadata中记录版本号，检索时过滤版本</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px;">
+              <h4 style="color: white; margin-top: 0;">挑战4：长文档</h4>
+              <p style="color: rgba(255,255,255,0.9); margin-bottom: 0;">上百页的技术手册检索效率低</p>
+              <p style="color: #ffd700; margin-bottom: 0;"><strong>方案</strong>：建立层级索引（文档→章节→段落）</p>
+            </div>
+          </div>
+
+          <h3 style="color: white;">需求分析与场景设计</h3>
+          <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <p style="color: rgba(255,255,255,0.9);">在开始编码前，先明确业务需求和用户场景：</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px;">
+              <div style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
+                <h4 style="color: #ffd700; margin-top: 0;">用户画像</h4>
+                <ul style="color: rgba(255,255,255,0.9); margin-bottom: 0;">
+                  <li>客户：需要快速查找产品参数、使用方法</li>
+                  <li>客服：需要准确回答客户问题，减少工单</li>
+                  <li>销售：需要了解产品特性，对比竞品</li>
+                </ul>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
+                <h4 style="color: #ffd700; margin-top: 0;">典型问题分类</h4>
+                <ul style="color: rgba(255,255,255,0.9); margin-bottom: 0;">
+                  <li>产品参数查询："XX型号的功率是多少？"</li>
+                  <li>使用方法咨询："如何设置XX功能？"</li>
+                  <li>故障排除："XX报错怎么解决？"</li>
+                  <li>产品对比："A和B有什么区别？"</li>
+                </ul>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
+                <h4 style="color: #ffd700; margin-top: 0;">成功指标</h4>
+                <ul style="color: rgba(255,255,255,0.9); margin-bottom: 0;">
+                  <li>准确率 > 85%（答案正确且有依据）</li>
+                  <li>响应时间 < 3秒（含检索和生成）</li>
+                  <li>覆盖率 > 90%（能回答大部分常见问题）</li>
+                  <li>用户满意度 > 4.0/5.0</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <h3 style="color: white;">数据处理最佳实践</h3>
+          <details style="color: rgba(255,255,255,0.9); margin: 20px 0;">
+            <summary style="cursor: pointer; font-weight: bold;">展开查看文档处理技巧</summary>
+            <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 20px; margin-top: 12px;">
+              <h4 style="color: #ffd700; margin-top: 0;">1. 表格处理策略</h4>
+              <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px;"><code style="color: #fff;">def extract_table_as_markdown(table: list[list]) -> str:
+    """将表格转为Markdown格式，保持结构完整"""
+    if not table or len(table) < 2:
+        return ""
+
+    headers = table[0]
+    rows = table[1:]
+
+    md_lines = []
+    md_lines.append("| " + " | ".join(str(h) for h in headers) + " |")
+    md_lines.append("| " + " | ".join(["---"] * len(headers)) + " |")
+    for row in rows:
+        md_lines.append("| " + " | ".join(str(cell) for cell in row) + " |")
+
+    return "\n".join(md_lines)</code></pre>
+
+              <h4 style="color: #ffd700; margin-top: 16px;">2. 扫描版PDF处理（OCR）</h4>
+              <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px;"><code style="color: #fff;">import pytesseract
+from pdf2image import convert_from_path
+
+def ocr_pdf(pdf_path: str) -> list[dict]:
+    """处理扫描版PDF"""
+    images = convert_from_path(pdf_path)
+    pages = []
+    for i, img in enumerate(images):
+        text = pytesseract.image_to_string(img, lang='chi_sim+eng')
+        pages.append({
+            "page_num": i + 1,
+            "text": text,
+            "source": Path(pdf_path).name,
+            "is_ocr": True
+        })
+    return pages</code></pre>
+
+              <h4 style="color: #ffd700; margin-top: 16px;">3. 文档版本管理</h4>
+              <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px;"><code style="color: #fff;">from datetime import datetime
+import hashlib
+
+def compute_doc_hash(file_path: str) -> str:
+    """计算文档哈希值，用于检测变更"""
+    with open(file_path, "rb") as f:
+        return hashlib.md5(f.read()).hexdigest()
+
+def check_and_update_index(doc_path: str, index_db):
+    """增量更新：只处理变更的文档"""
+    current_hash = compute_doc_hash(doc_path)
+    stored_hash = index_db.get_doc_hash(doc_path)
+
+    if current_hash != stored_hash:
+        # 文档有变更，重新索引
+        chunks = process_document(doc_path)
+        index_db.upsert_chunks(chunks)
+        index_db.update_hash(doc_path, current_hash)
+        return True
+    return False</code></pre>
+            </div>
+          </details>
+
+          <h3 style="color: white;">混合检索策略详解</h3>
+          <details style="color: rgba(255,255,255,0.9); margin: 20px 0;">
+            <summary style="cursor: pointer; font-weight: bold;">展开查看混合检索实现</summary>
+            <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 20px; margin-top: 12px;">
+              <p style="color: rgba(255,255,255,0.9);">单一检索方式各有局限，混合检索能取长补短：</p>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 16px 0;">
+                <div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 6px;">
+                  <h4 style="color: #ffd700; margin-top: 0;">向量检索</h4>
+                  <p style="color: rgba(255,255,255,0.9); margin-bottom: 0; font-size: 0.9em;">✓ 语义相似<br>✓ 同义词匹配<br>✗ 精确术语弱</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 6px;">
+                  <h4 style="color: #ffd700; margin-top: 0;">关键词检索</h4>
+                  <p style="color: rgba(255,255,255,0.9); margin-bottom: 0; font-size: 0.9em;">✓ 精确匹配<br>✓ 型号/编号<br>✗ 语义理解弱</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 6px;">
+                  <h4 style="color: #ffd700; margin-top: 0;">混合检索</h4>
+                  <p style="color: rgba(255,255,255,0.9); margin-bottom: 0; font-size: 0.9em;">✓ 综合优势<br>✓ 更稳定<br>✗ 计算成本高</p>
+                </div>
+              </div>
+              <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px;"><code style="color: #fff;">from rank_bm25 import BM25Okapi
+import numpy as np
+
+class HybridRetriever:
+    def __init__(self, vector_db, chunks: list[str]):
+        self.vector_db = vector_db
+        self.bm25 = BM25Okapi([chunk.split() for chunk in chunks])
+        self.chunks = chunks
+
+    def search(self, query: str, top_k: int = 5,
+               vector_weight: float = 0.7) -> list[dict]:
+        # 向量检索
+        vector_results = self.vector_db.search(query, top_k=top_k * 2)
+
+        # 关键词检索
+        bm25_scores = self.bm25.get_scores(query.split())
+        bm25_top_idx = np.argsort(bm25_scores)[::-1][:top_k * 2]
+
+        # 融合分数
+        combined = {}
+        for idx, result in enumerate(vector_results):
+            chunk_id = result["chunk_id"]
+            combined[chunk_id] = {
+                **result,
+                "score": result["score"] * vector_weight
+            }
+
+        for idx in bm25_top_idx:
+            chunk_id = f"chunk_{idx}"
+            if chunk_id in combined:
+                combined[chunk_id]["score"] += bm25_scores[idx] * (1 - vector_weight)
+            else:
+                combined[chunk_id] = {
+                    "chunk_id": chunk_id,
+                    "text": self.chunks[idx],
+                    "score": bm25_scores[idx] * (1 - vector_weight)
+                }
+
+        # 按融合分数排序
+        results = sorted(combined.values(), key=lambda x: x["score"], reverse=True)
+        return results[:top_k]</code></pre>
+            </div>
+          </details>
+
+          <h3 style="color: white;">LLM服务方案选择</h3>
+          <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <p style="color: rgba(255,255,255,0.9);">根据资源条件选择合适的LLM服务方案：</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px;">
+              <div style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px; border-left: 4px solid #4caf50;">
+                <h4 style="color: #4caf50; margin-top: 0;">方案一：云端API（推荐新手）</h4>
+                <p style="color: rgba(255,255,255,0.9); font-size: 0.9em; margin-bottom: 12px;">无需GPU，按需付费，快速上手</p>
+                <table style="width: 100%; color: rgba(255,255,255,0.9); font-size: 0.85em;">
+                  <tr><td><strong>服务商</strong></td><td><strong>推荐模型</strong></td><td><strong>价格</strong></td></tr>
+                  <tr><td>DeepSeek</td><td>deepseek-chat</td><td>¥1/百万token</td></tr>
+                  <tr><td>智谱GLM</td><td>glm-4-flash</td><td>¥0.1/百万token</td></tr>
+                  <tr><td>MiniMax</td><td>abab6.5s-chat</td><td>¥0.5/百万token</td></tr>
+                  <tr><td>通义千问</td><td>qwen-turbo</td><td>¥0.3/百万token</td></tr>
+                </table>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px; border-left: 4px solid #ff9800;">
+                <h4 style="color: #ff9800; margin-top: 0;">方案二：本地部署（有GPU）</h4>
+                <p style="color: rgba(255,255,255,0.9); font-size: 0.9em; margin-bottom: 12px;">数据隐私好，无调用限制，需硬件资源</p>
+                <table style="width: 100%; color: rgba(255,255,255,0.9); font-size: 0.85em;">
+                  <tr><td><strong>工具</strong></td><td><strong>推荐模型</strong></td><td><strong>显存需求</strong></td></tr>
+                  <tr><td>Ollama</td><td>qwen2:7b</td><td>8GB</td></tr>
+                  <tr><td>vLLM</td><td>Qwen2-7B</td><td>16GB</td></tr>
+                  <tr><td>Llama.cpp</td><td>Qwen2-7B-Q4</td><td>6GB</td></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <h3 style="color: white;">统一LLM调用接口设计</h3>
+          <details style="color: rgba(255,255,255,0.9); margin: 20px 0;">
+            <summary style="cursor: pointer; font-weight: bold;">展开查看多服务商适配代码</summary>
+            <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 20px; margin-top: 12px;">
+              <p style="color: rgba(255,255,255,0.9);">设计统一接口，支持本地和云端LLM无缝切换：</p>
+              <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; margin-top: 12px;"><code style="color: #fff;">from abc import ABC, abstractmethod
+from typing import AsyncIterator
+import httpx
+
+class LLMProvider(ABC):
+    """LLM服务提供商基类"""
+
+    @abstractmethod
+    async def chat(self, messages: list[dict], **kwargs) -> str:
+        pass
+
+    @abstractmethod
+    async def chat_stream(self, messages: list[dict], **kwargs) -> AsyncIterator[str]:
+        pass
+
+
+class DeepSeekProvider(LLMProvider):
+    """DeepSeek API"""
+
+    def __init__(self, api_key: str, base_url: str = "https://api.deepseek.com"):
+        self.api_key = api_key
+        self.base_url = base_url
+
+    async def chat(self, messages: list[dict], **kwargs) -> str:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{self.base_url}/v1/chat/completions",
+                headers={"Authorization": f"Bearer {self.api_key}"},
+                json={
+                    "model": kwargs.get("model", "deepseek-chat"),
+                    "messages": messages,
+                    "temperature": kwargs.get("temperature", 0.7),
+                    "max_tokens": kwargs.get("max_tokens", 2000)
+                }
+            )
+            return response.json()["choices"][0]["message"]["content"]
+
+
+class GLMProvider(LLMProvider):
+    """智谱GLM API"""
+
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self.base_url = "https://open.bigmodel.cn/api/paas/v4"
+
+    async def chat(self, messages: list[dict], **kwargs) -> str:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{self.base_url}/chat/completions",
+                headers={"Authorization": f"Bearer {self.api_key}"},
+                json={
+                    "model": kwargs.get("model", "glm-4-flash"),
+                    "messages": messages
+                }
+            )
+            return response.json()["choices"][0]["message"]["content"]
+
+
+class OllamaProvider(LLMProvider):
+    """本地Ollama服务"""
+
+    def __init__(self, base_url: str = "http://localhost:11434"):
+        self.base_url = base_url
+
+    async def chat(self, messages: list[dict], **kwargs) -> str:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{self.base_url}/api/chat",
+                json={
+                    "model": kwargs.get("model", "qwen2:7b"),
+                    "messages": messages,
+                    "stream": False
+                }
+            )
+            return response.json()["message"]["content"]
+
+
+def create_llm_provider(provider: str, **kwargs) -> LLMProvider:
+    """工厂函数：根据配置创建LLM提供商"""
+    providers = {
+        "deepseek": DeepSeekProvider,
+        "glm": GLMProvider,
+        "ollama": OllamaProvider,
+    }
+    if provider not in providers:
+        raise ValueError(f"不支持的提供商: {provider}")
+    return providers[provider](**kwargs)
+
+# 使用示例
+# llm = create_llm_provider("deepseek", api_key="your-key")
+# llm = create_llm_provider("ollama")  # 本地部署</code></pre>
+
+              <h4 style="color: #ffd700; margin-top: 20px;">配置文件示例</h4>
+              <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px;"><code style="color: #fff;"># config.yaml
+llm:
+  provider: "deepseek"  # 可选: deepseek, glm, minimax, ollama, vllm
+  model: "deepseek-chat"
+  api_key: "${DEEPSEEK_API_KEY}"  # 从环境变量读取
+  temperature: 0.7
+  max_tokens: 2000
+
+embedding:
+  provider: "local"  # 可选: local, openai, zhipu
+  model: "bge-small-zh-v1.5"
+  device: "cpu"  # 无GPU时使用cpu</code></pre>
+            </div>
+          </details>
+
+          <h3 style="color: white;">成本对比与选择建议</h3>
+          <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+              <div style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
+                <h4 style="color: #ffd700; margin-top: 0;">Embedding模型选择</h4>
+                <table style="width: 100%; color: rgba(255,255,255,0.9); font-size: 0.9em;">
+                  <tr><td><strong>模型</strong></td><td><strong>维度</strong></td><td><strong>特点</strong></td></tr>
+                  <tr><td>bge-small-zh</td><td>512</td><td>轻量、CPU可跑</td></tr>
+                  <tr><td>bge-large-zh</td><td>1024</td><td>效果好、需GPU</td></tr>
+                  <tr><td>m3e-base</td><td>768</td><td>中英文均衡</td></tr>
+                </table>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
+                <h4 style="color: #ffd700; margin-top: 0;">场景推荐</h4>
+                <ul style="color: rgba(255,255,255,0.9); margin-bottom: 0; font-size: 0.9em;">
+                  <li><strong>学习/原型</strong>：DeepSeek/GLM免费额度 + 本地Embedding</li>
+                  <li><strong>小规模生产</strong>：DeepSeek API + ChromaDB</li>
+                  <li><strong>大规模生产</strong>：私有部署 + Qdrant集群</li>
+                  <li><strong>数据敏感</strong>：全本地部署（Ollama + FAISS）</li>
+                </ul>
+              </div>
+            </div>
+            <div style="background: rgba(255,255,255,0.2); border-radius: 6px; padding: 12px; margin-top: 16px;">
+              <p style="color: white; margin: 0;"><strong>💡 成本估算</strong>：假设每天1000次问答，每次消耗2000 token，使用DeepSeek约 ¥2/天，使用GLM-4-Flash约 ¥0.2/天。本地部署则主要是电费和硬件折旧。</p>
+            </div>
+          </div>
+
+          <h3 style="color: white;">安全与权限控制</h3>
+          <details style="color: rgba(255,255,255,0.9); margin: 20px 0;">
+            <summary style="cursor: pointer; font-weight: bold;">展开查看安全设计</summary>
+            <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 20px; margin-top: 12px;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px;">
+                  <h4 style="color: #ffd700; margin-top: 0;">数据隔离</h4>
+                  <ul style="color: rgba(255,255,255,0.9); margin-bottom: 0; font-size: 0.9em;">
+                    <li>按产品线/客户分collection</li>
+                    <li>metadata中记录访问权限</li>
+                    <li>检索时过滤无权限文档</li>
+                  </ul>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px;">
+                  <h4 style="color: #ffd700; margin-top: 0;">输入防护</h4>
+                  <ul style="color: rgba(255,255,255,0.9); margin-bottom: 0; font-size: 0.9em;">
+                    <li>过滤敏感词和注入攻击</li>
+                    <li>限制输入长度</li>
+                    <li>记录异常查询</li>
+                  </ul>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px;">
+                  <h4 style="color: #ffd700; margin-top: 0;">输出审核</h4>
+                  <ul style="color: rgba(255,255,255,0.9); margin-bottom: 0; font-size: 0.9em;">
+                    <li>检查是否泄露内部信息</li>
+                    <li>敏感数据脱敏处理</li>
+                    <li>人工审核高风险回答</li>
+                  </ul>
+                </div>
+              </div>
+              <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; margin-top: 16px;"><code style="color: #fff;">class AccessControl:
+    def __init__(self):
+        self.permissions = {
+            "product_a": ["customer_1", "internal"],
+            "product_b": ["customer_2", "internal"],
+        }
+
+    def filter_chunks(self, chunks: list[dict], user_role: str) -> list[dict]:
+        """根据用户权限过滤检索结果"""
+        filtered = []
+        for chunk in chunks:
+            product = chunk.get("metadata", {}).get("product")
+            if product and user_role in self.permissions.get(product, []):
+                filtered.append(chunk)
+        return filtered</code></pre>
+            </div>
+          </details>
+
+          <h3 style="color: white;">常见问题FAQ</h3>
+          <div style="margin: 20px 0;">
+            <details style="background: rgba(255,255,255,0.1); padding: 16px; margin: 8px 0; border-radius: 8px; color: rgba(255,255,255,0.9);">
+              <summary style="cursor: pointer; font-weight: bold;">Q: 切分chunk大小怎么选？</summary>
+              <p style="margin-top: 12px; margin-bottom: 0;">建议从300-500字开始测试。太小会丢失上下文，太大会召回不准。技术文档通常按章节切分效果最好，避免在表格或参数列表中间切断。</p>
+            </details>
+            <details style="background: rgba(255,255,255,0.1); padding: 16px; margin: 8px 0; border-radius: 8px; color: rgba(255,255,255,0.9);">
+              <summary style="cursor: pointer; font-weight: bold;">Q: 检索返回多少条结果合适？</summary>
+              <p style="margin-top: 12px; margin-bottom: 0;">一般Top-K=5~10条，再用Rerank精选3~5条给模型。太多会增加token消耗和噪音，太少可能漏掉关键信息。</p>
+            </details>
+            <details style="background: rgba(255,255,255,0.1); padding: 16px; margin: 8px 0; border-radius: 8px; color: rgba(255,255,255,0.9);">
+              <summary style="cursor: pointer; font-weight: bold;">Q: 如何处理模型回答"不知道"的情况？</summary>
+              <p style="margin-top: 12px; margin-bottom: 0;">这是好事！说明防幻觉生效了。可以：1) 检查是否文档覆盖不足；2) 优化检索策略；3) 收集这类问题补充到文档中。</p>
+            </details>
+            <details style="background: rgba(255,255,255,0.1); padding: 16px; margin: 8px 0; border-radius: 8px; color: rgba(255,255,255,0.9);">
+              <summary style="cursor: pointer; font-weight: bold;">Q: 向量库选Chroma还是Qdrant？</summary>
+              <p style="margin-top: 12px; margin-bottom: 0;">开发阶段用Chroma（轻量、易用），生产环境用Qdrant（性能好、支持过滤）。数据量小（<10万条）两者差异不大。</p>
+            </details>
+            <details style="background: rgba(255,255,255,0.1); padding: 16px; margin: 8px 0; border-radius: 8px; color: rgba(255,255,255,0.9);">
+              <summary style="cursor: pointer; font-weight: bold;">Q: 如何评估RAG系统效果？</summary>
+              <p style="margin-top: 12px; margin-bottom: 0;">核心指标：1) 召回率（相关文档是否被召回）；2) 准确率（答案是否正确）；3) 忠实度（答案是否基于文档）。推荐用Ragas框架自动化评估。</p>
+            </details>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.2); border-radius: 8px; padding: 20px; margin: 24px 0; text-align: center;">
+            <p style="color: white; font-size: 1.1em; margin: 0;"><strong>💡 提示</strong>：这个案例完成后，可以直接纳入你的作品集（09-capstone-projects），作为"企业知识库问答系统"的真实项目展示。</p>
+          </div>
+        </section>
+
         <section id="resources" class="section">
           <h2>推荐资料</h2>
           <ul>

@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLM 应用开发面试题</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">LLM 应用开发路线</a><nav class="nav"><a href="../09-capstone-projects/index.html">上一阶段</a><a href="../index.html">主页</a></nav></div></header>
+  <main class="shell">
+    <section class="hero">
+      <h1>LLM 应用开发面试题</h1>
+      <p>面试题不是背答案，而是检验你是否真正理解了技术原理和工程实践。</p>
+      <div class="meta-row"><span class="pill">按技术类型分类</span><span class="pill">初级 / 中级 / 高级</span><span class="pill">直接展示答案</span></div>
+    </section>
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>技术主题</h2>
+        <a href="#python">Python 基础</a>
+        <a href="#llm">LLM 基础</a>
+        <a href="#prompt">Prompt 工程</a>
+        <a href="#rag">RAG 知识库</a>
+        <a href="#agent">Agent 与工具调用</a>
+        <a href="#finetuning">微调</a>
+        <a href="#evaluation">评估</a>
+        <a href="#deployment">部署</a>
+        <a href="#system-design">系统设计</a>
+        <a href="../index.html">返回主页</a>
+      </aside>
+      <article class="content">
+
+        <section id="python" class="section">
+          <span class="tag">Python 基础</span>
+          <h2>Python 与异步编程</h2>
+
+          <h3>初级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: Python 中 `asyncio` 和多线程有什么区别？为什么 LLM 应用推荐使用异步？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <ul>
+                  <li><strong>多线程</strong>：适合 I/O 密集型任务，但有 GIL 限制，线程切换有开销</li>
+                  <li><strong>asyncio</strong>：单线程并发，通过事件循环实现，切换开销更小</li>
+                  <li><strong>LLM 应用推荐异步</strong>：因为大量时间花在等待 API 响应，异步可以在等待时处理其他请求</li>
+                </ul>
+                <pre><code class="language-python"># 异步调用示例
+async def call_llm(prompt: str) -> str:
+    async with httpx.AsyncClient() as client:
+        response = await client.post("/v1/chat/completions", json={...})
+        return response.json()["choices"][0]["message"]["content"]
+
+# 并发调用多个 LLM
+results = await asyncio.gather(*[call_llm(p) for p in prompts])</code></pre>
+              </div>
+            </article>
+          </div>
+
+          <h3>中级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 如何实现 LLM 调用的重试机制和超时控制？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <pre><code class="language-python">import asyncio
+from tenacity import retry, stop_after_attempt, wait_exponential
+
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=1, max=10),
+    retry=retry_if_exception_type((httpx.TimeoutException, httpx.HTTPStatusError))
+)
+async def call_llm_with_retry(prompt: str, timeout: float = 30.0) -> str:
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        response = await client.post("/v1/chat/completions", json={...})
+        response.raise_for_status()
+        return response.json()["choices"][0]["message"]["content"]</code></pre>
+                <p><strong>关键点</strong>：指数退避、区分可重试错误、设置最大重试次数</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="llm" class="section">
+          <span class="tag">LLM 基础</span>
+          <h2>大语言模型原理与使用</h2>
+
+          <h3>初级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 什么是 Temperature？它如何影响模型输出？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <ul>
+                  <li><strong>Temperature</strong> 控制输出的随机性，范围通常 0-2</li>
+                  <li><strong>低温度 (0-0.3)</strong>：输出更确定、更集中，适合事实性问答</li>
+                  <li><strong>中温度 (0.7)</strong>：平衡创造性和准确性</li>
+                  <li><strong>高温度 (1.0+)</strong>：输出更多样、更有创意，适合创作</li>
+                </ul>
+                <p><strong>原理</strong>：Temperature 缩放 logits，温度越低，概率分布越尖锐，高概率 token 被选中的可能性越大。</p>
+              </div>
+            </article>
+            <article class="practice-item">
+              <h4>Q: 什么是 Token？为什么 LLM 按 Token 计费？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <ul>
+                  <li><strong>Token</strong> 是模型处理文本的基本单位，可以理解为"词元"</li>
+                  <li>英文大约 1 token ≈ 4 个字符，中文大约 1-2 个字 = 1 token</li>
+                  <li><strong>按 Token 计费</strong>：因为计算量与 token 数量成正比，包括输入和输出</li>
+                </ul>
+                <p><strong>影响</strong>：Prompt 越长、输出越长，成本越高。优化 prompt 长度可以降低成本。</p>
+              </div>
+            </article>
+          </div>
+
+          <h3>中级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 开源模型和商业 API 各自的优缺点？如何选择？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr><th style="border: 1px solid #ddd; padding: 8px;">维度</th><th style="border: 1px solid #ddd; padding: 8px;">开源模型</th><th style="border: 1px solid #ddd; padding: 8px;">商业 API</th></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">成本</td><td style="border: 1px solid #ddd; padding: 8px;">一次性硬件投入</td><td style="border: 1px solid #ddd; padding: 8px;">按量付费</td></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">隐私</td><td style="border: 1px solid #ddd; padding: 8px;">数据完全私有</td><td style="border: 1px solid #ddd; padding: 8px;">数据经过第三方</td></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">效果</td><td style="border: 1px solid #ddd; padding: 8px;">需要调优</td><td style="border: 1px solid #ddd; padding: 8px;">开箱即用</td></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">定制</td><td style="border: 1px solid #ddd; padding: 8px;">可微调</td><td style="border: 1px solid #ddd; padding: 8px;">有限定制</td></tr>
+                </table>
+                <p><strong>选择建议</strong>：原型验证用 API，数据敏感用开源，大规模使用考虑成本。</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="prompt" class="section">
+          <span class="tag">Prompt 工程</span>
+          <h2>提示词设计与结构化输出</h2>
+
+          <h3>初级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 什么是 Few-shot Prompt？什么时候使用？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>Few-shot Prompt</strong> 是在提示中提供几个示例，让模型学习任务模式。</p>
+                <pre><code class="language-text">请根据产品描述提取关键特性。
+
+示例：
+描述：这款手机配备6.7英寸屏幕，5000mAh电池，支持5G网络。
+特性：屏幕尺寸:6.7英寸, 电池容量:5000mAh, 网络:5G
+
+描述：该笔记本电脑搭载M3芯片，16GB内存，512GB固态硬盘。
+特性：</code></pre>
+                <p><strong>使用场景</strong>：输出格式复杂、任务定义模糊、需要特定风格时。</p>
+              </div>
+            </article>
+          </div>
+
+          <h3>中级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 如何确保 LLM 输出符合 JSON Schema？有哪些方案？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <ol>
+                  <li><strong>Prompt 约束</strong>：在提示中明确要求 JSON 格式，提供 schema 示例</li>
+                  <li><strong>输出解析</strong>：使用 Pydantic 或 JSON Schema 校验，失败则重试</li>
+                  <li><strong>Constrained Decoding</strong>：vLLM、Outlines 等工具限制输出 token</li>
+                  <li><strong>Function Calling</strong>：利用模型的工具调用能力返回结构化数据</li>
+                </ol>
+                <pre><code class="language-python">from pydantic import BaseModel, ValidationError
+
+class ProductInfo(BaseModel):
+    name: str
+    price: float
+    features: list[str]
+
+def extract_product(text: str, max_retries: int = 3) -> ProductInfo:
+    prompt = f"提取产品信息，返回JSON：{ProductInfo.model_json_schema()}\n\n{text}"
+    for _ in range(max_retries):
+        response = call_llm(prompt)
+        try:
+            return ProductInfo.model_validate_json(response)
+        except ValidationError:
+            continue
+    raise ValueError("无法提取有效产品信息")</code></pre>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="rag" class="section">
+          <span class="tag">RAG 知识库</span>
+          <h2>检索增强生成</h2>
+
+          <h3>初级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 什么是 RAG？为什么需要 RAG 而不是直接用 LLM？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>RAG (Retrieval-Augmented Generation)</strong> 是检索增强生成，先检索相关文档，再基于文档生成答案。</p>
+                <p><strong>为什么需要 RAG</strong>：</p>
+                <ul>
+                  <li><strong>知识时效</strong>：LLM 训练数据有截止日期，RAG 可以使用最新文档</li>
+                  <li><strong>领域知识</strong>：LLM 缺少企业私有数据，RAG 可以引入内部知识库</li>
+                  <li><strong>减少幻觉</strong>：要求模型基于检索到的事实回答，而非编造</li>
+                  <li><strong>可追溯</strong>：答案可以引用来源，便于验证</li>
+                </ul>
+              </div>
+            </article>
+            <article class="practice-item">
+              <h4>Q: 文档切分（Chunking）太大或太小各有什么问题？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <ul>
+                  <li><strong>太小</strong>：丢失上下文，模型无法理解完整语义</li>
+                  <li><strong>太大</strong>：检索不精确，无关信息多，占用 token 预算</li>
+                  <li><strong>推荐</strong>：300-500 tokens，按语义边界切分（段落、章节）</li>
+                </ul>
+                <p><strong>最佳实践</strong>：</p>
+                <ul>
+                  <li>保留重叠（overlap）以维持上下文连续性</li>
+                  <li>保留 metadata（来源、页码、章节标题）</li>
+                  <li>表格、代码块等结构化内容整体保留</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+
+          <h3>中级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 什么是 Rerank？为什么检索后还需要 Rerank？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>Rerank</strong> 是对初步检索结果进行重新排序的过程。</p>
+                <p><strong>为什么需要</strong>：</p>
+                <ul>
+                  <li>向量检索是近似搜索，可能遗漏最佳结果</li>
+                  <li>初检 Top-K 通常设较大（如 20），需要精选</li>
+                  <li>Rerank 模型更精确，考虑 query-document 的交互</li>
+                </ul>
+                <pre><code class="language-python"># 典型 RAG 流程
+1. 用户提问
+2. 向量检索 Top-20
+3. Rerank 精选 Top-5
+4. 将 Top-5 作为上下文生成答案</code></pre>
+                <p><strong>常用 Rerank 模型</strong>：Cohere Rerank、bge-reranker、cross-encoder</p>
+              </div>
+            </article>
+            <article class="practice-item">
+              <h4>Q: 如何评估 RAG 系统的效果？有哪些指标？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>检索质量指标</strong>：</p>
+                <ul>
+                  <li><strong>Recall@K</strong>：Top-K 结果中包含正确文档的比例</li>
+                  <li><strong>MRR</strong>：正确文档排名的倒数平均值</li>
+                  <li><strong>NDCG</strong>：考虑排名位置的评分</li>
+                </ul>
+                <p><strong>生成质量指标</strong>：</p>
+                <ul>
+                  <li><strong>Faithfulness</strong>：答案是否忠实于检索到的文档</li>
+                  <li><strong>Answer Relevancy</strong>：答案是否与问题相关</li>
+                  <li><strong>Context Precision</strong>：检索到的上下文是否精确</li>
+                </ul>
+                <p><strong>推荐工具</strong>：Ragas 框架，可自动化评估 RAG 全链路</p>
+              </div>
+            </article>
+          </div>
+
+          <h3>高级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 如何处理 RAG 中的"幻觉"问题？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>幻觉来源</strong>：</p>
+                <ul>
+                  <li>检索到了不相关的文档</li>
+                  <li>模型忽略上下文，使用自身知识回答</li>
+                  <li>上下文信息不足，模型"补全"</li>
+                </ul>
+                <p><strong>解决方案</strong>：</p>
+                <ol>
+                  <li><strong>Prompt 设计</strong>：明确要求"只基于上下文回答，没有则说不知道"</li>
+                  <li><strong>引用机制</strong>：要求模型标注答案来源</li>
+                  <li><strong>检索优化</strong>：提高检索精度，使用 Rerank</li>
+                  <li><strong>后处理</strong>：校验答案是否有对应上下文支持</li>
+                  <li><strong>置信度</strong>：返回检索分数，低于阈值时提示不确定性</li>
+                </ol>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="agent" class="section">
+          <span class="tag">Agent 与工具调用</span>
+          <h2>智能体与工具调用</h2>
+
+          <h3>初级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 什么是 Agent？Agent 和普通的 LLM 调用有什么区别？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>Agent</strong> 是具有自主决策能力的 LLM 系统，可以规划、使用工具、迭代执行。</p>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr><th style="border: 1px solid #ddd; padding: 8px;">维度</th><th style="border: 1px solid #ddd; padding: 8px;">普通 LLM</th><th style="border: 1px solid #ddd; padding: 8px;">Agent</th></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">能力</td><td style="border: 1px solid #ddd; padding: 8px;">文本生成</td><td style="border: 1px solid #ddd; padding: 8px;">规划、工具调用、迭代</td></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">交互</td><td style="border: 1px solid #ddd; padding: 8px;">单轮或简单多轮</td><td style="border: 1px solid #ddd; padding: 8px;">复杂任务分解</td></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">状态</td><td style="border: 1px solid #ddd; padding: 8px;">无状态</td><td style="border: 1px solid #ddd; padding: 8px;">维护执行状态</td></tr>
+                </table>
+              </div>
+            </article>
+          </div>
+
+          <h3>中级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: Function Calling 是如何工作的？如何设计好的工具描述？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>Function Calling 流程</strong>：</p>
+                <ol>
+                  <li>定义工具 Schema（名称、描述、参数）</li>
+                  <li>将工具定义和用户问题发送给模型</li>
+                  <li>模型决定是否调用工具，返回调用参数</li>
+                  <li>应用层执行工具，将结果返回给模型</li>
+                  <li>模型基于工具结果生成最终答案</li>
+                </ol>
+                <p><strong>好的工具描述</strong>：</p>
+                <pre><code class="language-python">tools = [{
+    "type": "function",
+    "function": {
+        "name": "search_documents",
+        "description": "在知识库中搜索文档。当用户询问产品信息、技术规格、使用方法时使用。",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "搜索关键词，建议使用产品名称或功能描述"
+                },
+                "top_k": {
+                    "type": "integer",
+                    "description": "返回结果数量，默认5",
+                    "default": 5
+                }
+            },
+            "required": ["query"]
+        }
+    }
+}]</code></pre>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="finetuning" class="section">
+          <span class="tag">微调</span>
+          <h2>模型微调</h2>
+
+          <h3>初级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 什么时候需要微调？什么时候用 RAG 就够了？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>用 RAG</strong>：</p>
+                <ul>
+                  <li>知识会频繁更新</li>
+                  <li>需要引用来源</li>
+                  <li>数据量大（>10万文档）</li>
+                  <li>需要快速上线</li>
+                </ul>
+                <p><strong>用微调</strong>：</p>
+                <ul>
+                  <li>需要特定风格/格式输出</li>
+                  <li>领域术语多，模型不理解</li>
+                  <li>需要压缩模型规模</li>
+                  <li>任务复杂，Prompt 难以描述</li>
+                </ul>
+                <p><strong>两者结合</strong>：微调模型学习领域知识 + RAG 提供最新信息</p>
+              </div>
+            </article>
+          </div>
+
+          <h3>中级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: LoRA 和全量微调有什么区别？各自适用场景？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr><th style="border: 1px solid #ddd; padding: 8px;">维度</th><th style="border: 1px solid #ddd; padding: 8px;">LoRA</th><th style="border: 1px solid #ddd; padding: 8px;">全量微调</th></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">参数量</td><td style="border: 1px solid #ddd; padding: 8px;">原模型 0.1-1%</td><td style="border: 1px solid #ddd; padding: 8px;">100%</td></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">显存</td><td style="border: 1px solid #ddd; padding: 8px;">低（7B 约 16GB）</td><td style="border: 1px solid #ddd; padding: 8px;">高（7B 约 60GB）</td></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">效果</td><td style="border: 1px solid #ddd; padding: 8px;">接近全量</td><td style="border: 1px solid #ddd; padding: 8px;">最佳</td></tr>
+                  <tr><td style="border: 1px solid #ddd; padding: 8px;">场景</td><td style="border: 1px solid #ddd; padding: 8px;">资源有限、快速迭代</td><td style="border: 1px solid #ddd; padding: 8px;">追求极致效果</td></tr>
+                </table>
+                <p><strong>QLoRA</strong>：4-bit 量化 + LoRA，进一步降低显存需求，7B 模型只需 8GB 显存。</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="evaluation" class="section">
+          <span class="tag">评估</span>
+          <h2>评估体系</h2>
+
+          <h3>初级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 为什么 LLM 应用需要专门的评估体系？不能人工评估吗？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>人工评估的问题</strong>：</p>
+                <ul>
+                  <li>成本高、速度慢</li>
+                  <li>主观性强，不同人标准不一</li>
+                  <li>无法频繁执行，阻碍迭代</li>
+                </ul>
+                <p><strong>自动化评估的价值</strong>：</p>
+                <ul>
+                  <li>CI/CD 集成，每次改动自动评估</li>
+                  <li>量化指标，便于对比和追踪</li>
+                  <li>快速发现问题，加速优化</li>
+                </ul>
+                <p><strong>最佳实践</strong>：自动化评估为主 + 人工抽检为辅</p>
+              </div>
+            </article>
+          </div>
+
+          <h3>中级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 如何构建有效的测试集？需要注意什么？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>测试集构成</strong>：</p>
+                <ul>
+                  <li><strong>覆盖度</strong>：涵盖各种问题类型（简单/复杂、常见/边缘）</li>
+                  <li><strong>真实性</strong>：使用真实用户问题，而非人造</li>
+                  <li><strong>标注质量</strong>：Ground Truth 需要专家审核</li>
+                  <li><strong>规模</strong>：至少 50-100 条，越多越好</li>
+                </ul>
+                <p><strong>注意事项</strong>：</p>
+                <ul>
+                  <li>定期更新测试集，避免过拟合</li>
+                  <li>包含"无法回答"的案例</li>
+                  <li>记录评估时间和版本</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="deployment" class="section">
+          <span class="tag">部署</span>
+          <h2>部署与工程化</h2>
+
+          <h3>初级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: LLM 应用部署需要考虑哪些关键因素？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <ul>
+                  <li><strong>并发处理</strong>：LLM 推理慢，需要异步 + 队列</li>
+                  <li><strong>超时控制</strong>：设置合理超时，避免请求堆积</li>
+                  <li><strong>成本控制</strong>：监控 token 消耗，设置预算告警</li>
+                  <li><strong>缓存策略</strong>：相同问题缓存答案，减少调用</li>
+                  <li><strong>日志监控</strong>：记录每次调用的输入、输出、耗时</li>
+                  <li><strong>错误处理</strong>：优雅降级，返回友好错误信息</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+
+          <h3>中级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 如何估算 GPU 显存需求？选择什么规格的 GPU？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>显存估算公式</strong>（FP16）：</p>
+                <pre><code>显存 (GB) ≈ 参数量 (B) × 2</code></pre>
+                <p><strong>示例</strong>：</p>
+                <ul>
+                  <li>7B 模型：约 14GB → 推荐 24GB GPU (3090/4090)</li>
+                  <li>13B 模型：约 26GB → 推荐 40GB GPU (A100)</li>
+                  <li>70B 模型：约 140GB → 需要多卡或量化</li>
+                </ul>
+                <p><strong>量化后</strong>：</p>
+                <ul>
+                  <li>INT8：显存减半</li>
+                  <li>INT4：显存为 1/4</li>
+                </ul>
+                <p><strong>建议</strong>：先用量化版本验证效果，再决定是否需要全精度。</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="system-design" class="section">
+          <span class="tag">系统设计</span>
+          <h2>综合系统设计题</h2>
+
+          <h3>高级</h3>
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>Q: 设计一个企业级知识库问答系统，需要考虑哪些方面？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>需求分析</strong>：</p>
+                <ul>
+                  <li>用户场景：客户自助查询、客服辅助、内部知识共享</li>
+                  <li>文档类型：PDF、Word、HTML、Markdown</li>
+                  <li>性能要求：响应时间、并发量、可用性</li>
+                </ul>
+                <p><strong>架构设计</strong>：</p>
+                <pre><code>用户 → API Gateway → 负载均衡
+                ↓
+         RAG 服务集群
+         ├── 文档处理服务（解析、切分、索引）
+         ├── 检索服务（向量检索 + 关键词检索 + Rerank）
+         └── 生成服务（LLM 推理）
+                ↓
+         存储层
+         ├── 向量数据库（Qdrant/Milvus）
+         ├── 对象存储（文档原文）
+         └── 缓存（Redis）</code></pre>
+                <p><strong>关键设计点</strong>：</p>
+                <ul>
+                  <li><strong>权限控制</strong>：按部门/角色过滤文档</li>
+                  <li><strong>增量更新</strong>：文档变更自动重新索引</li>
+                  <li><strong>监控告警</strong>：成功率、延迟、成本监控</li>
+                  <li><strong>A/B 测试</strong>：对比不同模型/策略效果</li>
+                </ul>
+              </div>
+            </article>
+            <article class="practice-item">
+              <h4>Q: 如何设计一个支持多轮对话的 Agent 系统？</h4>
+              <div style="background: #f0f7ff; padding: 16px; border-radius: 8px; margin-top: 12px;">
+                <p><strong>A:</strong></p>
+                <p><strong>核心组件</strong>：</p>
+                <ul>
+                  <li><strong>对话管理器</strong>：维护会话状态、历史消息</li>
+                  <li><strong>规划器</strong>：分解任务、决定执行顺序</li>
+                  <li><strong>工具执行器</strong>：调用外部工具、处理结果</li>
+                  <li><strong>记忆系统</strong>：短期（当前对话）+ 长期（用户偏好）</li>
+                </ul>
+                <p><strong>状态管理</strong>：</p>
+                <pre><code class="language-python">class AgentState:
+    messages: list[dict]      # 对话历史
+    current_plan: list[str]   # 当前计划
+    tool_results: dict        # 工具执行结果
+    context: dict             # 上下文信息
+    step: int                 # 当前步骤</code></pre>
+                <p><strong>关键挑战</strong>：</p>
+                <ul>
+                  <li>上下文窗口限制：摘要历史、滑动窗口</li>
+                  <li>错误恢复：工具调用失败后的重试/降级</li>
+                  <li>人机协作：何时需要人工确认</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" style="background: #f0f7ff; border-radius: 8px;">
+          <h2>面试准备建议</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>基础扎实</h3>
+              <p>确保理解 LLM 原理、Token、Temperature 等基本概念，这是面试的基础分。</p>
+            </div>
+            <div class="card">
+              <h3>项目经验</h3>
+              <p>准备 1-2 个完整项目，能说清楚：做了什么、为什么这么做、遇到什么问题、如何解决。</p>
+            </div>
+            <div class="card">
+              <h3>动手能力</h3>
+              <p>面试可能会要求写代码或设计系统，平时多练习手写 RAG、Agent 流程。</p>
+            </div>
+            <div class="card">
+              <h3>持续学习</h3>
+              <p>LLM 领域发展快，关注最新论文、开源项目、行业动态。</p>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+  </main>
+</body>
+</html>

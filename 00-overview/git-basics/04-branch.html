@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>分支管理 - Git 入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .example-box {
+      background: #f8f9fa;
+      border-left: 4px solid #4CAF50;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .example-title {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 8px;
+    }
+    .tip-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 0 8px 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Git 入门</a>
+        <a class="current" href="04-branch.html">04 分支管理</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第四章：分支管理</h1>
+      <p>分支是 Git 最强大的功能之一，让你可以同时开发多个功能，互不影响。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：30 分钟</span>
+        <span class="pill">目标：会创建和切换分支</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#what">什么是分支</a>
+        <a href="#basic">基本操作</a>
+        <a href="#merge">合并分支</a>
+        <a href="03-basic-commands.html">← 上一章：基本操作</a>
+        <a href="05-github.html">下一章：GitHub 使用 →</a>
+      </aside>
+
+      <article class="content">
+        <section id="what" class="section">
+          <h2>什么是分支？</h2>
+          <p>分支就像是代码的"平行宇宙"，你可以在不同的分支上做不同的事情，互不影响。</p>
+
+          <div class="note">
+            <h3>通俗理解</h3>
+            <p>想象你在写论文：</p>
+            <ul>
+              <li>主分支（main）：论文的正式版本</li>
+              <li>新分支：你想尝试一种新的写法，但不想影响正式版本</li>
+              <li>你可以在新分支上随便改，改好了再合并到主分支</li>
+            </ul>
+          </div>
+
+          <div class="grid">
+            <div class="card">
+              <h3>主分支（main）</h3>
+              <p>存放稳定的、可发布的代码。</p>
+            </div>
+            <div class="card">
+              <h3>开发分支（dev）</h3>
+              <p>存放正在开发的代码。</p>
+            </div>
+            <div class="card">
+              <h3>功能分支（feature）</h3>
+              <p>开发某个具体功能。</p>
+            </div>
+            <div class="card">
+              <h3>修复分支（fix）</h3>
+              <p>修复某个 bug。</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="basic" class="section">
+          <h2>基本操作</h2>
+
+          <div class="example-box">
+            <div class="example-title">查看分支</div>
+            <pre><code class="language-bash"># 查看所有分支
+git branch
+
+# 输出说明：
+# * main      - 当前分支（前面有 * 号）
+#   dev       - 其他分支</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">创建新分支</div>
+            <pre><code class="language-bash"># 创建新分支
+git branch new-feature
+
+# 创建并切换到新分支（推荐）
+git checkout -b new-feature
+
+# 或者用 switch（更新的命令）
+git switch -c new-feature</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">切换分支</div>
+            <pre><code class="language-bash"># 切换到指定分支
+git checkout main
+
+# 切换到 dev 分支
+git checkout dev
+
+# 或者用 switch
+git switch main</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">删除分支</div>
+            <pre><code class="language-bash"># 删除已合并的分支
+git branch -d branch-name
+
+# 强制删除（即使没有合并）
+git branch -D branch-name</code></pre>
+          </div>
+        </section>
+
+        <section id="merge" class="section">
+          <h2>合并分支</h2>
+          <p>把一个分支的修改合并到另一个分支。</p>
+
+          <div class="example-box">
+            <div class="example-title">合并分支</div>
+            <pre><code class="language-bash"># 1. 切换到目标分支（比如 main）
+git checkout main
+
+# 2. 合并其他分支
+git merge new-feature
+
+# 3. 合并完成后，可以删除分支
+git branch -d new-feature</code></pre>
+          </div>
+
+          <div class="example-box">
+            <div class="example-title">完整流程示例</div>
+            <pre><code class="language-bash"># 1. 从 main 分支创建新分支
+git checkout -b feature-login
+
+# 2. 在新分支上开发（修改代码）
+# ... 编辑代码 ...
+
+# 3. 提交修改
+git add .
+git commit -m "完成登录功能"
+
+# 4. 切换回 main 分支
+git checkout main
+
+# 5. 合并功能分支
+git merge feature-login
+
+# 6. 推送到 GitHub
+git push
+
+# 7. 删除功能分支
+git branch -d feature-login</code></pre>
+          </div>
+
+          <div class="tip-box">
+            <strong>💡 小贴士：</strong>
+            <ul>
+              <li>每个功能一个分支，保持分支独立</li>
+              <li>分支名要有意义，比如 <code>feature-login</code>、<code>fix-bug-123</code></li>
+              <li>开发完成后及时合并和删除分支</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>本章小结</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 你学会了</h3>
+              <ul>
+                <li>理解分支的概念</li>
+                <li>查看、创建、切换、删除分支</li>
+                <li>合并分支</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>➡️ 下一步</h3>
+              <p>下一章我们学习如何使用 GitHub。</p>
+              <a href="05-github.html" class="btn-primary">继续学习：GitHub 使用 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">分支是 Git 最强大的功能，多练习就会了。</div>
+  </footer>
+</body>
+</html>

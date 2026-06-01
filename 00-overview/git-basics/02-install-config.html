@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>安装和配置 - Git 入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Git 入门</a>
+        <a class="current" href="02-install-config.html">02 安装和配置</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第二章：安装和配置</h1>
+      <p>安装 Git 并进行基本配置，为后续使用做准备。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：30 分钟</span>
+        <span class="pill">目标：能在电脑上使用 Git</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#install">安装 Git</a>
+        <a href="#config">基本配置</a>
+        <a href="#verify">验证安装</a>
+        <a href="01-what-is-git.html">← 上一章：Git 是什么</a>
+        <a href="03-basic-commands.html">下一章：基本操作 →</a>
+      </aside>
+
+      <article class="content">
+        <section id="install" class="section">
+          <h2>安装 Git</h2>
+          
+          <h3>Windows 用户</h3>
+          <ol>
+            <li>访问 <a href="https://git-scm.com/downloads" target="_blank">git-scm.com/downloads</a></li>
+            <li>点击 "Download for Windows"</li>
+            <li>双击下载的安装包</li>
+            <li>一路点击 "Next" 使用默认设置即可</li>
+            <li>安装完成后，右键桌面，应该能看到 "Git Bash Here" 选项</li>
+          </ol>
+
+          <h3>Mac 用户</h3>
+          <p>Mac 通常自带 Git，打开终端输入以下命令检查：</p>
+          <pre><code class="language-bash">git --version</code></pre>
+          <p>如果显示版本号（如 <code>git version 2.39.0</code>），说明已经安装了。</p>
+          <p>如果没有安装，会提示你安装 Xcode Command Line Tools，按提示安装即可。</p>
+
+          <h3>也可以用 Homebrew 安装（Mac）</h3>
+          <pre><code class="language-bash"># 安装 Homebrew（如果没有的话）
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 安装 Git
+brew install git</code></pre>
+        </section>
+
+        <section id="config" class="section">
+          <h2>基本配置</h2>
+          <p>安装完成后，需要配置你的用户名和邮箱。这些信息会记录在每次提交中。</p>
+
+          <div class="note">
+            <strong>重要</strong>：请把下面的 "你的名字" 和 "你的邮箱" 替换成你自己的信息。
+          </div>
+
+          <pre><code class="language-bash"># 配置用户名（建议用 GitHub 用户名）
+git config --global user.name "你的名字"
+
+# 配置邮箱（建议用 GitHub 注册邮箱）
+git config --global user.email "你的邮箱@example.com"</code></pre>
+
+          <h3>示例</h3>
+          <pre><code class="language-bash"># 示例（请替换成你自己的信息）
+git config --global user.name "zhangsan"
+git config --global user.email "zhangsan@example.com"</code></pre>
+
+          <h3>查看配置</h3>
+          <pre><code class="language-bash"># 查看所有配置
+git config --list
+
+# 查看特定配置
+git config user.name
+git config user.email</code></pre>
+
+          <div class="tip-box">
+            <strong>💡 小贴士：</strong><code>--global</code> 表示全局配置，对所有仓库生效。只需要配置一次。
+          </div>
+        </section>
+
+        <section id="verify" class="section">
+          <h2>验证安装</h2>
+          <p>运行以下命令，确认 Git 已经正确安装和配置：</p>
+
+          <pre><code class="language-bash"># 检查 Git 版本
+git --version
+# 输出类似: git version 2.39.0
+
+# 检查用户名
+git config user.name
+# 输出: 你配置的用户名
+
+# 检查邮箱
+git config user.email
+# 输出: 你配置的邮箱</code></pre>
+
+          <div class="note">
+            <strong>如果所有命令都能正常输出，恭喜你！Git 已经配置好了。</strong>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>本章小结</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 你学会了</h3>
+              <ul>
+                <li>安装 Git</li>
+                <li>配置用户名和邮箱</li>
+                <li>验证安装是否成功</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>➡️ 下一步</h3>
+              <p>下一章我们学习 Git 的基本操作：clone、add、commit、push、pull。</p>
+              <a href="03-basic-commands.html" class="btn-primary">继续学习：基本操作 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">配置好后，就可以开始使用 Git 了！</div>
+  </footer>
+</body>
+</html>

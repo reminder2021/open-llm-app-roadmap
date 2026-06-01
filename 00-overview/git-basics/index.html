@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git 入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="../index.html">00 总览</a>
+        <a class="current" href="index.html">Git 入门</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>Git 入门</h1>
+      <p>Git 是开发者必备的工具，用来管理代码版本、协作开发。这个模块用最简单的方式教你学会 Git 的基本操作。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：1-2 天</span>
+        <span class="pill">目标：会用 Git 管理自己的代码</span>
+        <span class="pill">前置要求：会用命令行</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>章节导航</h2>
+        <a class="current" href="index.html">学习指引</a>
+        <a href="01-what-is-git.html">01 Git 是什么</a>
+        <a href="02-install-config.html">02 安装和配置</a>
+        <a href="03-basic-commands.html">03 基本操作</a>
+        <a href="04-branch.html">04 分支管理</a>
+        <a href="05-github.html">05 GitHub 使用</a>
+        <a href="../index.html">返回 00 总览</a>
+      </aside>
+
+      <article class="content">
+        <section class="section">
+          <h2>为什么需要学 Git？</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>版本管理</h3>
+              <p>代码改坏了可以回退，不用担心丢失之前的版本。</p>
+            </div>
+            <div class="card">
+              <h3>协作开发</h3>
+              <p>多人同时修改代码，不会互相覆盖。</p>
+            </div>
+            <div class="card">
+              <h3>代码备份</h3>
+              <p>代码存在 GitHub 上，电脑坏了也不怕。</p>
+            </div>
+            <div class="card">
+              <h3>提交作业</h3>
+              <p>在本学习路线中，你需要用 Git 提交学习成果。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>这个模块适合谁？</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 适合你</h3>
+              <ul>
+                <li>从来没用过 Git</li>
+                <li>听说过但不会用</li>
+                <li>只会用 GitHub 网页上传文件</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>⏭️ 可以跳过</h3>
+              <ul>
+                <li>已经会用 git add/commit/push</li>
+                <li>熟悉分支操作</li>
+                <li>用过 GitHub/GitLab 协作</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>学习路径</h2>
+          <div class="timeline">
+            <article class="timeline-item">
+              <h3>第 1 天：理解 + 安装 + 配置</h3>
+              <p>理解 Git 的概念，安装 Git，配置基本信息。</p>
+            </article>
+            <article class="timeline-item">
+              <h3>第 2 天：基本操作 + GitHub</h3>
+              <p>学会 clone、add、commit、push、pull，以及使用 GitHub。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>常用命令速查</h2>
+          <div class="note">
+            <p>先有个印象，后面会详细讲解：</p>
+            <pre><code class="language-bash">git clone <仓库地址>     # 下载远程仓库
+git add <文件>           # 添加文件到暂存区
+git commit -m "说明"     # 提交更改
+git push                 # 推送到远程仓库
+git pull                 # 从远程仓库拉取更新
+git status               # 查看当前状态
+git log                  # 查看提交历史</code></pre>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>准备好了吗？</h2>
+          <p>如果你已经准备好开始学习，点击下面的按钮进入第一章：</p>
+          <div style="text-align: center; margin-top: 20px;">
+            <a href="01-what-is-git.html" class="btn-primary">开始学习：Git 是什么 →</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">Git 学习不难，关键是多练习。</div>
+  </footer>
+</body>
+</html>

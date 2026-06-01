@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git 是什么 - Git 入门</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../../index.html">主页</a>
+        <a href="index.html">Git 入门</a>
+        <a class="current" href="01-what-is-git.html">01 Git 是什么</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>第一章：Git 是什么</h1>
+      <p>用最简单的方式理解 Git 的概念和用途。</p>
+      <div class="meta-row">
+        <span class="pill">建议时长：30 分钟</span>
+        <span class="pill">目标：理解 Git 能做什么</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>本章内容</h2>
+        <a href="#what">Git 是什么</a>
+        <a href="#why">为什么需要 Git</a>
+        <a href="#concept">核心概念</a>
+        <a href="index.html">← 返回入口</a>
+        <a href="02-install-config.html">下一章：安装和配置 →</a>
+      </aside>
+
+      <article class="content">
+        <section id="what" class="section">
+          <h2>Git 是什么？</h2>
+          <p>Git 是一个<strong>版本控制工具</strong>，用来记录代码的每一次修改。</p>
+          
+          <div class="note">
+            <h3>通俗理解</h3>
+            <p>想象你在写论文：</p>
+            <ul>
+              <li>你可能会保存多个版本：论文_v1.doc、论文_v2.doc、论文_最终版.doc、论文_最终版_真的最终版.doc</li>
+              <li>Git 就是帮你自动管理这些版本的工具</li>
+              <li>你可以随时回到任何一个版本，不用担心改坏了</li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="why" class="section">
+          <h2>为什么需要 Git？</h2>
+          
+          <div class="grid">
+            <div class="card">
+              <h3>🔄 版本管理</h3>
+              <p>每次修改都有记录，改坏了可以回退。</p>
+              <pre><code class="language-bash"># 查看历史版本
+git log
+
+# 回退到某个版本
+git checkout <版本号></code></pre>
+            </div>
+            
+            <div class="card">
+              <h3>👥 团队协作</h3>
+              <p>多人同时修改代码，不会互相覆盖。</p>
+              <pre><code class="language-bash"># 拉取别人的代码
+git pull
+
+# 推送自己的代码
+git push</code></pre>
+            </div>
+            
+            <div class="card">
+              <h3>☁️ 代码备份</h3>
+              <p>代码存在 GitHub 上，电脑坏了也不怕。</p>
+              <pre><code class="language-bash"># 代码已经自动同步到 GitHub
+# 任何一台电脑都可以下载
+git clone <仓库地址></code></pre>
+            </div>
+            
+            <div class="card">
+              <h3>🌿 分支开发</h3>
+              <p>可以同时开发多个功能，互不影响。</p>
+              <pre><code class="language-bash"># 创建新分支
+git checkout -b new-feature
+
+# 切换回主分支
+git checkout main</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="concept" class="section">
+          <h2>核心概念</h2>
+          <p>理解这几个概念，Git 就学会了一半：</p>
+          
+          <div class="grid">
+            <div class="card">
+              <h3>工作区（Working Directory）</h3>
+              <p>你正在编辑的文件，就是工作区。</p>
+              <p><strong>通俗理解</strong>：你正在写的文档。</p>
+            </div>
+            
+            <div class="card">
+              <h3>暂存区（Staging Area）</h3>
+              <p>准备提交的修改，先放在暂存区。</p>
+              <p><strong>通俗理解</strong>：你准备保存的草稿。</p>
+            </div>
+            
+            <div class="card">
+              <h3>本地仓库（Local Repository）</h3>
+              <p>提交后的代码，存在本地仓库。</p>
+              <p><strong>通俗理解</strong>：你电脑上的文档版本。</p>
+            </div>
+            
+            <div class="card">
+              <h3>远程仓库（Remote Repository）</h3>
+              <p>存在 GitHub 上的代码仓库。</p>
+              <p><strong>通俗理解</strong>：云盘上的文档备份。</p>
+            </div>
+          </div>
+          
+          <div class="note">
+            <h3>工作流程</h3>
+            <pre><code>修改文件 → 添加到暂存区 → 提交到本地仓库 → 推送到远程仓库
+
+  工作区      git add       git commit        git push
+ (编辑)    ──────────→  (暂存)  ──────────→ (本地)  ──────────→ (GitHub)</code></pre>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Git vs GitHub</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>Git</h3>
+              <ul>
+                <li>是一个工具（软件）</li>
+                <li>安装在你电脑上</li>
+                <li>用来管理代码版本</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>GitHub</h3>
+              <ul>
+                <li>是一个网站</li>
+                <li>用来存储代码仓库</li>
+                <li>方便团队协作</li>
+              </ul>
+            </div>
+          </div>
+          <div class="note">
+            <strong>关系</strong>：Git 是工具，GitHub 是平台。你用 Git 这个工具，把代码上传到 GitHub 这个平台。
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>本章小结</h2>
+          <div class="grid">
+            <div class="card">
+              <h3>✅ 你学会了</h3>
+              <ul>
+                <li>Git 是版本控制工具</li>
+                <li>Git 可以管理代码版本、协作开发、备份代码</li>
+                <li>Git 和 GitHub 的区别</li>
+                <li>核心概念：工作区、暂存区、本地仓库、远程仓库</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>➡️ 下一步</h3>
+              <p>下一章我们安装 Git 并进行基本配置。</p>
+              <a href="02-install-config.html" class="btn-primary">继续学习：安装和配置 →</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">理解概念后，最重要的是动手实践。</div>
+  </footer>
+</body>
+</html>

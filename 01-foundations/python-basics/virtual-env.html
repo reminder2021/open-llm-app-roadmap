@@ -486,6 +486,43 @@ rm -rf venv
 # 然后可以重新创建
 python3 -m venv venv</code></pre>
           </div>
+
+          <div class="example-box">
+            <div class="example-title">问题 5：pip 被 alias 到系统路径</div>
+            <p>有些电脑上 <code>pip</code> 命令被 alias 到了系统路径（如 <code>/usr/bin/pip3</code>），导致即使激活了虚拟环境，<code>pip install</code> 仍然安装到系统目录。</p>
+
+            <div class="warning-box">
+              <strong>⚠️ 问题表现</strong>：激活虚拟环境后，运行 <code>which pip</code> 显示的不是 venv 目录下的路径。
+            </div>
+
+            <p><strong>解决方案：使用 <code>python3 -m pip</code></strong></p>
+            <pre><code class="language-bash"># ❌ 可能指向系统 pip
+pip install requests
+
+# ✅ 确保使用虚拟环境中的 pip
+python3 -m pip install requests
+
+# ✅ 安装 requirements.txt
+python3 -m pip install -r requirements.txt
+
+# ✅ 查看已安装的包
+python3 -m pip list</code></pre>
+
+            <div class="tip-box">
+              <strong>💡 为什么这样更可靠？</strong>
+              <ul>
+                <li><code>python3 -m pip</code> 会使用当前 Python3 解释器对应的 pip</li>
+                <li>即使 pip 被 alias 或 PATH 配置有问题，也能正确工作</li>
+                <li>推荐在所有场景下都使用这种方式</li>
+              </ul>
+            </div>
+
+            <p><strong>验证是否生效：</strong></p>
+            <pre><code class="language-bash"># 检查 pip 路径
+python3 -m pip --version
+# 应该显示 venv 目录下的路径，如：
+# pip 23.x.x from /Users/xxx/my_project/venv/lib/python3.x/site-packages/pip (python 3.x)</code></pre>
+          </div>
         </section>
 
         <!-- 练习 -->

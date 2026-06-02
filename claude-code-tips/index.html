@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude Code 使用技巧大全</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    .tip-card {
+      border-left: 4px solid var(--accent);
+      background: var(--green-soft);
+      padding: 14px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 12px 0;
+    }
+    .tip-card.warning {
+      border-left-color: var(--amber);
+      background: var(--amber-soft);
+    }
+    .code-block {
+      background: #202124;
+      color: #f4f7f6;
+      padding: 14px 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 12px 0;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .feature-item {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .feature-item h4 {
+      margin: 0 0 10px;
+      color: var(--accent-strong);
+    }
+    .shortcut-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+    .shortcut-table th,
+    .shortcut-table td {
+      border: 1px solid var(--line);
+      padding: 10px 14px;
+      text-align: left;
+    }
+    .shortcut-table th {
+      background: var(--green-soft);
+      font-weight: 600;
+    }
+    .shortcut-table tr:nth-child(even) {
+      background: rgba(0,0,0,0.02);
+    }
+    kbd {
+      background: #ecefed;
+      border: 1px solid #d4d4d4;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../00-overview/index.html">总览</a>
+        <a href="../04-rag/index.html">RAG</a>
+        <a href="../05-tool-calling-langchain-langgraph/index.html">工具调用</a>
+        <a href="../06-finetuning/index.html">微调</a>
+        <a href="../09-capstone-projects/index.html">项目</a>
+        <a href="../10-interview-questions/index.html">面试题</a>
+        <a href="../showcase/index.html">作品展示</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>Claude Code 使用技巧大全</h1>
+      <p>从入门到精通的完整指南，涵盖安装配置、记忆系统、Hooks、MCP扩展、自定义命令等所有进阶技巧。</p>
+      <div class="meta-row">
+        <span class="pill">AI 编程助手</span>
+        <span class="pill">效率提升 3-5 倍</span>
+        <span class="pill">持续更新中</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>一、什么是 Claude Code？</h2>
+      <p>Claude Code 是 Anthropic 推出的命令行 AI 编程助手，它能深度理解整个代码库，提供智能代码生成、调试、重构等能力。与传统 IDE 插件不同，Claude Code 通过终端实现与现有工具的无缝融合。</p>
+      
+      <div class="feature-grid">
+        <div class="feature-item">
+          <h4>🧠 代码理解能力</h4>
+          <p>几秒钟映射整个代码库结构，理解项目依赖关系</p>
+        </div>
+        <div class="feature-item">
+          <h4>📝 多文件智能编辑</h4>
+          <p>跨文件修改和重构一气呵成，支持复杂重构操作</p>
+        </div>
+        <div class="feature-item">
+          <h4>🔗 深度 Git 集成</h4>
+          <p>自动解决合并冲突、生成 commit、创建 PR</p>
+        </div>
+        <div class="feature-item">
+          <h4>💾 记忆系统</h4>
+          <p>跨会话保持上下文，项目越用越懂你</p>
+        </div>
+        <div class="feature-item">
+          <h4>🔌 MCP 扩展</h4>
+          <p>连接外部服务，能力无限扩展</p>
+        </div>
+        <div class="feature-item">
+          <h4>🤖 子代理系统</h4>
+          <p>专业化的任务委派，支持多代理协作</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>二、安装与配置</h2>
+      
+      <h3>2.1 系统要求</h3>
+      <table class="shortcut-table">
+        <tr>
+          <th>系统</th>
+          <th>要求</th>
+        </tr>
+        <tr>
+          <td>macOS</td>
+          <td>macOS 10.15 (Catalina) 及以上</td>
+        </tr>
+        <tr>
+          <td>Windows</td>
+          <td>Windows 10 及以上，需安装 WSL2</td>
+        </tr>
+        <tr>
+          <td>Linux</td>
+          <td>主流发行版均支持</td>
+        </tr>
+        <tr>
+          <td>Node.js</td>
+          <td>20.0.0 及以上版本</td>
+        </tr>
+      </table>
+
+      <h3>2.2 安装步骤</h3>
+      <div class="code-block">
+# NPM 全局安装（推荐）
+npm install -g @anthropic-ai/claude-code
+
+# 验证安装
+claude --version
+
+# 直接运行（无需安装）
+npx @anthropic-ai/claude-code
+      </div>
+
+      <h3>2.3 认证方式</h3>
+      <table class="shortcut-table">
+        <tr>
+          <th>方式</th>
+          <th>适用场景</th>
+          <th>说明</th>
+        </tr>
+        <tr>
+          <td>OAuth 登录</td>
+          <td>个人用户</td>
+          <td>最简单，直接用 Anthropic 账号</td>
+        </tr>
+        <tr>
+          <td>API Key</td>
+          <td>企业用户/高级用户</td>
+          <td>更灵活，支持自定义配额</td>
+        </tr>
+      </table>
+
+      <div class="code-block">
+# 使用 API Key 认证
+export ANTHROPIC_API_KEY="your-api-key-here"
+
+# 或者通过配置命令
+claude config set apiKey your-api-key-here
+      </div>
+
+      <h3>2.4 配置文件位置</h3>
+      <table class="shortcut-table">
+        <tr>
+          <th>文件</th>
+          <th>路径</th>
+          <th>作用</th>
+        </tr>
+        <tr>
+          <td>全局配置</td>
+          <td><code>~/.claude.json</code></td>
+          <td>用户级别设置</td>
+        </tr>
+        <tr>
+          <td>全局记忆</td>
+          <td><code>~/.claude/CLAUDE.md</code></td>
+          <td>所有项目通用的记忆</td>
+        </tr>
+        <tr>
+          <td>项目配置</td>
+          <td><code>.claude/settings.json</code></td>
+          <td>项目级别设置</td>
+        </tr>
+        <tr>
+          <td>项目记忆</td>
+          <td><code>CLAUDE.md</code></td>
+          <td>项目根目录的记忆文件</td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>三、CLAUDE.md 记忆系统</h2>
+      <p>CLAUDE.md 是 Claude Code 的核心特性之一，它会在每次会话开始时自动加载到上下文中，让 Claude 了解你的项目和偏好。</p>
+      
+      <h3>3.1 创建方式</h3>
+      <div class="code-block">
+# 方式一：使用 /init 命令自动生成
+/init
+
+# 方式二：手动创建
+touch CLAUDE.md
+      </div>
+
+      <h3>3.2 推荐配置模板</h3>
+      <div class="code-block">
+# 项目概要
+技术栈：Next.js 15 + tRPC + PostgreSQL
+跑测试：pnpm test
+
+## 代码风格
+- 组件文件用 named export，不用 default export
+- 优先使用 ES modules (import/export) 语法
+- 解构导入：import { foo } from 'bar'
+
+## 全局约定
+- 金额相关计算一律用整数表示"分"，禁止浮点数
+- API 响应统一包裹在 { data, error } 结构里
+- Commit message 用中文，格式：模块: 做了什么
+
+## 工作流
+- 修改代码后务必运行 typecheck
+- 优先运行单个测试，而非整个测试套件
+      </div>
+
+      <h3>3.3 存放位置</h3>
+      <ul>
+        <li><strong>仓库根目录</strong>：最常见，命名为 CLAUDE.md 并提交到 git</li>
+        <li><strong>子目录</strong>：处理子目录文件时按需拉入</li>
+        <li><strong>Home 文件夹</strong>：<code>~/.claude/CLAUDE.md</code>，适用于所有会话</li>
+      </ul>
+
+      <div class="tip-card">
+        <strong>💡 最佳实践：</strong>CLAUDE.md 内容控制在 30-150 行以内，只放 AI 需要在开口之前就知道的信息。规则放 CLAUDE.md，工作流放 Skills。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>四、核心命令速查</h2>
+      
+      <h3>4.1 CLI 启动参数</h3>
+      <div class="code-block">
+# 基础启动
+claude
+
+# 指定工作目录
+claude --cwd /path/to/project
+
+# 带初始提示启动
+claude "帮我分析这个项目的结构"
+
+# 调试模式
+claude --debug
+
+# 跳过权限确认（个人项目推荐）
+claude --dangerously-skip-permissions
+      </div>
+
+      <h3>4.2 会话内快捷键</h3>
+      <table class="shortcut-table">
+        <tr>
+          <th>快捷键</th>
+          <th>功能</th>
+        </tr>
+        <tr>
+          <td><kbd>Enter</kbd></td>
+          <td>发送消息（单行）</td>
+        </tr>
+        <tr>
+          <td><kbd>Shift</kbd> + <kbd>Enter</kbd></td>
+          <td>换行（多行输入）</td>
+        </tr>
+        <tr>
+          <td><kbd>Ctrl</kbd> + <kbd>C</kbd></td>
+          <td>中断当前操作</td>
+        </tr>
+        <tr>
+          <td><kbd>Ctrl</kbd> + <kbd>D</kbd></td>
+          <td>退出 Claude Code</td>
+        </tr>
+        <tr>
+          <td><kbd>↑</kbd> / <kbd>↓</kbd></td>
+          <td>浏览历史命令</td>
+        </tr>
+        <tr>
+          <td><kbd>Tab</kbd></td>
+          <td>自动补全</td>
+        </tr>
+      </table>
+
+      <h3>4.3 常用斜杠命令</h3>
+      <table class="shortcut-table">
+        <tr>
+          <th>命令</th>
+          <th>功能</th>
+          <th>示例</th>
+        </tr>
+        <tr>
+          <td><code>/init</code></td>
+          <td>初始化项目，生成 CLAUDE.md</td>
+          <td>/init</td>
+        </tr>
+        <tr>
+          <td><code>/memory</code></td>
+          <td>打开记忆文件编辑</td>
+          <td>/memory</td>
+        </tr>
+        <tr>
+          <td><code>/clear</code></td>
+          <td>清除对话历史</td>
+          <td>/clear</td>
+        </tr>
+        <tr>
+          <td><code>/compact</code></td>
+          <td>压缩上下文，释放 token</td>
+          <td>/compact</td>
+        </tr>
+        <tr>
+          <td><code>/cost</code></td>
+          <td>查看当前会话费用</td>
+          <td>/cost</td>
+        </tr>
+        <tr>
+          <td><code>/help</code></td>
+          <td>查看帮助信息</td>
+          <td>/help</td>
+        </tr>
+        <tr>
+          <td><code>/add-dir</code></td>
+          <td>添加额外工作目录</td>
+          <td>/add-dir ./libs</td>
+        </tr>
+        <tr>
+          <td><code>/file</code></td>
+          <td>将文件添加到上下文</td>
+          <td>/file src/main.ts</td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>五、Hooks 钩子系统</h2>
+      <p>Hooks 是 Claude Code 的事件驱动扩展机制，可以在关键交互节点插入自定义逻辑，实现自动化工作流。</p>
+      
+      <h3>5.1 Hook 类型一览</h3>
+      <table class="shortcut-table">
+        <tr>
+          <th>Hook</th>
+          <th>触发时机</th>
+          <th>常见用途</th>
+        </tr>
+        <tr>
+          <td><code>PreToolUse</code></td>
+          <td>工具执行前</td>
+          <td>阻止危险命令、验证文件路径、自动批准安全操作</td>
+        </tr>
+        <tr>
+          <td><code>PostToolUse</code></td>
+          <td>工具执行后</td>
+          <td>运行格式化工具、触发 linter、记录文件变更</td>
+        </tr>
+        <tr>
+          <td><code>SessionStart</code></td>
+          <td>会话开始时</td>
+          <td>注入 git 状态、加载 TODO 列表、设置环境上下文</td>
+        </tr>
+        <tr>
+          <td><code>UserPromptSubmit</code></td>
+          <td>提交提示时</td>
+          <td>注入项目上下文、验证请求、添加动态信息</td>
+        </tr>
+        <tr>
+          <td><code>Stop</code></td>
+          <td>Claude 完成响应时</td>
+          <td>验证任务完成、运行测试、生成摘要</td>
+        </tr>
+        <tr>
+          <td><code>PermissionRequest</code></td>
+          <td>权限对话框出现前</td>
+          <td>自动批准测试命令、阻止访问敏感文件</td>
+        </tr>
+      </table>
+
+      <h3>5.2 配置示例</h3>
+      <div class="code-block">
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "node .claude/hooks/session-context.mjs"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "type": "command",
+        "command": "prettier --write $file_path"
+      }
+    ]
+  }
+}
+      </div>
+
+      <h3>5.3 SessionStart Hook 示例</h3>
+      <div class="code-block">
+// .claude/hooks/session-context.mjs
+import { execSync } from 'child_process';
+
+const branch = execSync('git branch --show-current').toString().trim();
+const status = execSync('git status --short').toString().trim();
+const log = execSync('git log --oneline -5').toString().trim();
+
+console.log(`
+## 当前环境
+- 分支：${branch}
+- 最近提交：
+${log}
+- 工作区状态：
+${status || '干净'}
+`);
+      </div>
+
+      <div class="tip-card">
+        <strong>💡 最佳实践：</strong>
+        <ul>
+          <li>设置合理的超时时间，避免 Hook 阻塞 Claude Code</li>
+          <li>使用 JSON 格式通信，确保 Claude Code 能正确解析</li>
+          <li>记录日志，方便调试和审计</li>
+          <li>优雅降级：Hook 失败时不应阻断正常工作流</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>六、MCP 扩展配置</h2>
+      <p>MCP（Model Context Protocol）允许 Claude Code 连接外部服务，扩展其能力边界。</p>
+      
+      <h3>6.1 配置文件位置</h3>
+      <ul>
+        <li><strong>项目级</strong>：<code>.claude/settings.json</code></li>
+        <li><strong>用户级</strong>：<code>~/.claude/settings.json</code></li>
+      </ul>
+
+      <h3>6.2 常用 MCP 服务器</h3>
+      <table class="shortcut-table">
+        <tr>
+          <th>MCP 服务器</th>
+          <th>功能</th>
+          <th>适用场景</th>
+        </tr>
+        <tr>
+          <td>filesystem</td>
+          <td>文件系统访问</td>
+          <td>跨目录文件操作</td>
+        </tr>
+        <tr>
+          <td>github</td>
+          <td>GitHub API 集成</td>
+          <td>PR、Issue、代码审查</td>
+        </tr>
+        <tr>
+          <td>postgres</td>
+          <td>PostgreSQL 数据库</td>
+          <td>数据库查询、Schema 管理</td>
+        </tr>
+        <tr>
+          <td>playwright</td>
+          <td>浏览器自动化</td>
+          <td>E2E 测试、网页抓取</td>
+        </tr>
+        <tr>
+          <td>figma</td>
+          <td>Figma 设计稿</td>
+          <td>设计稿转代码</td>
+        </tr>
+      </table>
+
+      <h3>6.3 配置示例</h3>
+      <div class="code-block">
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/dir"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+  }
+}
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>七、自定义命令</h2>
+      <p>通过自定义斜杠命令，可以将常用工作流封装成一键触发的操作。</p>
+      
+      <h3>7.1 创建方式</h3>
+      <div class="code-block">
+# 创建命令目录
+mkdir -p .claude/commands
+
+# 创建命令文件
+touch .claude/commands/deploy.md
+      </div>
+
+      <h3>7.2 命令文件格式</h3>
+      <div class="code-block">
+---
+name: 部署到生产环境
+description: 自动化 GitHub 和 Vercel 部署流程
+---
+
+## 部署步骤
+- [ ] Step 1: 运行 `pnpm run build` 检查构建
+- [ ] Step 2: 创建 GitHub 私有仓库（可选）
+- [ ] Step 3: Push 代码到 GitHub
+- [ ] Step 4: 部署到 Vercel
+- [ ] Step 5: 验证部署结果
+
+**重要**：只有 build 成功后才能继续
+      </div>
+
+      <h3>7.3 实用命令示例</h3>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <h4>/deploy</h4>
+          <p>一键部署到生产环境</p>
+        </div>
+        <div class="feature-item">
+          <h4>/review</h4>
+          <p>代码质量审查</p>
+        </div>
+        <div class="feature-item">
+          <h4>/test</h4>
+          <p>运行测试并生成报告</p>
+        </div>
+        <div class="feature-item">
+          <h4>/refactor</h4>
+          <p>代码重构助手</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>八、权限管理</h2>
+      <p>Claude Code 采用保守的权限策略，你可以根据需要自定义允许列表。</p>
+      
+      <h3>8.1 四种管理方式</h3>
+      <table class="shortcut-table">
+        <tr>
+          <th>方式</th>
+          <th>说明</th>
+          <th>适用场景</th>
+        </tr>
+        <tr>
+          <td>交互式允许</td>
+          <td>每次操作前询问</td>
+          <td>默认行为，最安全</td>
+        </tr>
+        <tr>
+          <td>会话级允许</td>
+          <td>当前会话内允许</td>
+          <td>临时信任</td>
+        </tr>
+        <tr>
+          <td>项目级允许</td>
+          <td>保存到项目配置</td>
+          <td>团队共享的规则</td>
+        </tr>
+        <tr>
+          <td>跳过权限</td>
+          <td><code>--dangerously-skip-permissions</code></td>
+          <td>个人项目，追求效率</td>
+        </tr>
+      </table>
+
+      <h3>8.2 配置允许列表</h3>
+      <div class="code-block">
+// .claude/settings.json
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Edit",
+      "Bash(npm run build)",
+      "Bash(npm test)",
+      "Bash(git *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(curl *)"
+    ]
+  }
+}
+      </div>
+
+      <div class="tip-card warning">
+        <strong>⚠️ 安全提示：</strong>跳过权限模式仅限个人项目使用，生产环境或团队协作时务必启用权限检查。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>九、子代理系统</h2>
+      <p>子代理（Subagents）允许你将复杂任务分解给专业的代理处理，实现多代理协作。</p>
+      
+      <h3>9.1 内置子代理</h3>
+      <table class="shortcut-table">
+        <tr>
+          <th>代理</th>
+          <th>功能</th>
+        </tr>
+        <tr>
+          <td>planner</td>
+          <td>功能实现规划</td>
+        </tr>
+        <tr>
+          <td>architect</td>
+          <td>系统设计决策</td>
+        </tr>
+        <tr>
+          <td>code-reviewer</td>
+          <td>代码质量和安全审查</td>
+        </tr>
+        <tr>
+          <td>tdd-guide</td>
+          <td>测试驱动开发</td>
+        </tr>
+        <tr>
+          <td>build-error-resolver</td>
+          <td>构建错误解决</td>
+        </tr>
+      </table>
+
+      <h3>9.2 自定义子代理</h3>
+      <div class="code-block">
+# .claude/agents/security-reviewer.md
+---
+name: security-reviewer
+description: 安全漏洞分析
+tools: ["Read", "Grep", "Glob", "Bash"]
+model: opus
+---
+
+你是一个安全专家，专注于识别代码中的安全漏洞...
+
+检查清单：
+1. SQL 注入风险
+2. XSS 漏洞
+3. 硬编码密钥
+4. 不安全的依赖
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>十、效率提升技巧</h2>
+      
+      <h3>10.1 使用强调词提高遵循度</h3>
+      <div class="code-block">
+## IMPORTANT: 必须遵守的规则
+- YOU MUST 在修改代码前创建备份
+- NEVER 直接修改 node_modules
+- ALWAYS 使用 TypeScript 严格模式
+      </div>
+
+      <h3>10.2 提供清晰的上下文</h3>
+      <div class="tip-card">
+        <strong>❌ 模糊提示：</strong>"帮我修复这个 bug"
+      </div>
+      <div class="tip-card">
+        <strong>✅ 清晰提示：</strong>"src/api/users.ts 第 45 行的 getUser 函数在用户 ID 为 null 时会抛出 TypeError，请添加空值检查并返回 400 错误"
+      </div>
+
+      <h3>10.3 分步执行复杂任务</h3>
+      <ul>
+        <li>将大任务拆解为小步骤</li>
+        <li>每完成一步后验证结果</li>
+        <li>使用 <code>/compact</code> 定期清理上下文</li>
+        <li>善用 <code>Esc</kbd> 键中断不必要的操作</li>
+      </ul>
+
+      <h3>10.4 别名设置</h3>
+      <div class="code-block">
+# 在 ~/.zshrc 或 ~/.bashrc 中添加
+alias cc="claude --dangerously-skip-permissions"
+alias ccd="claude --debug"
+
+# 使配置生效
+source ~/.zshrc
+      </div>
+
+      <h3>10.5 常用工作流</h3>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <h4>🔍 代码探索</h4>
+          <p>先让 Claude 理解项目结构，再进行修改</p>
+        </div>
+        <div class="feature-item">
+          <h4>🧪 测试驱动</h4>
+          <p>先写测试，再让 Claude 实现功能</p>
+        </div>
+        <div class="feature-item">
+          <h4>🔄 迭代优化</h4>
+          <p>逐步完善，每次只改一个小点</p>
+        </div>
+        <div class="feature-item">
+          <h4>📋 检查清单</h4>
+          <p>用 checklist 确保不遗漏步骤</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>十一、最佳实践总结</h2>
+      
+      <div class="grid">
+        <div class="card">
+          <h3>📝 写好 CLAUDE.md</h3>
+          <p>精炼、准确、只放必要信息。控制在 150 行以内，定期迭代优化。</p>
+        </div>
+        <div class="card">
+          <h3>🔒 安全第一</h3>
+          <p>生产环境启用权限检查，敏感操作需要确认，避免硬编码密钥。</p>
+        </div>
+        <div class="card">
+          <h3>🎯 明确指令</h3>
+          <p>提供具体、可执行的指令，说明预期结果和约束条件。</p>
+        </div>
+        <div class="card">
+          <h3>🔄 持续优化</h3>
+          <p>记录有效的 prompt，不断改进工作流，分享团队经验。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>十二、参考资源</h2>
+      <ul>
+        <li><a href="https://docs.anthropic.com/claude-code" target="_blank">Claude Code 官方文档</a></li>
+        <li><a href="https://www.anthropic.com/engineering/claude-code-best-practices" target="_blank">Claude Code 最佳实践</a></li>
+        <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a></li>
+        <li><a href="https://github.com/anthropics/skills" target="_blank">官方 Skills 示例</a></li>
+        <li><a href="https://github.com/littleben/awesomeAgentSkills" target="_blank">社区 Skills 精选</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">
+      <p>持续更新中 | 欢迎贡献你的 Claude Code 使用技巧</p>
+      <p style="margin-top: 10px;">
+        <a href="../index.html">← 返回首页</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

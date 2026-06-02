@@ -103,11 +103,93 @@
 ├── requirements.txt
 └── README.md</code></pre>
           <h3>基础依赖</h3>
-          <pre><code class="language-bash">python3 -m venv .venv
+          <pre><code class="language-bash"># 第1步：创建虚拟环境
+# .venv 是虚拟环境的名字，你可以改成任何名字，比如 venv、myenv 等
+# 执行后会创建一个名为 .venv 的文件夹
+python3 -m venv .venv
+
+# 第2步：激活虚拟环境
+# 激活后，命令行前面会显示 (.venv)，表示你在虚拟环境中
+# Mac/Linux 用 source，Windows 用 .venv\Scripts\activate
 source .venv/bin/activate
+
+# 第3步：安装依赖包
+# fastapi: Web 框架，用来写 API
+# uvicorn: ASGI 服务器，用来运行 FastAPI
+# pydantic: 数据校验，处理请求和响应
+# python-dotenv: 读取 .env 配置文件
+# httpx: HTTP 客户端，调用外部 API
+# pytest: 测试框架，写单元测试
 pip install fastapi uvicorn pydantic python-dotenv httpx pytest</code></pre>
-          <div class="note">后续接 LLM 时，你会经常遇到不同模型服务、向量库、微调工具的依赖冲突。现在先养成用虚拟环境隔离项目的习惯。</div>
-        </section>
+          <div class="note">
+            <strong>关于虚拟环境名字的说明</strong>：
+            <ul>
+              <li><code>.venv</code>：以点开头，隐藏文件夹，是目前最流行的命名方式</li>
+              <li><code>venv</code>：不带点，也是常见的命名方式</li>
+              <li><code>myenv</code>、<code>env</code>：其他常见命名</li>
+              <li>名字可以随便取，但建议统一团队命名规范</li>
+            </ul>
+            <strong>重要</strong>：虚拟环境文件夹不要提交到 Git！在 <code>.gitignore</code> 中添加 <code>.venv/</code> 或 <code>venv/</code>。
+          </div>
+
+          <h3>在 PyCharm 中配置虚拟环境</h3>
+          <div class="grid">
+            <div class="card">
+              <h4>方式一：创建项目时配置</h4>
+              <ol>
+                <li>打开 PyCharm，点击 <strong>File → New Project</strong></li>
+                <li><strong>Location</strong>：选择项目保存位置</li>
+                <li><strong>Interpreter type</strong>：选择 <strong>Virtualenv</strong></li>
+                <li><strong>Base interpreter</strong>：选择你的 Python 版本</li>
+                <li><strong>Location of new virtual environment</strong>：默认 <code>.venv</code> 即可</li>
+                <li>点击 <strong>Create</strong></li>
+              </ol>
+            </div>
+            <div class="card">
+              <h4>方式二：为已有项目配置</h4>
+              <ol>
+                <li>点击 <strong>File → Settings</strong>（Mac: <strong>PyCharm → Preferences</strong>）</li>
+                <li>找到 <strong>Project → Python Interpreter</strong></li>
+                <li>点击右上角 <strong>齿轮 ⚙️ → Add</strong></li>
+                <li>选择 <strong>Virtualenv Environment → New environment</strong></li>
+                <li>选择 Python 版本，点击 <strong>OK</strong></li>
+              </ol>
+            </div>
+          </div>
+          <div class="note">
+            <strong>PyCharm 小提示</strong>：
+            <ul>
+              <li>PyCharm 底部的 <strong>Terminal</strong> 会自动激活虚拟环境</li>
+              <li>如果项目目录下已有 <code>.venv</code> 文件夹，PyCharm 会自动识别</li>
+              <li>在 PyCharm 中安装包：<strong>Settings → Python Interpreter → 点击 + 号</strong></li>
+            </ul>
+          </div>
+
+          <h3>在 VS Code 中配置虚拟环境</h3>
+          <div class="grid">
+            <div class="card">
+              <h4>步骤一：创建虚拟环境</h4>
+              <pre><code class="language-bash"># 在项目目录下执行
+python3 -m venv .venv</code></pre>
+            </div>
+            <div class="card">
+              <h4>步骤二：选择 Python 解释器</h4>
+              <ol>
+                <li>按 <code>Cmd + Shift + P</code>（Mac）或 <code>Ctrl + Shift + P</code>（Windows）</li>
+                <li>输入 <strong>Python: Select Interpreter</strong></li>
+                <li>选择 <strong>./venv/bin/python</strong></li>
+              </ol>
+            </div>
+          </div>
+          <div class="note">
+            <strong>VS Code 小提示</strong>：
+            <ul>
+              <li>VS Code 会自动识别项目目录下的 <code>.venv</code> 文件夹</li>
+              <li>VS Code 的终端会自动激活虚拟环境</li>
+              <li>如果终端没有自动激活，手动运行 <code>source .venv/bin/activate</code></li>
+              <li>需要安装 <strong>Python 扩展</strong>（Microsoft 发布的）</li>
+            </ul>
+          </div>
 
         <section id="python" class="section">
           <h2>Python 必备能力</h2>
@@ -434,9 +516,13 @@ def process_text(payload: TextRequest) -> TextResponse:
 mkdir text-processor-api
 cd text-processor-api
 
-# 创建并激活虚拟环境，避免依赖污染系统 Python。
+# 创建虚拟环境（.venv 是虚拟环境名字，可改成 venv、myenv 等）
 python3 -m venv .venv
+
+# 激活虚拟环境（Mac/Linux 用 source，Windows 用 .venv\Scripts\activate）
 source .venv/bin/activate
+
+# 激活后命令行会显示 (.venv)，表示已在虚拟环境中
 
 # app 存放业务代码，tests 存放测试，data 存放练习数据。
 mkdir -p app tests data

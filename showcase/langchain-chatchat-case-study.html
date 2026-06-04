@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Langchain-Chatchat 项目案例分析</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <a class="brand" href="../index.html">LLM 应用开发路线</a>
+      <nav class="nav">
+        <a href="../showcase/index.html">作品展示</a>
+        <a class="current" href="langchain-chatchat-case-study.html">案例分析</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>Langchain-Chatchat 项目案例分析</h1>
+      <p>一个完整的 RAG + Agent 应用案例，涵盖知识库问答、工具调用、MCP 协议等核心功能</p>
+      <div class="meta-row">
+        <span class="pill">案例类型：综合项目</span>
+        <span class="pill">技术栈：Langchain + FastAPI + Streamlit</span>
+        <span class="pill">学习阶段：04-RAG + 05-工具调用</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>案例导航</h2>
+        <a href="#overview">项目概述</a>
+        <a href="#architecture">技术架构</a>
+        <a href="#core-modules">核心模块</a>
+        <a href="#implementation">实现细节</a>
+        <a href="#learning-points">学习要点</a>
+        <a href="#practice">实践任务</a>
+        <a href="#code-examples">代码示例</a>
+        <a href="#resources">相关资源</a>
+        <a href="../index.html">返回主页</a>
+      </aside>
+
+      <article class="content">
+        <section id="overview" class="section">
+          <h2>项目概述</h2>
+          <p><strong>Langchain-Chatchat</strong> 是一个基于 ChatGLM 等大语言模型与 Langchain 框架实现的开源 RAG 与 Agent 应用项目，支持本地知识库问答和多种工具调用。</p>
+          
+          <div class="grid">
+            <div class="card">
+              <h3>核心价值</h3>
+              <ul>
+                <li>完整的 RAG 实现：文档加载、切分、向量化、检索、生成</li>
+                <li>强大的 Agent 能力：工具调用、MCP 协议支持</li>
+                <li>生产级架构：FastAPI + Streamlit + 多种向量数据库</li>
+                <li>易于扩展：模块化设计，支持多种模型和工具</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>适用场景</h3>
+              <ul>
+                <li>企业知识库问答系统</li>
+                <li>智能助手与 Agent 应用</li>
+                <li>文档分析与检索系统</li>
+                <li>研究辅助工具</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="meta-row">
+            <span class="pill">GitHub Stars: 20K+</span>
+            <span class="pill">活跃维护</span>
+            <span class="pill">中文友好</span>
+          </div>
+        </section>
+
+        <section id="architecture" class="section">
+          <h2>技术架构</h2>
+          <p>项目采用分层架构，清晰分离关注点：</p>
+          
+          <pre><code class="language-text">┌─────────────────────────────────────────────────────┐
+│                   WebUI 层 (Streamlit)              │
+├─────────────────────────────────────────────────────┤
+│                   API 层 (FastAPI)                   │
+├─────────────────────────────────────────────────────┤
+│                 业务逻辑层                            │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐   │
+│  │ 对话管理 │ │ 知识库   │ │ Agent   │ │ 工具管理 │   │
+│  └─────────┘ └─────────┘ └─────────┘ └─────────┘   │
+├─────────────────────────────────────────────────────┤
+│                 数据访问层                            │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐               │
+│  │ 数据库   │ │ 向量库   │ │ 文件存储 │               │
+│  │ (SQLite) │ │ (FAISS等)│ │         │               │
+│  └─────────┘ └─────────┘ └─────────┘               │
+├─────────────────────────────────────────────────────┤
+│                 模型接入层                            │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐               │
+│  │ LLM     │ │ Embedding│ │ Reranker│               │
+│  │ (多平台) │ │ (多平台) │ │         │               │
+│  └─────────┘ └─────────┘ └─────────┘               │
+└─────────────────────────────────────────────────────┘</code></pre>
+
+          <h3>技术栈详解</h3>
+          <div class="grid">
+            <div class="card">
+              <h4>后端框架</h4>
+              <ul>
+                <li><strong>FastAPI</strong>: 高性能 API 框架</li>
+                <li><strong>SQLAlchemy</strong>: ORM 数据库操作</li>
+                <li><strong>Pydantic</strong>: 数据验证和配置管理</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>AI 框架</h4>
+              <ul>
+                <li><strong>Langchain</strong>: LLM 应用开发框架</li>
+                <li><strong>Langchain-Chatchat</strong>: 自定义扩展</li>
+                <li><strong>OpenAI SDK</strong>: 模型调用兼容</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>向量数据库</h4>
+              <ul>
+                <li><strong>FAISS</strong>: 本地向量检索</li>
+                <li><strong>Milvus</strong>: 分布式向量库</li>
+                <li><strong>ChromaDB</strong>: 轻量级向量库</li>
+                <li><strong>Elasticsearch</strong>: 全文检索</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>前端界面</h4>
+              <ul>
+                <li><strong>Streamlit</strong>: 快速 Web 界面</li>
+                <li><strong>Streamlit-antd</strong>: UI 组件库</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="core-modules" class="section">
+          <h2>核心模块</h2>
+          
+          <h3>1. 启动与配置系统</h3>
+          <p>项目使用 YAML 配置文件，支持热更新：</p>
+          <pre><code class="language-python"># settings.py - 配置管理
+class SettingsContainer:
+    basic_settings: BasicSettings = settings_property(BasicSettings())
+    kb_settings: KBSettings = settings_property(KBSettings())
+    model_settings: ApiModelSettings = settings_property(ApiModelSettings())
+    tool_settings: ToolSettings = settings_property(ToolSettings())
+    prompt_settings: PromptSettings = settings_property(PromptSettings())
+
+# 配置文件结构
+# basic_settings.yaml - 基础配置
+# kb_settings.yaml - 知识库配置
+# model_settings.yaml - 模型配置
+# tool_settings.yaml - 工具配置
+# prompt_settings.yaml - 提示词配置</code></pre>
+
+          <h3>2. 知识库系统</h3>
+          <p>支持多种向量数据库，统一接口设计：</p>
+          <pre><code class="language-python"># kb_service/base.py - 知识库服务基类
+class KBService(ABC):
+    def __init__(self, knowledge_base_name: str, embed_model: str):
+        self.kb_name = knowledge_base_name
+        self.embed_model = embed_model
+        self.do_init()
+    
+    @abstractmethod
+    def do_search(self, query: str, top_k: int, score_threshold: float) -> List[Tuple[Document, float]]:
+        """搜索知识库子类实自己逻辑"""
+        pass
+    
+    @abstractmethod
+    def do_add_doc(self, docs: List[Document], **kwargs) -> List[Dict]:
+        """向知识库添加文档子类实自己逻辑"""
+        pass
+
+# 支持的向量数据库类型
+class SupportedVSType:
+    FAISS = "faiss"
+    MILVUS = "milvus"
+    ZILLIZ = "zilliz"
+    PG = "pg"
+    ES = "es"
+    CHROMADB = "chromadb"</code></pre>
+
+          <h3>3. Agent 工具系统</h3>
+          <p>工具注册机制和 MCP 协议支持：</p>
+          <pre><code class="language-python"># tools_registry.py - 工具注册
+def regist_tool(*args, title="", description="", return_direct=False, args_schema=None):
+    """注册工具到全局注册表"""
+    def wrapper(def_func: Callable) -> BaseTool:
+        partial_ = tool(*args, return_direct=return_direct, args_schema=args_schema)
+        t = partial_(def_func)
+        _TOOLS_REGISTRY[t.name] = t
+        return t
+    return wrapper
+
+# 内置工具示例
+@regist_tool(return_direct=True)
+def search_local_knowledgebase(query: str, top_k: int = 3):
+    """搜索本地知识库"""
+    # 实现细节...</code></pre>
+
+          <h3>4. 对话系统</h3>
+          <p>支持多种对话模式：</p>
+          <pre><code class="language-python"># chat.py - Agent 对话实现
+async def chat(query: str, conversation_id: str, stream: bool = True):
+    """Agent 对话，支持工具调用和 MCP 协议"""
+    # 1. 创建模型实例
+    models, prompts = create_models_from_config(configs=chat_model_config)
+    
+    # 2. 获取工具
+    tools = [tool for tool in all_tools if tool.name in tool_config]
+    
+    # 3. 创建 Agent 执行器
+    agent_executor = PlatformToolsRunnable.create_agent_executor(
+        agent_type="platform-knowledge-mode",
+        llm=models["action_model"],
+        tools=tools,
+        mcp_connections=mcp_connections if use_mcp else {}
+    )
+    
+    # 4. 流式输出结果
+    async for item in agent_executor.invoke({"input": query}):
+        yield OpenAIChatOutput(content=item.text, tool_calls=item.tool_calls)</code></pre>
+        </section>
+
+        <section id="implementation" class="section">
+          <h2>实现细节</h2>
+          
+          <h3>RAG 完整流程</h3>
+          <ol>
+            <li><strong>文档加载</strong>: 支持 PDF、Word、Markdown、HTML 等格式</li>
+            <li><strong>文本切分</strong>: 使用 ChineseRecursiveTextSplitter 等分词器</li>
+            <li><strong>向量化</strong>: 调用 Embedding 模型生成向量</li>
+            <li><strong>存储索引</strong>: 写入向量数据库（FAISS、Milvus 等）</li>
+            <li><strong>检索匹配</strong>: 根据问题检索相关文档片段</li>
+            <li><strong>答案生成</strong>: 使用 LLM 基于检索结果生成答案</li>
+          </ol>
+
+          <h3>Agent 工具调用流程</h3>
+          <pre><code class="language-text">用户输入 → 意图识别 → 工具选择 → 参数提取 → 工具执行 → 结果整合 → 答案生成
+
+具体实现：
+1. 用户输入问题
+2. LLM 分析是否需要工具
+3. 选择合适的工具（如知识库搜索、网络搜索）
+4. 提取工具参数
+5. 执行工具获取结果
+6. 整合工具结果和上下文
+7. 生成最终答案</code></pre>
+
+          <h3>MCP 协议集成</h3>
+          <p>项目支持 Model Context Protocol，可以扩展外部工具：</p>
+          <pre><code class="language-python"># MCP 连接配置
+mcp_connections = {
+    "weather-server": {
+        "transport": "stdio",
+        "command": "python",
+        "args": ["weather_server.py"],
+        "env": {"API_KEY": "your_key"}
+    },
+    "math-server": {
+        "transport": "sse",
+        "url": "http://localhost:8080/sse",
+        "headers": {"Authorization": "Bearer token"}
+    }
+}</code></pre>
+        </section>
+
+        <section id="learning-points" class="section">
+          <h2>学习要点</h2>
+          
+          <div class="grid">
+            <div class="card">
+              <h3>RAG 核心概念</h3>
+              <ul>
+                <li>文档切分策略：固定长度 vs 语义切分</li>
+                <li>向量检索原理：相似度计算、索引优化</li>
+                <li>Rerank 机制：提高检索精度</li>
+                <li>上下文窗口管理：避免超出 token 限制</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Agent 设计模式</h3>
+              <ul>
+                <li>ReAct 模式：思考-行动-观察循环</li>
+                <li>工具注册与发现机制</li>
+                <li>参数校验与错误处理</li>
+                <li>多轮对话状态管理</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>工程化实践</h3>
+              <ul>
+                <li>配置管理：YAML + 环境变量</li>
+                <li>数据库设计：ORM 模型与仓库模式</li>
+                <li>API 设计：RESTful + 流式响应</li>
+                <li>日志与监控：结构化日志记录</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>扩展性设计</h3>
+              <ul>
+                <li>插件化工具系统</li>
+                <li>多模型平台支持</li>
+                <li>多种向量数据库适配</li>
+                <li>MCP 协议扩展</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="practice" class="section">
+          <h2>实践任务</h2>
+          
+          <div class="practice-list">
+            <article class="practice-item">
+              <h4>任务 1：搭建基础 RAG 系统</h4>
+              <p>基于 Langchain-Chatchat 搭建一个简单的知识库问答系统</p>
+              <details class="example">
+                <summary>查看任务清单</summary>
+                <pre><code class="language-text">目标：
+- 理解 RAG 完整流程
+- 掌握文档加载和切分
+- 实现向量检索和答案生成
+
+步骤：
+1. 安装 Langchain-Chatchat
+2. 配置 Embedding 模型
+3. 创建知识库并上传文档
+4. 测试问答效果
+5. 调整切分参数优化效果
+
+验收标准：
+- 能成功上传 PDF/Markdown 文档
+- 问答结果准确率 > 80%
+- 支持引用来源</code></pre>
+              </details>
+            </article>
+
+            <article class="practice-item">
+              <h4>任务 2：实现自定义工具</h4>
+              <p>为 Agent 添加自定义工具，扩展系统能力</p>
+              <details class="example">
+                <summary>查看任务清单</summary>
+                <pre><code class="language-text">目标：
+- 理解工具注册机制
+- 掌握工具参数定义
+- 实现工具调用流程
+
+步骤：
+1. 学习 tools_registry.py 源码
+2. 实现一个简单工具（如天气查询）
+3. 注册工具到系统
+4. 测试工具调用效果
+5. 处理工具异常情况
+
+验收标准：
+- 工具能正常注册和调用
+- 参数校验正确
+- 错误处理完善</code></pre>
+              </details>
+            </article>
+
+            <article class="practice-item">
+              <h4>任务 3：集成 MCP 服务器</h4>
+              <p>使用 MCP 协议扩展外部工具能力</p>
+              <details class="example">
+                <summary>查看任务清单</summary>
+                <pre><code class="language-text">目标：
+- 理解 MCP 协议原理
+- 掌握 MCP 服务器配置
+- 实现外部工具集成
+
+步骤：
+1. 学习 MCP 协议规范
+2. 配置 MCP 连接
+3. 测试外部工具调用
+4. 处理连接异常
+5. 优化工具调用流程
+
+验收标准：
+- MCP 连接正常建立
+- 外部工具能正常调用
+- 错误处理完善</code></pre>
+              </details>
+            </article>
+
+            <article class="practice-item">
+              <h4>任务 4：性能优化与部署</h4>
+              <p>优化系统性能，准备生产环境部署</p>
+              <details class="example">
+                <summary>查看任务清单</summary>
+                <pre><code class="language-text">目标：
+- 理解性能瓶颈
+- 掌握优化策略
+- 实现生产部署
+
+步骤：
+1. 分析性能瓶颈
+2. 优化向量检索
+3. 实现缓存机制
+4. 配置 Docker 部署
+5. 监控和日志配置
+
+验收标准：
+- 响应时间 < 3 秒
+- 支持并发访问
+- 日志完整可追溯</code></pre>
+              </details>
+            </article>
+          </div>
+        </section>
+
+        <section id="code-examples" class="section">
+          <h2>代码示例</h2>
+          
+          <h3>示例 1：创建自定义工具</h3>
+          <pre><code class="language-python"># custom_tool.py
+from chatchat.server.agent.tools_factory.tools_registry import regist_tool
+from pydantic import BaseModel, Field
+
+class WeatherInput(BaseModel):
+    city: str = Field(description="城市名称")
+    unit: str = Field(default="celsius", description="温度单位")
+
+@regist_tool(
+    title="天气查询",
+    description="查询指定城市的天气信息",
+    args_schema=WeatherInput,
+    return_direct=True
+)
+def get_weather(city: str, unit: str = "celsius") -> str:
+    """查询天气信息"""
+    # 实现天气查询逻辑
+    import requests
+    api_key = "your_api_key"
+    url = f"https://api.weather.com/v1?city={city}&unit={unit}&key={api_key}"
+    response = requests.get(url)
+    data = response.json()
+    
+    return f"{city}天气：{data['weather']}，温度：{data['temperature']}°{unit[0].upper()}"</code></pre>
+
+          <h3>示例 2：自定义知识库服务</h3>
+          <pre><code class="language-python"># custom_kb_service.py
+from chatchat.server.knowledge_base.kb_service.base import KBService, SupportedVSType
+from langchain.docstore.document import Document
+from typing import List, Tuple
+
+class CustomKBService(KBService):
+    """自定义知识库服务实现"""
+    
+    def vs_type(self) -> str:
+        return "custom"
+    
+    def do_init(self):
+        """初始化自定义向量库"""
+        self.vector_store = self._create_vector_store()
+    
+    def do_search(self, query: str, top_k: int, score_threshold: float) -> List[Tuple[Document, float]]:
+        """实现搜索逻辑"""
+        docs = self.vector_store.similarity_search_with_score(query, k=top_k)
+        return [(doc, score) for doc, score in docs if score <= score_threshold]
+    
+    def do_add_doc(self, docs: List[Document], **kwargs) -> List[Dict]:
+        """实现文档添加逻辑"""
+        ids = self.vector_store.add_documents(docs)
+        return [{"id": id, "metadata": doc.metadata} for id, doc in zip(ids, docs)]</code></pre>
+
+          <h3>示例 3：流式对话实现</h3>
+          <pre><code class="language-python"># stream_chat.py
+from fastapi import FastAPI
+from sse_starlette.sse import EventSourceResponse
+from chatchat.server.chat.chat import chat
+
+app = FastAPI()
+
+@app.post("/chat/stream")
+async def stream_chat(query: str, conversation_id: str):
+    """流式对话接口"""
+    async def event_generator():
+        async for chunk in chat(
+            query=query,
+            conversation_id=conversation_id,
+            stream=True
+        ):
+            yield {
+                "event": "message",
+                "data": chunk.model_dump_json()
+            }
+    
+    return EventSourceResponse(event_generator())</code></pre>
+        </section>
+
+        <section id="resources" class="section">
+          <h2>相关资源</h2>
+          
+          <div class="grid">
+            <div class="card">
+              <h3>官方资源</h3>
+              <ul>
+                <li><a href="https://github.com/chatchat-space/Langchain-Chatchat" target="_blank">GitHub 仓库</a></li>
+                <li><a href="https://github.com/chatchat-space/Langchain-Chatchat/tree/master/docs" target="_blank">官方文档</a></li>
+                <li><a href="https://github.com/chatchat-space/Langchain-Chatchat/blob/master/docs/contributing/README_dev.md" target="_blank">开发指南</a></li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>学习资料</h3>
+              <ul>
+                <li><a href="https://python.langchain.com/docs/get_started" target="_blank">Langchain 官方教程</a></li>
+                <li><a href="https://fastapi.tiangolo.com/tutorial/" target="_blank">FastAPI 教程</a></li>
+                <li><a href="https://docs.streamlit.io/" target="_blank">Streamlit 文档</a></li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>相关项目</h3>
+              <ul>
+                <li><a href="https://github.com/langchain-ai/langchain" target="_blank">Langchain</a></li>
+                <li><a href="https://github.com/xorbitsai/inference" target="_blank">Xinference</a></li>
+                <li><a href="https://github.com/ollama/ollama" target="_blank">Ollama</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>推荐学习路径</h3>
+          <pre><code class="language-text">1. 基础阶段（1-2 周）
+   - 学习 Langchain 基础概念
+   - 理解 RAG 原理和流程
+   - 搭建简单的问答系统
+
+2. 进阶阶段（2-3 周）
+   - 学习 Agent 和工具调用
+   - 实现自定义工具
+   - 集成 MCP 协议
+
+3. 实战阶段（3-4 周）
+   - 分析 Langchain-Chatchat 源码
+   - 实现自定义功能扩展
+   - 优化性能和部署
+
+4. 项目阶段（4-6 周）
+   - 基于框架开发完整应用
+   - 集成多种工具和模型
+   - 生产环境部署和优化</code></pre>
+        </section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>
